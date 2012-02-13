@@ -21,4 +21,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "rspec-rails"
   gem.add_development_dependency "capybara-firebug", "~> 1.1"
   gem.add_development_dependency "coffee-script"
+  gem.add_development_dependency "ejs"
 end

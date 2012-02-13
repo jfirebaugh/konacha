@@ -15,9 +15,9 @@ describe Matcha::Runner do
     it "prints results to the output" do
       buffer.rewind
       results = buffer.read
-      results.should include(".......F....")
+      results.should include(".......F.....")
       results.should include("expected 4 to equal 5")
-      results.should include("12 examples, 1 failure")
+      results.should include("13 examples, 1 failure")
     end
   end
 

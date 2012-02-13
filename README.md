@@ -149,6 +149,32 @@ to the page body and instead append it to this test div:
 Note: this functionality is available only for the "BDD" (default) and "TDD" mocha interfaces,
 and not for the "exports" or "QUnit" interfaces.
 
+## Templates / Fixtures
+
+Matcha has no template (a.k.a. HTML fixture) support of its own. Instead, we suggest you use
+Sprocket's built in support for JavaScript template (`.jst`) files. Add a `spec/javascripts/templates`
+directory, place template files there (using any JS template language supported by Sprockets),
+require them in your spec or spec_helper, and render them into the `#test` div.
+
+For example, in `spec/javascripts/templates/hello.jst.ejs`:
+
+    <h1>Hello Matcha!</h1>
+
+In `spec_helper.js`:
+
+    //= require_tree ./templates
+
+And your spec:
+
+    //= require spec_helper
+
+    describe("templating", function(){
+      it("is built in to Sprockets", function(){
+        $('#test').html(JST['templates/hello']());
+        $('#test h1').text().should.equal('Hello Matcha!');
+      });
+    });
+
 ## Contributing
 
 1. Fork it
