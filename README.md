@@ -127,6 +127,9 @@ configuration option in an initializer:
 Matcha will make all three of chai's assertion styles available to you: `expect`,
 `should`, and `assert`. See the chai documentation for the details.
 
+If you use jQuery, you may want to check out [chai-jquery](https://github.com/jfirebaugh/chai-jquery)
+for some jQuery-specific assertions.
+
 ## Contributing
 
 1. Fork it
