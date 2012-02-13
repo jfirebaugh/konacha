@@ -11,10 +11,21 @@
           should = chai.should(),
           assert = chai.assert;
       window.onload = mocha.run;
+
+      <% if @interface == :bdd %>
+        beforeEach(function() {
+          document.getElementById('test').innerHTML = "";
+        });
+      <% elsif @interface == :tdd %>
+        setup(function() {
+          document.getElementById('test').innerHTML = "";
+        });
+      <% end %>
     </script>
     <%= yield %>
   </head>
   <body>
     <div id="mocha"></div>
+    <div id="test"></div>
   </body>
 </html>

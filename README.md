@@ -130,6 +130,25 @@ Matcha will make all three of chai's assertion styles available to you: `expect`
 If you use jQuery, you may want to check out [chai-jquery](https://github.com/jfirebaugh/chai-jquery)
 for some jQuery-specific assertions.
 
+## Transactions
+
+One problem often faced when writing unit tests for client side code is that changes
+to the page are not reverted for the next example, so that successive examples become
+dependent on each other. Matcha adds a special div to your page with an id of `test`.
+This div is automatically emptied before each example. You should avoid appending markup
+to the page body and instead append it to this test div:
+
+    describe "transactions", ->
+      it "should add stuff in one test...", ->
+        $('#test').append('<h1 id="added">New Stuff</h1>')
+        $('#test h1#added').length.should.equal(1)
+
+      it "... should have been removed before the next starts", ->
+        $('#test h1#added').length.should.equal(0)
+
+Note: this functionality is available only for the "BDD" (default) and "TDD" mocha interfaces,
+and not for the "exports" or "QUnit" interfaces.
+
 ## Contributing
 
 1. Fork it
