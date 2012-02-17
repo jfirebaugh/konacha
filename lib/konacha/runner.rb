@@ -1,4 +1,4 @@
-module Matcha
+module Konacha
   class Runner
     def self.start
       new.run
@@ -54,17 +54,17 @@ module Matcha
           previous_results = ""
 
           session.wait_until(300) do
-            dots = session.evaluate_script('Matcha.dots')
+            dots = session.evaluate_script('Konacha.dots')
             io.print dots.sub(/^#{Regexp.escape(previous_results)}/, '')
             io.flush
             previous_results = dots
-            session.evaluate_script('Matcha.done')
+            session.evaluate_script('Konacha.done')
           end
 
-          dots = session.evaluate_script('Matcha.dots')
+          dots = session.evaluate_script('Konacha.dots')
           io.print dots.sub(/^#{Regexp.escape(previous_results)}/, '')
 
-          JSON.parse(session.evaluate_script('Matcha.getResults()')).map do |row|
+          JSON.parse(session.evaluate_script('Konacha.getResults()')).map do |row|
             Example.new(row)
           end
         end
@@ -139,13 +139,13 @@ module Matcha
     end
 
     def session
-      @session ||= Capybara::Session.new(Matcha.driver, Matcha.application)
+      @session ||= Capybara::Session.new(Konacha.driver, Konacha.application)
     end
 
   protected
 
     def spec_runners
-      @spec_runners ||= Matcha::Spec.all.map { |spec| SpecRunner.new(self, spec) }
+      @spec_runners ||= Konacha::Spec.all.map { |spec| SpecRunner.new(self, spec) }
     end
   end
 end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "matcha/specs/index" do
+describe "konacha/specs/index" do
   it "renders a script tag for each basename in @specs" do
     a_spec = stub(:basename => "a_spec")
     b_spec = stub(:basename => "b_spec")

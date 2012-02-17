@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe Matcha::Server, :type => :request do
+describe Konacha::Server, :type => :request do
   def app
-    Matcha.application
+    Konacha.application
   end
 
   before do
-    Matcha.mode = :server
+    Konacha.mode = :server
   end
 
   it "serves a root page" do

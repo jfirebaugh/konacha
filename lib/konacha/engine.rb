@@ -1,6 +1,6 @@
-module Matcha
+module Konacha
   class Engine < Rails::Engine
-    config.matcha = ActiveSupport::OrderedOptions.new
+    config.konacha = ActiveSupport::OrderedOptions.new
 
     def self.application(app)
       Rack::Builder.app do
@@ -8,16 +8,16 @@ module Matcha
           run app.assets
         end
 
-        run Matcha::Engine
+        run Konacha::Engine
       end
     end
 
-    initializer "matcha.environment" do |app|
+    initializer "konacha.environment" do |app|
       unless app.config.assets.enabled
-        raise RuntimeError, "matcha requires the asset pipeline to be enabled"
+        raise RuntimeError, "konacha requires the asset pipeline to be enabled"
       end
 
-      options = app.config.matcha
+      options = app.config.konacha
 
       options.spec_dir    ||= "spec/javascripts"
       options.port        ||= 8888

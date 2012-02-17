@@ -1,25 +1,25 @@
 (function () {
-  window.Matcha = {
+  window.Konacha = {
     dots:"",
 
     Reporter:function (runner) {
       window.mocha.reporters.Base.call(this, runner);
 
       runner.on('start', function () {
-        Matcha.results = [];
+        Konacha.results = [];
       });
 
       runner.on('pass', function (test) {
-        Matcha.dots += ".";
-        Matcha.results.push({
+        Konacha.dots += ".";
+        Konacha.results.push({
           name: test.title,
           passed: true
         });
       });
 
       runner.on('fail', function (test) {
-        Matcha.dots += "F";
-        Matcha.results.push({
+        Konacha.dots += "F";
+        Konacha.results.push({
           name: test.title,
           passed: false,
           message: test.err.message,
@@ -28,18 +28,18 @@
       });
 
       runner.on('end', function () {
-        Matcha.done = true;
+        Konacha.done = true;
       });
     },
 
     getResults:function () {
-      return JSON.stringify(Matcha.results);
+      return JSON.stringify(Konacha.results);
     }
   };
 
   var suite = new mocha.Suite
     , utils = mocha.utils
-    , Reporter = Matcha.Reporter;
+    , Reporter = Konacha.Reporter;
 
   function parse(qs) {
     return utils.reduce(qs.replace('?', '').split('&'), function(obj, pair){

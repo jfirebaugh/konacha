@@ -1,7 +1,7 @@
-module Matcha
+module Konacha
   class Spec
     def self.all
-      Matcha.spec_paths.map { |path| new(path) }
+      Konacha.spec_paths.map { |path| new(path) }
     end
 
     def self.find(basename)

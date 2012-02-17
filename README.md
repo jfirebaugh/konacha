@@ -1,20 +1,20 @@
-# Matcha
+# Konacha
 
-Matcha is a Rails engine that allows you to test your JavaScript with the
+Konacha is a Rails engine that allows you to test your JavaScript with the
 [mocha](http://visionmedia.github.com/mocha/) test framework and [chai](http://chaijs.com/)
 assertion library.
 
 It is similar to [Jasmine](https://github.com/pivotal/jasmine-gem) and
 [Evergreen](https://github.com/jnicklas/evergreen), but does not attempt to be framework
-agnostic. By sticking with Rails, Matcha can take full advantage of features such as
+agnostic. By sticking with Rails, Konacha can take full advantage of features such as
 the asset pipeline and engines.
 
 ## Installation
 
-Add matcha to the `:test` and `:development` groups in the Gemfile:
+Add konacha to the `:test` and `:development` groups in the Gemfile:
 
     group :test, :development do
-      gem "matcha"
+      gem "konacha"
     end
 
 And then execute:
@@ -23,7 +23,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install matcha
+    $ gem install konacha
 
 ## Usage
 
@@ -59,15 +59,15 @@ Or, if you prefer CoffeeScript, in `spec/javascripts/array_sum_spec.js.coffee`:
       it "returns the sum of numeric elements", ->
         [1,2,3].sum().should.equal(6)
 
-The `matcha:server` rake task starts a server for your tests. You can go to the root
+The `konacha:server` rake task starts a server for your tests. You can go to the root
 page to run all specs (e.g. `http://localhost:8888/`), or a sub page to run an individual
 spec file (e.g. `http://localhost:8888/array_sum_spec`).
 
-Alternatively, you can run the specs headlessly with the `matcha:ci` task.
+Alternatively, you can run the specs headlessly with the `konacha:ci` task.
 
 ## Spec Helper
 
-Since Matcha integrates with the asset pipeline, using setup helpers in your specs is
+Since Konacha integrates with the asset pipeline, using setup helpers in your specs is
 easy. Just create a `spec_helper.js` or `spec_helper.js.coffee` file in `specs/javascripts`
 and require it in your tests:
 
@@ -81,29 +81,29 @@ and require it in your tests:
 ## Directives and Asset Bundling
 
 We suggest that you explicitly require just the assets necessary for each spec. In CI
-mode, Matcha will run each spec in isolation, and requiring things explicitly will help
+mode, Konacha will run each spec in isolation, and requiring things explicitly will help
 ensure your scripts don't accumulate hidden dependencies and tight coupling.
 
 However, you are free to ignore this advice and require the entire application.js asset
 bundle in your specs or spec helper, or a bundled subset of assets. Requiring bundled
-assets works like it does in Rails development mode -- Matcha will detect the complete
+assets works like it does in Rails development mode -- Konacha will detect the complete
 set of dependencies and generate a separate script tag for each one. You won't have to
 search through a many thousand line application.js bundle to debug a spec failure.
 
 ## Configuration
 
-Matcha can be configured in an initializer, e.g. `config/initializers/matcha.rb`:
+Konacha can be configured in an initializer, e.g. `config/initializers/konacha.rb`:
 
-    Matcha.configure do |config|
+    Konacha.configure do |config|
       config.spec_dir  = "spec/javascripts"
       config.interface = :bdd
       config.driver    = :selenium
-    end if defined?(Matcha)
+    end if defined?(Konacha)
 
-The `defined?` check is necessary to avoid a dependency on Matcha in the production
+The `defined?` check is necessary to avoid a dependency on Konacha in the production
 environment.
 
-The `spec_dir` option tells Matcha where to find JavaScript specs. The `interface`
+The `spec_dir` option tells Konacha where to find JavaScript specs. The `interface`
 option specifies the test interface used by Mocha (see below). `driver` names a
 Capybara driver used for the CI task (try `:webkit`, after installing
 [capybara-webkit](https://github.com/thoughtbot/capybara-webkit)).
@@ -112,7 +112,7 @@ The values above are the defaults.
 
 ## Test Interface and Assertions
 
-Matcha includes a vendored copy of mocha.js and the [chai](http://chaijs.com/)
+Konacha includes a vendored copy of mocha.js and the [chai](http://chaijs.com/)
 assertion libraries.
 
 By default, it will assume that you want to use Mocha's "BDD" test interface, which
@@ -120,11 +120,11 @@ provides `describe()`, `it()`, `before()`, `after()`, `beforeEach()`, and `after
 If you want to use the TDD, Exports, or QUnit interfaces instead, set the `interface`
 configuration option in an initializer:
 
-    Matcha.configure do |config|
+    Konacha.configure do |config|
       config.interface = :tdd # Or :exports or :qunit
-    end if defined?(Matcha)
+    end if defined?(Konacha)
 
-Matcha will make all three of chai's assertion styles available to you: `expect`,
+Konacha will make all three of chai's assertion styles available to you: `expect`,
 `should`, and `assert`. See the chai documentation for the details.
 
 If you use jQuery, you may want to check out [chai-jquery](https://github.com/jfirebaugh/chai-jquery)
@@ -134,7 +134,7 @@ for some jQuery-specific assertions.
 
 One problem often faced when writing unit tests for client side code is that changes
 to the page are not reverted for the next example, so that successive examples become
-dependent on each other. Matcha adds a special div to your page with an id of `test`.
+dependent on each other. Konacha adds a special div to your page with an id of `test`.
 This div is automatically emptied before each example. You should avoid appending markup
 to the page body and instead append it to this test div:
 
@@ -151,14 +151,14 @@ and not for the "exports" or "QUnit" interfaces.
 
 ## Templates / Fixtures
 
-Matcha has no template (a.k.a. HTML fixture) support of its own. Instead, we suggest you use
+Konacha has no template (a.k.a. HTML fixture) support of its own. Instead, we suggest you use
 Sprocket's built in support for JavaScript template (`.jst`) files. Add a `spec/javascripts/templates`
 directory, place template files there (using any JS template language supported by Sprockets),
 require them in your spec or spec_helper, and render them into the `#test` div.
 
 For example, in `spec/javascripts/templates/hello.jst.ejs`:
 
-    <h1>Hello Matcha!</h1>
+    <h1>Hello Konacha!</h1>
 
 In `spec_helper.js`:
 
@@ -171,7 +171,7 @@ And your spec:
     describe("templating", function(){
       it("is built in to Sprockets", function(){
         $('#test').html(JST['templates/hello']());
-        $('#test h1').text().should.equal('Hello Matcha!');
+        $('#test h1').text().should.equal('Hello Konacha!');
       });
     });
 

@@ -4,7 +4,7 @@
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
     <title>Mocha Tests</title>
     <%= stylesheet_link_tag "mocha" %>
-    <%= javascript_include_tag "jquery", "mocha", "chai", "matcha/#{@mode}" %>
+    <%= javascript_include_tag "jquery", "mocha", "chai", "konacha/#{@mode}" %>
     <script>
       mocha.setup(<%= raw @interface.to_json %>);
       var expect = chai.expect,

@@ -1,8 +1,8 @@
-require "matcha/engine"
-require "matcha/runner"
-require "matcha/server"
+require "konacha/engine"
+require "konacha/runner"
+require "konacha/server"
 
-module Matcha
+module Konacha
   class << self
     attr_accessor :mode
 
@@ -10,16 +10,16 @@ module Matcha
       puts "your tests are here:"
       puts "  http://localhost:#{port}/"
       self.mode = :server
-      Matcha::Server.start
+      Konacha::Server.start
     end
 
     def run
       self.mode = :runner
-      Matcha::Runner.start
+      Konacha::Runner.start
     end
 
     def config
-      Matcha::Engine.config.matcha
+      Konacha::Engine.config.konacha
     end
 
     def configure

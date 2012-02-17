@@ -1,21 +1,21 @@
-module Matcha
+module Konacha
   class SpecsController < ActionController::Base
     before_filter :set_interface, :set_mode
 
     def set_interface
-      @interface = Matcha.interface
+      @interface = Konacha.interface
     end
 
     def set_mode
-      @mode = Matcha.mode
+      @mode = Konacha.mode
     end
 
     def index
-      @specs = Matcha::Spec.all
+      @specs = Konacha::Spec.all
     end
 
     def show
-      @spec = Matcha::Spec.find(params[:spec])
+      @spec = Konacha::Spec.find(params[:spec])
       @spec or render :text => "Not Found", :status => 404
     end
   end

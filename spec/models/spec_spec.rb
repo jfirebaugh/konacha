@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Matcha::Spec do
+describe Konacha::Spec do
   describe "#basename" do
     it "is the basename of the path" do
       described_class.new("array_spec.js").basename.should == "array_spec"
@@ -23,7 +23,7 @@ describe Matcha::Spec do
 
   describe ".all" do
     it "returns an array of specs" do
-      Matcha.should_receive(:spec_paths) { ["a_spec.js", "b_spec.js"] }
+      Konacha.should_receive(:spec_paths) { ["a_spec.js", "b_spec.js"] }
       all = described_class.all
       all.length.should == 2
     end

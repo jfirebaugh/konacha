@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Matcha do
+describe Konacha do
   describe ".config" do
-    subject { Matcha.config }
+    subject { Konacha.config }
 
     describe ".interface" do
       it "defaults to :bdd interface" do
@@ -18,7 +18,7 @@ describe Matcha do
   end
 
   describe ".spec_paths" do
-    subject { Matcha.spec_paths }
+    subject { Konacha.spec_paths }
 
     it "returns an array of paths relative to spec_dir" do
       subject.should include("array_sum_js_spec.js")
@@ -35,6 +35,6 @@ describe Matcha do
   end
 
   it "can be configured in an initializer" do
-    Matcha.config.configured.should == true
+    Konacha.config.configured.should == true
   end
 end

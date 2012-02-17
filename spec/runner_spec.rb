@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe Matcha::Runner do
+describe Konacha::Runner do
   before do
-    Matcha.mode = :runner
-    Matcha.config.driver = :selenium_with_firebug
+    Konacha.mode = :runner
+    Konacha.config.driver = :selenium_with_firebug
   end
 
-  let(:runner) { Matcha::Runner.new(:output => buffer) }
+  let(:runner) { Konacha::Runner.new(:output => buffer) }
   let(:buffer) { StringIO.new }
 
   describe "#run" do
@@ -22,7 +22,7 @@ describe Matcha::Runner do
   end
 
   describe "#run_spec" do
-    let(:spec) { Matcha::Spec.find("failing_spec") }
+    let(:spec) { Konacha::Spec.find("failing_spec") }
     before { runner.spec_runner(spec).run }
 
     it "prints results to the output" do

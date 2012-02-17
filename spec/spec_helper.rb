@@ -14,5 +14,5 @@ require "capybara/firebug"
 Capybara.configure do |config|
   config.default_selector = :css
   config.default_driver   = :selenium_with_firebug
-  config.app              = Matcha.application
+  config.app              = Konacha.application
 end

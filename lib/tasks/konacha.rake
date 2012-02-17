@@ -1,11 +1,11 @@
-namespace :matcha do
+namespace :konacha do
   desc "Run JavaScript specs interactively"
   task :server => :environment do
-    Matcha.serve
+    Konacha.serve
   end
 
   desc "Run JavaScript specs non-interactively"
   task :ci => :environment do
-    Matcha.run
+    Konacha.run
   end
 end
