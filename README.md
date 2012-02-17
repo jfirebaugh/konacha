@@ -16,19 +16,11 @@ the asset pipeline and engines.
 
 ## Installation
 
-Add konacha to the `:test` and `:development` groups in the Gemfile:
+Add konacha to the `:test` and `:development` groups in the Gemfile and `bundle install`:
 
     group :test, :development do
       gem "konacha"
     end
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install konacha
 
 ## Usage
 
@@ -179,14 +171,6 @@ And your spec:
         $('#test h1').text().should.equal('Hello Konacha!');
       });
     });
-
-## Contributing
-
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
 
 ## License
 
