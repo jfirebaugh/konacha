@@ -9,7 +9,7 @@ describe "konacha/specs/index" do
     b_spec, b_asset = new_spec_and_asset("b_spec", [])
     assign(:specs, [a_spec, b_spec])
     render
-    rendered.should have_selector("script[src='/assets/a_spec.js']")
-    rendered.should have_selector("script[src='/assets/b_spec.js']")
+    rendered.should have_selector("script[src='/assets/a_spec.js?body=1']")
+    rendered.should have_selector("script[src='/assets/b_spec.js?body=1']")
   end
 end

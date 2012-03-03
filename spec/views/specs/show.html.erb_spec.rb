@@ -8,6 +8,6 @@ describe "konacha/specs/show" do
     spec, asset = new_spec_and_asset("spec", [])
     assign(:spec, spec)
     render
-    rendered.should have_selector("script[src='/assets/spec.js']")
+    rendered.should have_selector("script[src='/assets/spec.js?body=1']")
   end
 end
