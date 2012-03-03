@@ -8,11 +8,11 @@ module Konacha
     end
 
     def add_spec(spec)
-      asset = @asset_paths.asset_for(spec.basename)
+      asset = @asset_paths.asset_for(spec.basename, "js")
       @assets.merge(asset.to_a)
     end
 
-    def add_specs(*specs)
+    def add_specs(specs)
       specs.each { |s| add_spec(s) }
     end
   end
