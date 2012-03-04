@@ -19,7 +19,7 @@ module Konacha
     end
 
     def basename
-      path[/.*(?=\.js.*$)/]
+      path.sub(/(\.js|\.coffee).*/, '')
     end
   end
 end

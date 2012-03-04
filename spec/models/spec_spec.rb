@@ -4,6 +4,7 @@ describe Konacha::Spec do
   describe "#basename" do
     it "is the basename of the path" do
       described_class.new("array_spec.js").basename.should == "array_spec"
+      described_class.new("array_spec.coffee").basename.should == "array_spec"
     end
 
     it "ignores multiple extensions" do
