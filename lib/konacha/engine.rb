@@ -8,7 +8,9 @@ module Konacha
           run app.assets
         end
 
-        run Konacha::Engine
+        map "/" do
+          run Konacha::Engine
+        end
       end
     end
 
