@@ -57,8 +57,8 @@ Or, if you prefer CoffeeScript, in `spec/javascripts/array_sum_spec.js.coffee`:
         [1,2,3].sum().should.equal(6)
 
 The `konacha:server` rake task starts a server for your tests. You can go to the root
-page to run all specs (e.g. `http://localhost:8888/`), or a sub page to run an individual
-spec file (e.g. `http://localhost:8888/array_sum_spec`).
+page to run all specs (e.g. `http://localhost:3500/`), or a sub page to run an individual
+spec file (e.g. `http://localhost:3500/array_sum_spec`).
 
 Alternatively, you can run the specs headlessly with the `konacha:ci` task.
 
