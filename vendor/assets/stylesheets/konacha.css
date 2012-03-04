@@ -1,0 +1,6 @@
+// Keep #test div visible so we can test against element visibility
+#test {
+  position: relative;
+  left: -9999px;
+  height: 0;
+}

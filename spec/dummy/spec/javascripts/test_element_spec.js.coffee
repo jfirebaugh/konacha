@@ -5,3 +5,6 @@ describe "the #test element", ->
 
   it "... that is removed before the next starts", ->
     $('#test h1#added').length.should.equal(0)
+
+  it "is visible", ->
+    $('#test').is(':visible').should.be.true
