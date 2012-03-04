@@ -3,8 +3,8 @@
 Gem::Specification.new do |gem|
   gem.authors       = ["John Firebaugh"]
   gem.email         = ["john.firebaugh@gmail.com"]
-  gem.description   = %q{Unit test your Rails JavaScript with the mocha test framework and chai assertion library}
-  gem.summary       = %q{Konacha is a Rails engine that allows you to test your JavaScript with the
+  gem.summary       = %q{Unit-test your Rails JavaScript with the mocha test framework and chai assertion library}
+  gem.description   = %q{Konacha is a Rails engine that allows you to test your JavaScript with the
 mocha test framework and chai assertion library.
 
 It is similar to Jasmine and Evergreen, but does not attempt to be framework
