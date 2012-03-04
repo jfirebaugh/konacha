@@ -1,3 +1,4 @@
+bin
 *.gem
 *.rbc
 .bundle
