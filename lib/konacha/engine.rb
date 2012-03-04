@@ -20,7 +20,7 @@ module Konacha
       options = app.config.konacha
 
       options.spec_dir    ||= "spec/javascripts"
-      options.port        ||= 8888
+      options.port        ||= 3500
       options.interface   ||= :bdd
       options.application ||= self.class.application(app)
       options.driver      ||= :selenium
