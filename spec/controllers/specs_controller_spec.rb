@@ -30,13 +30,13 @@ describe Konacha::SpecsController do
   end
 
   describe "#show" do
-    it "finds the spec with the given basename and assigns it to @spec" do
+    it "finds the spec with the given asset_name and assigns it to @spec" do
       Konacha::Spec.should_receive(:find).with("array_spec") { :spec }
       get :show, :spec => "array_spec"
       assigns[:spec].should == :spec
     end
 
-    it "404s if there is no spec with the given basename" do
+    it "404s if there is no spec with the given asset_name" do
       Konacha::Spec.should_receive(:find).with("array_spec") { nil }
       get :show, :spec => "array_spec"
       response.status.should == 404
