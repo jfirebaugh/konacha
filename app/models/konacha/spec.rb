@@ -4,8 +4,8 @@ module Konacha
       Konacha.spec_paths.map { |path| new(path) }
     end
 
-    def self.find(basename)
-      all.find { |spec| spec.basename == basename }
+    def self.find(asset_name)
+      all.find { |spec| spec.asset_name == asset_name }
     end
 
     attr_accessor :path
@@ -15,10 +15,10 @@ module Konacha
     end
 
     def url
-      "/#{basename}"
+      "/#{asset_name}"
     end
 
-    def basename
+    def asset_name
       path.sub(/(\.js|\.coffee).*/, '')
     end
   end
