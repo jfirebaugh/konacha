@@ -5,9 +5,9 @@
     <title>Mocha Tests</title>
     <%= stylesheet_link_tag "mocha" %>
     <%= stylesheet_link_tag "konacha" %>
-    <%= javascript_include_tag "jquery", "mocha", "chai", "konacha/#{@mode}" %>
+    <%= javascript_include_tag "jquery", "mocha", "chai", "konacha/#{Konacha.mode}" %>
     <script>
-      mocha.setup(<%= raw @interface.to_json %>);
+      mocha.setup(<%= raw Konacha.interface.to_json %>);
       var expect = chai.expect,
           should = chai.should(),
           assert = chai.assert;
@@ -16,11 +16,11 @@
         mocha.run(Konacha.Reporter);
       };
 
-      <% if @interface == :bdd %>
+      <% if Konacha.interface == :bdd %>
         beforeEach(function() {
           document.getElementById('test').innerHTML = "";
         });
-      <% elsif @interface == :tdd %>
+      <% elsif Konacha.interface == :tdd %>
         setup(function() {
           document.getElementById('test').innerHTML = "";
         });
