@@ -13,6 +13,19 @@ describe "konacha/specs/specs" do
     rendered.should have_css("script[src='/assets/konacha/runner.js']")
   end
 
+  def asset_double(asset_name, dependencies = [])
+    asset = double("asset called '#{asset_name}'")
+    asset.stub(:to_a).and_return([dependencies, asset].flatten)
+    asset.stub(:logical_path).and_return(asset_name)
+    view.asset_paths.stub(:asset_for).with(asset_name, "js").and_return(asset)
+    asset
+  end
+
+  def spec_double(asset_name, dependencies = [])
+    asset_double(asset_name, dependencies)
+    double("spec called '#{asset_name}'", :asset_name => asset_name)
+  end
+
   let(:dependency) { asset_double("dependency") }
 
   it "renders a script tag for each spec in @specs" do
