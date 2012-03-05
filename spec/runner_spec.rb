@@ -15,8 +15,13 @@ describe Konacha::Runner do
     it "prints results to the output" do
       buffer.rewind
       results = buffer.read
-      results.should include('F')
-      results.should include("expected 4 to equal 5")
+      # "should include" gives us nice multi-line error messages if there is
+      # more than one failure
+      results.should include 'examples, 1 failure'
+      # Failure output present?
+      results.should include 'F'
+      results.should include 'expected 4 to equal 5'
+      # Enough examples run?
       results.should match /[1-9][0-9]+ examples, 1 failure/
     end
   end
