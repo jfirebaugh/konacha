@@ -1,11 +1,14 @@
 module Konacha
   class Spec
+    class NotFound < StandardError
+    end
+
     def self.all
       Konacha.spec_paths.map { |path| new(path) }
     end
 
-    def self.find(asset_name)
-      all.find { |spec| spec.asset_name == asset_name }
+    def self.find(path)
+      all.select { |s| s.path.starts_with?(path) }.presence or raise NotFound
     end
 
     attr_accessor :path

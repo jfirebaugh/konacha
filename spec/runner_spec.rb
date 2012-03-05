@@ -27,7 +27,7 @@ describe Konacha::Runner do
   end
 
   describe "#run_spec" do
-    let(:spec) { Konacha::Spec.find("failing_spec") }
+    let(:spec) { Konacha::Spec.find("failing_spec").first }
     before { runner.spec_runner(spec).run }
 
     it "prints results to the output" do

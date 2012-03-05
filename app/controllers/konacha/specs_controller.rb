@@ -2,6 +2,10 @@ module Konacha
   class SpecsController < ActionController::Base
     before_filter :set_interface, :set_mode
 
+    rescue_from Konacha::Spec::NotFound do
+      render :text => "Not found", :status => 404
+    end
+
     def set_interface
       @interface = Konacha.interface
     end
@@ -10,13 +14,8 @@ module Konacha
       @mode = Konacha.mode
     end
 
-    def index
-      @specs = Konacha::Spec.all
-    end
-
-    def show
-      @spec = Konacha::Spec.find(params[:spec])
-      @spec or render :text => "Not Found", :status => 404
+    def specs
+      @specs = Konacha::Spec.find(params[:path] || "")
     end
   end
 end

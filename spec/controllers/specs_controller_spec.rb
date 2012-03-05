@@ -21,24 +21,16 @@ describe Konacha::SpecsController do
     end
   end
 
-  describe "#index" do
-    it "assigns Konacha::Spec.all to @specs" do
-      Konacha::Spec.should_receive(:all) { :all }
-      get :index
-      assigns[:specs].should == :all
-    end
-  end
-
-  describe "#show" do
-    it "finds the spec with the given asset_name and assigns it to @spec" do
-      Konacha::Spec.should_receive(:find).with("array_spec") { :spec }
-      get :show, :spec => "array_spec"
-      assigns[:spec].should == :spec
+  describe "#specs" do
+    it "assigns the result of Spec.find to @specs" do
+      Konacha::Spec.should_receive(:find).with("spec_path") { :spec }
+      get :specs, :path => "spec_path"
+      assigns[:specs].should == :spec
     end
 
-    it "404s if there is no spec with the given asset_name" do
-      Konacha::Spec.should_receive(:find).with("array_spec") { nil }
-      get :show, :spec => "array_spec"
+    it "404s if there is no match for the given path" do
+      Konacha::Spec.should_receive(:find).with("array_spec") { raise Konacha::Spec::NotFound }
+      get :specs, :path => "array_spec"
       response.status.should == 404
       response.should_not render_template("konacha/specs/show")
     end

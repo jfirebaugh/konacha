@@ -33,6 +33,12 @@ describe Konacha::Server, :type => :request do
     page.should have_css(".test.pass")
   end
 
+  it "serves a subdirectory of specs" do
+    visit "/subdirectory"
+    page.should have_content("spec in subdirectory")
+    page.should have_css(".test.pass")
+  end
+
   it "supports spec helpers" do
     visit "/spec_helper_spec"
     page.should have_content("two_plus_two")
