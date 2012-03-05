@@ -1,7 +1,6 @@
 require "konacha/engine"
 require "konacha/runner"
 require "konacha/server"
-require "konacha/spec_bundler"
 
 module Konacha
   class << self

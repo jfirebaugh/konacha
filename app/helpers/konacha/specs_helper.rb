@@ -1,9 +1,10 @@
 module Konacha
   module SpecsHelper
     def spec_include_tag(*specs)
-      bundler = SpecBundler.new(asset_paths)
-      bundler.add_specs(specs)
-      assets = bundler.assets.map { |a| asset_path(a) }
+      assets = specs.map do |spec|
+        asset_paths.asset_for(spec.asset_name, "js").to_a
+      end.flatten.uniq.map(&:logical_path)
+
       javascript_include_tag *assets, :body => true
     end
   end
