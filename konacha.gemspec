@@ -17,7 +17,7 @@ the asset pipeline and engines.}
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.name          = "konacha"
   gem.require_paths = ["lib"]
-  gem.version       = "0.9.0"
+  gem.version       = "0.9.1"
 
   gem.add_dependency "jquery-rails"
   gem.add_dependency "rails", "~> 3.1"
