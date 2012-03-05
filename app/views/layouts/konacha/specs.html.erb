@@ -11,7 +11,10 @@
       var expect = chai.expect,
           should = chai.should(),
           assert = chai.assert;
-      window.onload = mocha.run;
+
+      window.onload = function () {
+        mocha.run(Konacha.Reporter);
+      };
 
       <% if @interface == :bdd %>
         beforeEach(function() {
