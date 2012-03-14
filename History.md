@@ -1,5 +1,8 @@
 # master
 
+* Rename `konacha:ci` and `konacha:server` task to `konacha:run` and
+  `konacha:serve`
+
 # 0.9.1
 
 * Support foo_spec.coffee files (without .js)

@@ -56,12 +56,12 @@ Or, if you prefer CoffeeScript, in `spec/javascripts/array_sum_spec.js.coffee`:
       it "returns the sum of numeric elements", ->
         [1,2,3].sum().should.equal(6)
 
-The `konacha:server` rake task starts a server for your tests. You can go to the root
+The `konacha:serve` rake task starts a server for your tests. You can go to the root
 page to run all specs (e.g. `http://localhost:3500/`), a sub page to run an individual
 spec file (e.g. `http://localhost:3500/array_sum_spec`), or a path to a subdirectory to
 run a subset of specs (e.g. `http://localhost:3500/models`).
 
-Alternatively, you can run the specs headlessly with the `konacha:ci` task.
+Alternatively, you can run the specs headlessly with the `konacha:run` task.
 
 ## Spec Helper
 
@@ -103,7 +103,7 @@ environment.
 
 The `spec_dir` option tells Konacha where to find JavaScript specs. The `interface`
 option specifies the test interface used by Mocha (see below). `driver` names a
-Capybara driver used for the CI task (try `:webkit`, after installing
+Capybara driver used for the `run` task (try `:webkit`, after installing
 [capybara-webkit](https://github.com/thoughtbot/capybara-webkit)).
 
 The values above are the defaults.
