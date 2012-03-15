@@ -1,3 +1,5 @@
+require "capybara"
+
 module Konacha
   class Runner
     def self.start
