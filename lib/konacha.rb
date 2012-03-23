@@ -7,7 +7,7 @@ module Konacha
     attr_accessor :mode
 
     def serve
-      puts "your tests are here:"
+      puts "Your tests are here:"
       puts "  http://localhost:#{port}/"
       self.mode = :server
       Konacha::Server.start
