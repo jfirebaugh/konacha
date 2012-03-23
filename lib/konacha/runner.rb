@@ -42,13 +42,6 @@ module Konacha
         runner.io
       end
 
-      def run
-        run_examples!
-        io.puts failure_messages.join("\n\n")
-        io.puts "\n#{examples.size} examples, #{failed_examples.size} failures"
-        passed?
-      end
-
       def run_examples!
         session.visit(spec.url)
 
@@ -65,18 +58,6 @@ module Konacha
         @examples = JSON.parse(session.evaluate_script('Konacha.getResults()')).map do |row|
           Example.new(row)
         end
-      end
-
-      def failed_examples
-        examples.select { |example| not example.passed? }
-      end
-
-      def passed?
-        examples.all? { |example| example.passed? }
-      end
-
-      def failure_messages
-        examples.map { |example| example.failure_message }.compact
       end
     end
 
@@ -113,7 +94,7 @@ module Konacha
     end
 
     def passed?
-      spec_runners.all? { |spec_runner| spec_runner.passed? }
+      examples.all? { |example| example.passed? }
     end
 
     def failure_messages

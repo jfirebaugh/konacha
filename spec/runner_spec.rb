@@ -25,17 +25,4 @@ describe Konacha::Runner do
       results.should match /[1-9][0-9]+ examples, 1 failure/
     end
   end
-
-  describe "#run_spec" do
-    let(:spec) { Konacha::Spec.find("failing_spec").first }
-    before { runner.spec_runner(spec).run }
-
-    it "prints results to the output" do
-      buffer.rewind
-      results = buffer.read
-      results.should include('F')
-      results.should include("expected 4 to equal 5")
-      results.should include("1 examples, 1 failures")
-    end
-  end
 end
