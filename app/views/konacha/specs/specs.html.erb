@@ -3,9 +3,9 @@
   <head>
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
     <title>Konacha Tests</title>
-    <%= stylesheet_link_tag "mocha" %>
-    <%= stylesheet_link_tag "konacha" %>
-    <%= javascript_include_tag "jquery", "mocha", "chai", "konacha/#{Konacha.mode}" %>
+    <%= stylesheet_link_tag "mocha",   :debug => false %>
+    <%= stylesheet_link_tag "konacha", :debug => false %>
+    <%= javascript_include_tag "jquery", "mocha", "chai", "konacha/#{Konacha.mode}", :debug => false %>
     <script>
       mocha.setup(<%= raw Konacha.interface.to_json %>);
       var expect = chai.expect,

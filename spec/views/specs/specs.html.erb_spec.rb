@@ -55,4 +55,16 @@ describe "konacha/specs/specs" do
 
     rendered.should have_selector("script[src='/assets/dependency.js?body=1']", :count => 1)
   end
+
+  it "renders only one script tag for dependencies of dependencies" do
+    dependency_a = asset_double("dependency_a")
+    dependency_b = asset_double("dependency_b", [dependency_a])
+
+    assign(:specs, [spec_double("a_spec", [dependency_a, dependency_b])])
+
+    render
+
+    rendered.should have_selector("script[src='/assets/dependency_a.js?body=1']", :count => 1)
+    rendered.should have_selector("script[src='/assets/dependency_b.js?body=1']", :count => 1)
+  end
 end

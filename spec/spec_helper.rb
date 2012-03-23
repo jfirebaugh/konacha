@@ -1,4 +1,7 @@
-ENV["RAILS_ENV"] = "test"
+# In a real-world app, `rake konacha:serve` and `rake konacha:run` will use
+# the development environment, so we test with the development defaults.
+# In particular, it is important to test with `config.assets.debug = true`.
+ENV["RAILS_ENV"] = "development"
 
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 require "rspec/rails"

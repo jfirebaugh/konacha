@@ -2,6 +2,7 @@
 
 * Rename `konacha:ci` and `konacha:server` task to `konacha:run` and
   `konacha:serve`
+* Really don't require spec dependencies multiple times (#3)
 
 # 0.9.1
 
