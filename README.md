@@ -14,6 +14,8 @@ It is similar to [Jasmine](https://github.com/pivotal/jasmine-gem) and
 agnostic. By sticking with Rails, Konacha can take full advantage of features such as
 the asset pipeline and engines.
 
+Photo credit: [FCartegnie](http://commons.wikimedia.org/wiki/File:Konacha.jpg), CC-BY-SA.
+
 ## Installation
 
 Add konacha to the `:test` and `:development` groups in the Gemfile and `bundle install`:
