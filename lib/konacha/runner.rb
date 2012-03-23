@@ -43,32 +43,34 @@ module Konacha
       end
 
       def run
-        io.puts dots
         io.puts failure_messages
         io.puts "\n#{examples.size} examples, #{failed_examples.size} failures"
         passed?
       end
 
       def examples
-        @results ||= begin
-          session.visit(spec.url)
+        run_examples! if @examples.nil?
+        @examples
+      end
 
-          previous_results = ""
+      def run_examples!
+        session.visit(spec.url)
 
-          session.wait_until(300) do
-            dots = session.evaluate_script('Konacha.dots')
-            io.print dots.sub(/^#{Regexp.escape(previous_results)}/, '')
-            io.flush
-            previous_results = dots
-            session.evaluate_script('Konacha.done')
-          end
+        previous_results = ""
 
+        session.wait_until(300) do
           dots = session.evaluate_script('Konacha.dots')
           io.print dots.sub(/^#{Regexp.escape(previous_results)}/, '')
+          io.flush
+          previous_results = dots
+          session.evaluate_script('Konacha.done')
+        end
 
-          JSON.parse(session.evaluate_script('Konacha.getResults()')).map do |row|
-            Example.new(row)
-          end
+        dots = session.evaluate_script('Konacha.dots')
+        io.print dots.sub(/^#{Regexp.escape(previous_results)}/, '')
+
+        @examples = JSON.parse(session.evaluate_script('Konacha.getResults()')).map do |row|
+          Example.new(row)
         end
       end
 
@@ -78,10 +80,6 @@ module Konacha
 
       def passed?
         examples.all? { |example| example.passed? }
-      end
-
-      def dots
-        examples; ""
       end
 
       def failure_messages
@@ -105,7 +103,8 @@ module Konacha
       before = Time.now
 
       io.puts ""
-      io.puts dots.to_s
+      spec_runners.each { |spec_runner| spec_runner.run_examples! }
+      io.puts ""
       io.puts ""
       if failure_messages
         io.puts failure_messages
@@ -128,10 +127,6 @@ module Konacha
 
     def passed?
       spec_runners.all? { |spec_runner| spec_runner.passed? }
-    end
-
-    def dots
-      spec_runners.map { |spec_runner| spec_runner.dots }.join
     end
 
     def failure_messages
