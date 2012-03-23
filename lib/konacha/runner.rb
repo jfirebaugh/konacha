@@ -96,8 +96,7 @@ module Konacha
     def run
       before = Time.now
 
-      io.puts ""
-      spec_runners.each { |spec_runner| spec_runner.run_examples! }
+      spec_runners.each { |spec_runner| spec_runner.run_examples! } # prints dots
       io.puts ""
       io.puts ""
       failure_messages.each { |msg| io.write("#{msg}\n\n") }
