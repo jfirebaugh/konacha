@@ -1,5 +1,7 @@
 # master
 
+* Do not time out after 300 seconds
+
 # 0.10.0
 
 * Rename `konacha:ci` and `konacha:server` task to `konacha:run` and

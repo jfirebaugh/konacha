@@ -52,18 +52,15 @@ module Konacha
       def run_examples!
         session.visit(spec.url)
 
-        previous_results = ""
-
-        session.wait_until(300) do
+        dots_printed = 0
+        begin
+          sleep 0.2
+          done = session.evaluate_script('Konacha.done')
           dots = session.evaluate_script('Konacha.dots')
-          io.print dots.sub(/^#{Regexp.escape(previous_results)}/, '')
+          io.write dots[dots_printed..-1]
           io.flush
-          previous_results = dots
-          session.evaluate_script('Konacha.done')
-        end
-
-        dots = session.evaluate_script('Konacha.dots')
-        io.print dots.sub(/^#{Regexp.escape(previous_results)}/, '')
+          dots_printed = dots.length
+        end until done
 
         @examples = JSON.parse(session.evaluate_script('Konacha.getResults()')).map do |row|
           Example.new(row)
