@@ -44,7 +44,7 @@ module Konacha
 
       def run
         run_examples!
-        io.puts failure_messages
+        io.puts failure_messages.join("\n\n")
         io.puts "\n#{examples.size} examples, #{failed_examples.size} failures"
         passed?
       end
@@ -79,9 +79,7 @@ module Konacha
       end
 
       def failure_messages
-        unless passed?
-          examples.map { |example| example.failure_message }.compact.join("\n\n")
-        end
+        examples.map { |example| example.failure_message }.compact
       end
     end
 
@@ -102,10 +100,7 @@ module Konacha
       spec_runners.each { |spec_runner| spec_runner.run_examples! }
       io.puts ""
       io.puts ""
-      if failure_messages
-        io.puts failure_messages
-        io.puts ""
-      end
+      failure_messages.each { |msg| io.write("#{msg}\n\n") }
 
       seconds = "%.2f" % (Time.now - before)
       io.puts "Finished in #{seconds} seconds"
@@ -126,9 +121,7 @@ module Konacha
     end
 
     def failure_messages
-      unless passed?
-        spec_runners.map { |spec_runner| spec_runner.failure_messages }.compact.join("\n\n")
-      end
+      examples.map { |example| example.failure_message }.compact
     end
 
     def session
