@@ -27,7 +27,7 @@ module Konacha
     end
 
     class SpecRunner
-      attr_reader :runner, :spec
+      attr_reader :runner, :spec, :examples
 
       def initialize(runner, spec)
         @runner = runner
@@ -43,14 +43,10 @@ module Konacha
       end
 
       def run
+        run_examples!
         io.puts failure_messages
         io.puts "\n#{examples.size} examples, #{failed_examples.size} failures"
         passed?
-      end
-
-      def examples
-        run_examples! if @examples.nil?
-        @examples
       end
 
       def run_examples!
