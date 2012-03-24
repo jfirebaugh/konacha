@@ -6,61 +6,6 @@ module Konacha
       new.run
     end
 
-    class Example
-      def initialize(row)
-        @row = row
-      end
-
-      def passed?
-        @row['passed']
-      end
-
-      def failure_message
-        unless passed?
-          msg = []
-          msg << "  Failed: #{@row['name']}"
-          msg << "    #{@row['message']}"
-          msg << "    in #{@row['trace']['fileName']}:#{@row['trace']['lineNumber']}" if @row['trace']
-          msg.join("\n")
-        end
-      end
-    end
-
-    class SpecRunner
-      attr_reader :runner, :spec, :examples
-
-      def initialize(runner, spec)
-        @runner = runner
-        @spec = spec
-      end
-
-      def session
-        runner.session
-      end
-
-      def io
-        runner.io
-      end
-
-      def run_examples!
-        session.visit(spec.url)
-
-        dots_printed = 0
-        begin
-          sleep 0.2
-          done = session.evaluate_script('Konacha.done')
-          dots = session.evaluate_script('Konacha.dots')
-          io.write dots[dots_printed..-1]
-          io.flush
-          dots_printed = dots.length
-        end until done
-
-        @examples = JSON.parse(session.evaluate_script('Konacha.getResults()')).map do |row|
-          Example.new(row)
-        end
-      end
-    end
-
     attr_reader :suite, :io
 
     def initialize(options = {})
@@ -109,6 +54,60 @@ module Konacha
 
     def spec_runners
       @spec_runners ||= Konacha::Spec.all.map { |spec| SpecRunner.new(self, spec) }
+    end
+  end
+
+  class SpecRunner
+    attr_reader :runner, :spec, :examples
+
+    def initialize(runner, spec)
+      @runner = runner
+      @spec = spec
+    end
+
+    def session
+      runner.session
+    end
+
+    def io
+      runner.io
+    end
+
+    def run_examples!
+      session.visit(spec.url)
+
+      dots_printed = 0
+      begin
+        sleep 0.2
+        done, dots = session.evaluate_script('[Konacha.done, Konacha.dots]')
+        io.write dots[dots_printed..-1]
+        io.flush
+        dots_printed = dots.length
+      end until done
+
+      @examples = JSON.parse(session.evaluate_script('Konacha.getResults()')).map do |row|
+        Example.new(row)
+      end
+    end
+  end
+
+  class Example
+    def initialize(row)
+      @row = row
+    end
+
+    def passed?
+      @row['passed']
+    end
+
+    def failure_message
+      unless passed?
+        msg = []
+        msg << "  Failed: #{@row['name']}"
+        msg << "    #{@row['message']}"
+        msg << "    in #{@row['trace']['fileName']}:#{@row['trace']['lineNumber']}" if @row['trace']
+        msg.join("\n")
+      end
     end
   end
 end
