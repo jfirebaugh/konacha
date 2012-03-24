@@ -63,7 +63,7 @@ page to run all specs (e.g. `http://localhost:3500/`), a sub page to run an indi
 spec file (e.g. `http://localhost:3500/array_sum_spec`), or a path to a subdirectory to
 run a subset of specs (e.g. `http://localhost:3500/models`).
 
-Alternatively, you can run the specs headlessly with the `konacha:run` task.
+Alternatively, you can run the specs in your shell with the `konacha:run` task.
 
 ## Spec Helper
 
