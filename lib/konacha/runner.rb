@@ -6,20 +6,16 @@ module Konacha
       new.run
     end
 
-    attr_reader :suite, :io
+    attr_reader :io
 
     def initialize(options = {})
       @io = options[:output] || STDOUT
     end
 
-    def spec_runner(spec)
-      SpecRunner.new(self, spec)
-    end
-
     def run
       before = Time.now
 
-      spec_runners.each { |spec_runner| spec_runner.run_examples! } # prints dots
+      spec_runners.each { |spec_runner| spec_runner.run } # prints dots
       io.puts ""
       io.puts ""
       failure_messages.each { |msg| io.write("#{msg}\n\n") }
@@ -50,8 +46,6 @@ module Konacha
       @session ||= Capybara::Session.new(Konacha.driver, Konacha.application)
     end
 
-  protected
-
     def spec_runners
       @spec_runners ||= Konacha::Spec.all.map { |spec| SpecRunner.new(self, spec) }
     end
@@ -73,12 +67,12 @@ module Konacha
       runner.io
     end
 
-    def run_examples!
+    def run
       session.visit(spec.url)
 
       dots_printed = 0
       begin
-        sleep 0.2
+        sleep 0.1
         done, dots = session.evaluate_script('[Konacha.done, Konacha.dots]')
         io.write dots[dots_printed..-1]
         io.flush
