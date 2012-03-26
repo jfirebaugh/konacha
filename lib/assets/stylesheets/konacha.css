@@ -1,6 +1,5 @@
-// Keep #konacha div visible so we can test against element visibility
+/* Keep #konacha div visible so we can test against element visibility */
 #konacha {
-  position: relative;
-  left: -9999px;
-  height: 0;
+  height: 0 ! important;
+  overflow: hidden ! important;
 }
