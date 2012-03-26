@@ -1,10 +1,10 @@
-describe "the #test element", ->
+describe "the #konacha element", ->
   it "can have content added in one test...", ->
-    $('#test').append('<h1 id="added">New Stuff</h1>')
-    $('#test h1#added').length.should.equal(1)
+    $('#konacha').append('<h1 id="added">New Stuff</h1>')
+    $('#konacha h1#added').length.should.equal(1)
 
   it "... that is removed before the next starts", ->
-    $('#test h1#added').length.should.equal(0)
+    $('#konacha h1#added').length.should.equal(0)
 
   it "is visible", ->
-    $('#test').is(':visible').should.be.true
+    $('#konacha').is(':visible').should.be.true

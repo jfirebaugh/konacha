@@ -18,11 +18,11 @@
 
       <% if Konacha.interface == :bdd %>
         beforeEach(function() {
-          document.getElementById('test').innerHTML = "";
+          document.getElementById('konacha').innerHTML = "";
         });
       <% elsif Konacha.interface == :tdd %>
         setup(function() {
-          document.getElementById('test').innerHTML = "";
+          document.getElementById('konacha').innerHTML = "";
         });
       <% end %>
     </script>
@@ -30,6 +30,6 @@
   </head>
   <body>
     <div id="mocha"></div>
-    <div id="test"></div>
+    <div id="konacha"></div>
   </body>
 </html>
