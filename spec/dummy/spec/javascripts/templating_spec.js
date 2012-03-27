@@ -1,4 +1,5 @@
 //= require spec_helper
+//= require jquery
 
 describe("templating", function(){
   it("is built in to Sprockets", function(){

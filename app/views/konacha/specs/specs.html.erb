@@ -5,7 +5,7 @@
     <title>Konacha Tests</title>
     <%= stylesheet_link_tag "mocha",   :debug => false %>
     <%= stylesheet_link_tag "konacha", :debug => false %>
-    <%= javascript_include_tag "jquery", "mocha", "chai", "konacha/#{Konacha.mode}", :debug => false %>
+    <%= javascript_include_tag "mocha", "chai", "konacha/#{Konacha.mode}", :debug => false %>
     <script>
       mocha.setup({ui: <%= raw Konacha.interface.to_json %>, reporter: Konacha.Reporter});
 

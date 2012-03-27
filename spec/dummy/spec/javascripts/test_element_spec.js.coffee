@@ -1,3 +1,5 @@
+#= require jquery
+
 describe "the #konacha element", ->
   it "can have content added in one test...", ->
     $('#konacha').append('<h1 id="added">New Stuff</h1>')

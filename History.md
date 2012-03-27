@@ -3,6 +3,7 @@
 * Do not time out after 300 seconds
 * Rename #test div to #konacha
 * Update vendored copies of mocha (1.0.0+) and chai (0.5.2+)
+* jQuery is no longer included by default
 
 # 0.10.0
 
