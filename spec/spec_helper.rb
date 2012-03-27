@@ -19,3 +19,16 @@ Capybara.configure do |config|
   config.default_driver   = :selenium_with_firebug
   config.app              = Konacha.application
 end
+
+module Konacha
+  module RequestSpec
+    def app
+      # Override the RSpec default of `Rails.application`.
+      Konacha.application
+    end
+  end
+end
+
+RSpec.configure do |config|
+  config.include Konacha::RequestSpec, :type => :request
+end

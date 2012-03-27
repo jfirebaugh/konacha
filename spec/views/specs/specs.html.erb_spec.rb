@@ -1,12 +1,6 @@
 require 'spec_helper'
 
 describe "konacha/specs/specs" do
-  it "sets up the specified interface" do
-    Konacha.should_receive(:interface).any_number_of_times { :tdd }
-    render
-    rendered.should include('mocha.setup("tdd")')
-  end
-
   it "includes konacha JS for given mode" do
     Konacha.should_receive(:mode).any_number_of_times { :runner }
     render

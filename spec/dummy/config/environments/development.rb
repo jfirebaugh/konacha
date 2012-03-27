@@ -24,4 +24,7 @@ Dummy::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+
+  config.assets.paths.concat([Rails.root.join("spec/tdd"),
+                              Rails.root.join("spec/qunit")])
 end

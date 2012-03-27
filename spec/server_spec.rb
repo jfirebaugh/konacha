@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe Konacha::Server, :type => :request do
-  def app
-    Konacha.application
-  end
-
   before do
     Konacha.mode = :server
   end

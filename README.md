@@ -117,12 +117,14 @@ assertion libraries.
 
 By default, it will assume that you want to use Mocha's "BDD" test interface, which
 provides `describe()`, `it()`, `before()`, `after()`, `beforeEach()`, and `afterEach()`.
-If you want to use the TDD, Exports, or QUnit interfaces instead, set the `interface`
+If you want to use the TDD or QUnit interfaces instead, set the `interface`
 configuration option in an initializer:
 
     Konacha.configure do |config|
-      config.interface = :tdd # Or :exports or :qunit
+      config.interface = :tdd # Or :qunit
     end if defined?(Konacha)
+
+Mocha's 'exports' interface is not supported.
 
 Konacha will make all three of chai's assertion styles available to you: `expect`,
 `should`, and `assert`. See the chai documentation for the details.

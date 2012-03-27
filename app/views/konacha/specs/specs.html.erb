@@ -7,13 +7,14 @@
     <%= stylesheet_link_tag "konacha", :debug => false %>
     <%= javascript_include_tag "jquery", "mocha", "chai", "konacha/#{Konacha.mode}", :debug => false %>
     <script>
-      mocha.setup(<%= raw Konacha.interface.to_json %>);
+      mocha.setup({ui: <%= raw Konacha.interface.to_json %>, reporter: Konacha.Reporter});
+
       var expect = chai.expect,
           should = chai.should(),
           assert = chai.assert;
 
       window.onload = function () {
-        mocha.run(Konacha.Reporter);
+        mocha.run();
       };
 
       <% if Konacha.interface == :bdd %>
