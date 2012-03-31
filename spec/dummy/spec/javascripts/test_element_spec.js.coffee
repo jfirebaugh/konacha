@@ -8,5 +8,11 @@ describe "the #konacha element", ->
   it "... that is removed before the next starts", ->
     $('#konacha h1#added').length.should.equal(0)
 
+  it "can have an attribute added in one test...", ->
+    $('#konacha').addClass('test')
+
+  it "... that is removed before the next starts", ->
+    $('#konacha').hasClass('test').should.be.false;
+
   it "is visible", ->
     $('#konacha').is(':visible').should.be.true

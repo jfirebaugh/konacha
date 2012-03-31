@@ -7,7 +7,29 @@
     <%= stylesheet_link_tag "konacha", :debug => false %>
     <%= javascript_include_tag "mocha", "chai", "konacha/#{Konacha.mode}", :debug => false %>
     <script>
-      mocha.setup({ui: <%= raw Konacha.interface.to_json %>, reporter: Konacha.Reporter});
+      (function () {
+        var ui = <%= raw Konacha.interface.to_json %>;
+
+        mocha.setup({ui: ui, reporter: Konacha.Reporter});
+
+        var reset = function () {
+          var e = document.getElementById('konacha'),
+              p = e.parentNode;
+
+          p.removeChild(e);
+
+          e = document.createElement("div");
+          e.id = "konacha";
+
+          p.appendChild(e);
+        };
+
+        if (ui == "bdd") {
+          beforeEach(reset);
+        } else if (ui == "tdd") {
+          setup(reset);
+        }
+      })();
 
       var expect = chai.expect,
           should = chai.should(),
@@ -16,16 +38,6 @@
       window.onload = function () {
         mocha.run();
       };
-
-      <% if Konacha.interface == :bdd %>
-        beforeEach(function() {
-          document.getElementById('konacha').innerHTML = "";
-        });
-      <% elsif Konacha.interface == :tdd %>
-        setup(function() {
-          document.getElementById('konacha').innerHTML = "";
-        });
-      <% end %>
     </script>
     <%= spec_include_tag *@specs %>
   </head>
