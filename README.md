@@ -96,15 +96,13 @@ Konacha can be configured in an initializer, e.g. `config/initializers/konacha.r
 
     Konacha.configure do |config|
       config.spec_dir  = "spec/javascripts"
-      config.interface = :bdd
       config.driver    = :selenium
     end if defined?(Konacha)
 
 The `defined?` check is necessary to avoid a dependency on Konacha in the production
 environment.
 
-The `spec_dir` option tells Konacha where to find JavaScript specs. The `interface`
-option specifies the test interface used by Mocha (see below). `driver` names a
+The `spec_dir` option tells Konacha where to find JavaScript specs. `driver` names a
 Capybara driver used for the `run` task (try `:webkit`, after installing
 [capybara-webkit](https://github.com/thoughtbot/capybara-webkit)).
 
@@ -113,18 +111,8 @@ The values above are the defaults.
 ## Test Interface and Assertions
 
 Konacha includes a vendored copy of mocha.js and the [chai](http://chaijs.com/)
-assertion libraries.
-
-By default, it will assume that you want to use Mocha's "BDD" test interface, which
+assertion libraries. It configures Mocha to use the "BDD" test interface, which
 provides `describe()`, `it()`, `before()`, `after()`, `beforeEach()`, and `afterEach()`.
-If you want to use the TDD or QUnit interfaces instead, set the `interface`
-configuration option in an initializer:
-
-    Konacha.configure do |config|
-      config.interface = :tdd # Or :qunit
-    end if defined?(Konacha)
-
-Mocha's 'exports' interface is not supported.
 
 Konacha will make all three of chai's assertion styles available to you: `expect`,
 `should`, and `assert`. See the chai documentation for the details.
@@ -147,9 +135,6 @@ to the page body and instead append it to this test div:
 
       it "... should have been removed before the next starts", ->
         $('#test h1#added').length.should.equal(0)
-
-Note: this functionality is available only for the "BDD" (default) and "TDD" mocha interfaces,
-and not for the "exports" or "QUnit" interfaces.
 
 ## Templates / Fixtures
 

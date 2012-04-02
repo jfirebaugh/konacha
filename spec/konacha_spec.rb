@@ -4,12 +4,6 @@ describe Konacha do
   describe ".config" do
     subject { Konacha.config }
 
-    describe ".interface" do
-      it "defaults to :bdd interface" do
-        subject.interface.should == :bdd
-      end
-    end
-
     describe ".spec_dir" do
       it "defaults to 'spec/javascripts'" do
         subject.spec_dir.should == "spec/javascripts"

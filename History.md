@@ -5,6 +5,8 @@
 * Update vendored copies of mocha (1.0.0+) and chai (0.5.2+)
 * jQuery is no longer included by default
 * Fully remove and replace the #konacha element (#23)
+* Remove the `interface` configuration option. A future version will support
+  all Mocha configuration options, but configuration will be done in JS, not Ruby.
 
 # 0.10.0
 

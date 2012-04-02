@@ -7,29 +7,19 @@
     <%= stylesheet_link_tag "konacha", :debug => false %>
     <%= javascript_include_tag "mocha", "chai", "konacha/#{Konacha.mode}", :debug => false %>
     <script>
-      (function () {
-        var ui = <%= raw Konacha.interface.to_json %>;
+      mocha.setup({ui: "bdd", reporter: Konacha.Reporter});
 
-        mocha.setup({ui: ui, reporter: Konacha.Reporter});
+      beforeEach(function () {
+        var e = document.getElementById('konacha'),
+            p = e.parentNode;
 
-        var reset = function () {
-          var e = document.getElementById('konacha'),
-              p = e.parentNode;
+        p.removeChild(e);
 
-          p.removeChild(e);
+        e = document.createElement("div");
+        e.id = "konacha";
 
-          e = document.createElement("div");
-          e.id = "konacha";
-
-          p.appendChild(e);
-        };
-
-        if (ui == "bdd") {
-          beforeEach(reset);
-        } else if (ui == "tdd") {
-          setup(reset);
-        }
-      })();
+        p.appendChild(e);
+      });
 
       var expect = chai.expect,
           should = chai.should(),
