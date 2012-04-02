@@ -1,6 +1,6 @@
 # master
 
-# 1.0.0-rc1
+# 1.0.0
 
 * Do not time out after 300 seconds
 * Rename #test div to #konacha
