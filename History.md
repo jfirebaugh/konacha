@@ -1,5 +1,7 @@
 # master
 
+# 1.0.0-rc1
+
 * Do not time out after 300 seconds
 * Rename #test div to #konacha
 * Update vendored copies of mocha (1.0.0+) and chai (0.5.2+)
