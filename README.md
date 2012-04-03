@@ -124,17 +124,17 @@ for some jQuery-specific assertions.
 
 One problem often faced when writing unit tests for client side code is that changes
 to the page are not reverted for the next example, so that successive examples become
-dependent on each other. Konacha adds a special div to your page with an id of `test`.
+dependent on each other. Konacha adds a special div to your page with an id of `konacha`.
 This div is automatically emptied before each example. You should avoid appending markup
 to the page body and instead append it to this test div:
 
     describe "transactions", ->
       it "should add stuff in one test...", ->
-        $('#test').append('<h1 id="added">New Stuff</h1>')
-        $('#test h1#added').length.should.equal(1)
+        $('#konacha').append('<h1 id="added">New Stuff</h1>')
+        $('#konacha h1#added').length.should.equal(1)
 
       it "... should have been removed before the next starts", ->
-        $('#test h1#added').length.should.equal(0)
+        $('#konacha h1#added').length.should.equal(0)
 
 ## Templates / Fixtures
 
