@@ -126,7 +126,7 @@ One problem often faced when writing unit tests for client side code is that cha
 to the page are not reverted for the next example, so that successive examples become
 dependent on each other. Konacha adds a special div to your page with an id of `konacha`.
 This div is automatically emptied before each example. You should avoid appending markup
-to the page body and instead append it to this test div:
+to the page body and instead append it to the `#konacha` div:
 
     describe "transactions", ->
       it "should add stuff in one test...", ->
@@ -141,7 +141,7 @@ to the page body and instead append it to this test div:
 Konacha has no template (a.k.a. HTML fixture) support of its own. Instead, we suggest you use
 Sprocket's built in support for JavaScript template (`.jst`) files. Add a `spec/javascripts/templates`
 directory, place template files there (using any JS template language supported by Sprockets),
-require them in your spec or spec_helper, and render them into the `#test` div.
+require them in your spec or spec_helper, and render them into the `#konacha` div.
 
 For example, in `spec/javascripts/templates/hello.jst.ejs`:
 
@@ -157,8 +157,8 @@ And your spec:
 
     describe("templating", function(){
       it("is built in to Sprockets", function(){
-        $('#test').html(JST['templates/hello']());
-        $('#test h1').text().should.equal('Hello Konacha!');
+        $('#konacha').html(JST['templates/hello']());
+        $('#konacha h1').text().should.equal('Hello Konacha!');
       });
     });
 
