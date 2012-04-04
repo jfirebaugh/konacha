@@ -2,6 +2,8 @@ module Konacha
   class Engine < Rails::Engine
     config.konacha = ActiveSupport::OrderedOptions.new
 
+    isolate_namespace Konacha
+
     def self.application(app)
       Rack::Builder.app do
         map app.config.assets.prefix do
@@ -27,6 +29,14 @@ module Konacha
       options.driver      ||= :selenium
 
       app.config.assets.paths << app.root.join(options.spec_dir).to_s
+    end
+
+    initializer "konacha.engine.mount" do
+      config.after_initialize do
+        ::Rails.application.routes.prepend do
+          mount ::Konacha::Engine => "/konacha"
+        end
+      end
     end
   end
 end

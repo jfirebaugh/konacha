@@ -6,6 +6,11 @@ module Konacha
   class << self
     attr_accessor :mode
 
+    def mode
+      # defaults to :server
+      @mode ||= :server
+    end
+
     def serve
       puts "Your tests are here:"
       puts "  http://localhost:#{port}/"
