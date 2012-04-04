@@ -2,6 +2,8 @@ module Konacha
   class Engine < Rails::Engine
     config.konacha = ActiveSupport::OrderedOptions.new
 
+    isolate_namespace Konacha
+
     def self.application(app)
       Rack::Builder.app do
         map app.config.assets.prefix do
