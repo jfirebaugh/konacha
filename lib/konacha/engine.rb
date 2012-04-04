@@ -30,5 +30,13 @@ module Konacha
 
       app.config.assets.paths << app.root.join(options.spec_dir).to_s
     end
+
+    initializer "konacha.engine.mount" do
+      config.after_initialize do
+        ::Rails.application.routes.prepend do
+          mount ::Konacha::Engine => "/konacha"
+        end
+      end
+    end
   end
 end
