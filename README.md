@@ -95,16 +95,17 @@ search through a many thousand line application.js bundle to debug a spec failur
 Konacha can be configured in an initializer, e.g. `config/initializers/konacha.rb`:
 
     Konacha.configure do |config|
-      config.spec_dir  = "spec/javascripts"
-      config.driver    = :selenium
+      config.spec_dir     = "spec/javascripts"
+      config.ignore_leaks = false
+      config.driver       = :selenium
     end if defined?(Konacha)
 
 The `defined?` check is necessary to avoid a dependency on Konacha in the production
 environment.
 
-The `spec_dir` option tells Konacha where to find JavaScript specs. `driver` names a
-Capybara driver used for the `run` task (try `:webkit`, after installing
-[capybara-webkit](https://github.com/thoughtbot/capybara-webkit)).
+The `spec_dir` option tells Konacha where to find JavaScript specs. `ignore_leaks` instructs 
+mocha to ignore leaked global variables.  `driver` names a Capybara driver used for the 
+`run` task (try `:webkit`, after installing [capybara-webkit](https://github.com/thoughtbot/capybara-webkit)).
 
 The values above are the defaults.
 

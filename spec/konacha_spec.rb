@@ -9,6 +9,16 @@ describe Konacha do
         subject.spec_dir.should == "spec/javascripts"
       end
     end
+
+    describe "exposed mocha.js configuration" do
+
+      describe ".ignore_leaks" do
+        it 'defaults to false' do
+          subject.ignore_leaks.should be_false
+        end
+      end
+
+    end
   end
 
   describe ".spec_paths" do
