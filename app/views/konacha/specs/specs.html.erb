@@ -7,7 +7,7 @@
     <%= stylesheet_link_tag "konacha", :debug => false %>
     <%= javascript_include_tag "mocha", "chai", "konacha/#{Konacha.mode}", :debug => false %>
     <script>
-      mocha.setup({ui: "bdd", reporter: Konacha.Reporter});
+      mocha.setup({ui: 'bdd', reporter: Konacha.Reporter, ignoreLeaks: <%= Konacha.config.ignore_leaks %>});
 
       beforeEach(function () {
         var e = document.getElementById('konacha'),
