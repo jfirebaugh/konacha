@@ -6,8 +6,9 @@
     <%= stylesheet_link_tag "mocha",   :debug => false %>
     <%= stylesheet_link_tag "konacha", :debug => false %>
     <%= javascript_include_tag "mocha", "chai", "konacha/#{Konacha.mode}", :debug => false %>
+    <%= javascript_include_tag("konacha_config", :debug => false) if Rails.application.assets.find_asset('konacha_config') %>
     <script>
-      mocha.setup({ui: "bdd", reporter: Konacha.Reporter});
+      mocha.setup(Konacha.mochaOptions);
 
       beforeEach(function () {
         var e = document.getElementById('konacha'),
