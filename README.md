@@ -108,19 +108,12 @@ Capybara driver used for the `run` task (try `:webkit`, after installing
 
 The values above are the defaults.
 
-### Customizing mocha.js options
+### Mocha Configuration
 
-Konacha provides the ability to customize configuration for mocha.js.   
-The options provided will be passed into `mocha.setup(..)`.
-As of time of this writing, `ignoreLeaks`, `globals`, and `timeout` 
-are supported.  
+You can customize the Mocha options passed into `mocha.setup(..)` by creating a file
+named `konacha_config.js` or `konacha_config.js.coffee` in `spec/javascripts` and
+setting properties of `Konacha.mochaOptions`:
 
-WARNING: `ui` is also supported, but Konacha requires it be set to `bdd`.  
-
-To use this configuration create a file called `konacha_config.js` or 
-`konacha_config.js.coffee` in `spec/javascripts`.   It will be auto-required by 
-the runner if it exists.
-    
     // ignore the following globals during leak detection
     Konacha.mochaOptions.globals = ['YUI'];
 
@@ -129,6 +122,8 @@ the runner if it exists.
 
     // set slow test timeout in ms
     Konacha.mochaOptions.timeout = 5;
+
+The `ui` and `reporter` Mocha options are set by Konacha and must not be modified.
 
 ## Test Interface and Assertions
 

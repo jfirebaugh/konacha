@@ -1,5 +1,7 @@
 # master
 
+* Provided the ability to set mocha options via JS
+
 # 1.0.0
 
 * Do not time out after 300 seconds
