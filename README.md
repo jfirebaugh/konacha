@@ -179,6 +179,35 @@ And your spec:
       });
     });
 
+## Contributing
+
+```bash
+git clone git://github.com/jfirebaugh/konacha.git
+git submodule update --init
+```
+
+Run `bundle exec rake` to run the test suite.
+
+### Contributing to Mocha and Chai
+
+The Konacha repository includes the
+[Mocha](https://github.com/visionmedia/mocha) and
+[Chai](https://github.com/logicalparadox/chai) repositories as submodules, so
+you can hack on them directly:
+
+```bash
+cd mocha # or: cd chai
+git checkout master
+... hack-hack-hack ...
+bundle exec rake generate # make and cp assets based on your changes
+```
+
+Assuming your app's Gemfile points at your Konacha checkout (`gem 'konacha',
+:path => '~/path/to/konacha'`), your changes to Mocha and Chai are live in
+localhost:3500 when you refresh your browser.
+
+You can send pull requests to Mocha and Chai straight out of your submodules.
+
 ## License
 
 Copyright (c) 2012 John Firebaugh
