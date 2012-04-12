@@ -20,9 +20,11 @@ Photo credit: [FCartegnie](http://commons.wikimedia.org/wiki/File:Konacha.jpg), 
 
 Add konacha to the `:test` and `:development` groups in the Gemfile and `bundle install`:
 
-    group :test, :development do
-      gem "konacha"
-    end
+```ruby
+group :test, :development do
+  gem "konacha"
+end
+```
 
 ## Usage
 
@@ -35,28 +37,32 @@ For example, suppose you wanted to test your cool JavaScript `Array#sum` method,
 you placed in `app/assets/javascripts/array_sum.js`. Write the specs in JavaScript in
 the file `spec/javascripts/array_sum_spec.js`:
 
-    //= require array_sum
+```javascript
+//= require array_sum
 
-    describe("Array#sum", function(){
-      it("returns 0 when the Array is empty", function(){
-        [].sum().should.equal(0);
-      });
+describe("Array#sum", function() {
+  it("returns 0 when the Array is empty", function() {
+    [].sum().should.equal(0);
+  });
 
-      it("returns the sum of numeric elements", function(){
-        [1,2,3].sum().should.equal(6);
-      });
-    });
+  it("returns the sum of numeric elements", function() {
+    [1,2,3].sum().should.equal(6);
+  });
+});
+```
 
 Or, if you prefer CoffeeScript, in `spec/javascripts/array_sum_spec.js.coffee`:
 
-    #= require array_sum
+```coffeescript
+#= require array_sum
 
-    describe "Array#sum", ->
-      it "returns 0 when the Array is empty", ->
-        [].sum().should.equal(0)
+describe "Array#sum", ->
+  it "returns 0 when the Array is empty", ->
+    [].sum().should.equal(0)
 
-      it "returns the sum of numeric elements", ->
-        [1,2,3].sum().should.equal(6)
+  it "returns the sum of numeric elements", ->
+    [1,2,3].sum().should.equal(6)
+```
 
 The `konacha:serve` rake task starts a server for your tests. You can go to the root
 page to run all specs (e.g. `http://localhost:3500/`), a sub page to run an individual
@@ -71,12 +77,14 @@ Since Konacha integrates with the asset pipeline, using setup helpers in your sp
 easy. Just create a `spec_helper.js` or `spec_helper.js.coffee` file in `specs/javascripts`
 and require it in your tests:
 
-    //= require spec_helper
-    //= require array_sum
+```javascript
+//= require spec_helper
+//= require array_sum
 
-    describe("Array#sum", function(){
-      ...
-    });
+describe("Array#sum", function() {
+  ...
+});
+```
 
 ## Directives and Asset Bundling
 
@@ -94,10 +102,12 @@ search through a many thousand line application.js bundle to debug a spec failur
 
 Konacha can be configured in an initializer, e.g. `config/initializers/konacha.rb`:
 
-    Konacha.configure do |config|
-      config.spec_dir  = "spec/javascripts"
-      config.driver    = :selenium
-    end if defined?(Konacha)
+```ruby
+Konacha.configure do |config|
+  config.spec_dir  = "spec/javascripts"
+  config.driver    = :selenium
+end if defined?(Konacha)
+```
 
 The `defined?` check is necessary to avoid a dependency on Konacha in the production
 environment.
@@ -114,14 +124,16 @@ You can customize the Mocha options passed into `mocha.setup(..)` by creating a 
 named `konacha_config.js` or `konacha_config.js.coffee` in `spec/javascripts` and
 setting properties of `Konacha.mochaOptions`:
 
-    // ignore the following globals during leak detection
-    Konacha.mochaOptions.globals = ['YUI'];
+```javascript
+// ignore the following globals during leak detection
+Konacha.mochaOptions.globals = ['YUI'];
 
-    // or, ignore all leaks
-    Konacha.mochaOptions.ignoreLeaks = true;
+// or, ignore all leaks
+Konacha.mochaOptions.ignoreLeaks = true;
 
-    // set slow test timeout in ms
-    Konacha.mochaOptions.timeout = 5;
+// set slow test timeout in ms
+Konacha.mochaOptions.timeout = 5;
+```
 
 The `ui` and `reporter` Mocha options are set by Konacha and must not be modified.
 
@@ -145,13 +157,15 @@ dependent on each other. Konacha adds a special div to your page with an id of `
 This div is automatically emptied before each example. You should avoid appending markup
 to the page body and instead append it to the `#konacha` div:
 
-    describe "transactions", ->
-      it "should add stuff in one test...", ->
-        $('#konacha').append('<h1 id="added">New Stuff</h1>')
-        $('#konacha h1#added').length.should.equal(1)
+```coffeescript
+describe "transactions", ->
+  it "should add stuff in one test...", ->
+    $('#konacha').append('<h1 id="added">New Stuff</h1>')
+    $('#konacha h1#added').length.should.equal(1)
 
-      it "... should have been removed before the next starts", ->
-        $('#konacha h1#added').length.should.equal(0)
+  it "... should have been removed before the next starts", ->
+    $('#konacha h1#added').length.should.equal(0)
+```
 
 ## Templates / Fixtures
 
@@ -162,22 +176,28 @@ require them in your spec or spec_helper, and render them into the `#konacha` di
 
 For example, in `spec/javascripts/templates/hello.jst.ejs`:
 
-    <h1>Hello Konacha!</h1>
+```html
+<h1>Hello Konacha!</h1>
+```
 
 In `spec_helper.js`:
 
-    //= require_tree ./templates
+```javascript
+//= require_tree ./templates
+```
 
 And your spec:
 
-    //= require spec_helper
+```javascript
+//= require spec_helper
 
-    describe("templating", function(){
-      it("is built in to Sprockets", function(){
-        $('#konacha').html(JST['templates/hello']());
-        $('#konacha h1').text().should.equal('Hello Konacha!');
-      });
-    });
+describe("templating", function() {
+  it("is built in to Sprockets", function() {
+    $('#konacha').html(JST['templates/hello']());
+    $('#konacha h1').text().should.equal('Hello Konacha!');
+  });
+});
+```
 
 ## Contributing
 
