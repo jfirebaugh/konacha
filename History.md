@@ -1,5 +1,7 @@
 # master
 
+# 1.1.0
+
 * Provided the ability to set mocha options via JS
 
 # 1.0.0
