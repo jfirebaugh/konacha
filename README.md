@@ -183,7 +183,6 @@ And your spec:
 
 ```bash
 git clone git://github.com/jfirebaugh/konacha.git
-git submodule update --init
 ```
 
 Run `bundle exec rake` to run the test suite.
@@ -199,7 +198,7 @@ you can hack on them directly:
 cd mocha # or: cd chai
 git checkout master
 ... hack-hack-hack ...
-bundle exec rake generate # make and cp assets based on your changes
+bundle exec rake assets # make and cp assets based on your changes
 ```
 
 Assuming your app's Gemfile points at your Konacha checkout (`gem 'konacha',
