@@ -1,5 +1,7 @@
 # master
 
+* 1.8.7 compatibility
+
 # 1.1.0
 
 * Provided the ability to set mocha options via JS

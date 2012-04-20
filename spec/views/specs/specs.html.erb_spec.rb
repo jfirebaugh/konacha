@@ -2,8 +2,11 @@ require 'spec_helper'
 
 describe "konacha/specs/specs" do
   it "includes konacha JS for given mode" do
+    assign(:specs, [])
     Konacha.should_receive(:mode).any_number_of_times { :runner }
+
     render
+
     rendered.should have_css("script[src='/assets/konacha/runner.js']")
   end
 
