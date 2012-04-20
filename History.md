@@ -1,5 +1,7 @@
 # master
 
+# 1.1.1
+
 * 1.8.7 compatibility
 
 # 1.1.0
