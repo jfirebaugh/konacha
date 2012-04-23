@@ -1,5 +1,7 @@
 # master
 
+Fix asset deduplication on sprockets < 2.1
+
 # 1.1.1
 
 * 1.8.7 compatibility
