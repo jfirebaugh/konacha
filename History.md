@@ -1,5 +1,7 @@
 # master
 
+# 1.1.2
+
 Fix asset deduplication on sprockets < 2.1
 
 # 1.1.1
