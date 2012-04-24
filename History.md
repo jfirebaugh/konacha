@@ -1,5 +1,7 @@
 # master
 
+Update mocha (1.0.1) and chai (0.5.3)
+
 # 1.1.2
 
 Fix asset deduplication on sprockets < 2.1
