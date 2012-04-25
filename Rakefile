@@ -17,4 +17,6 @@ task :assets do
   cp 'chai/chai.js',    'vendor/assets/javascripts/'
 end
 
+task :build => :assets
+
 task :default => :spec
