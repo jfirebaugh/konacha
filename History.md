@@ -1,5 +1,7 @@
 # master
 
+* Update to mocha 1.0.2
+
 # 1.1.3
 
 Update mocha (1.0.1) and chai (0.5.3)
