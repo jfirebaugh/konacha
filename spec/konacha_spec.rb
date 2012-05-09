@@ -26,6 +26,10 @@ describe Konacha do
     it "does not include spec_helper" do
       subject.should_not include("spec_helper.js")
     end
+
+    it "includes *_test.* files" do
+      subject.should include("file_ending_in_test.js")
+    end
   end
 
   it "can be configured in an initializer" do
