@@ -31,9 +31,10 @@ end
 
 ## Usage
 
-Create a `spec/javascripts` directory and name the files in it with a `_spec` suffix.
-You can write the specs in either JavaScript or CoffeeScript, using a `.js` or
-`.js.coffee` extension respectively, like you would any other script asset.
+Create a `spec/javascripts` directory and name the files in it with a `_spec`
+(or `_test`) suffix. You can write the specs in either JavaScript or
+CoffeeScript, using a `.js` or `.js.coffee` extension respectively, like you
+would any other script asset.
 
 Require the assets under test and any other dependencies using Sprockets directives.
 For example, suppose you wanted to test your cool JavaScript `Array#sum` method, which
