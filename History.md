@@ -1,7 +1,8 @@
 # master
 
-* Update mocha (1.0.3) and chai (1.0.0-rc1)
+* Update mocha (1.0.3) and chai (1.0.0-rc3)
 * Find files ending in `_test.*` as well as `_spec.*`
+* Fix vendor files for adding konacha through git with bundler
 
 # 1.1.3
 
