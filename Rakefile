@@ -8,8 +8,8 @@ RSpec::Core::RakeTask.new :spec
 desc 'Build and copy Mocha and Chai assets from submodules into vendor/assets'
 task :assets do
   sh 'git submodule update --init' unless File.exist?('mocha/Makefile') || File.exist?('chai/Makefile')
-  sh 'cd mocha && make -s'
-  sh 'cd chai && make -s'
+  sh 'cd mocha && make clean && make'
+  sh 'cd chai && make clean && make'
   mkdir_p 'vendor/assets/javascripts'
   mkdir_p 'vendor/assets/stylesheets'
   cp 'mocha/mocha.js',  'vendor/assets/javascripts/'
