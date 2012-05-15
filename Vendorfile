@@ -1,5 +1,0 @@
-folder 'vendor/assets' do
-  file 'javascripts/chai.js',   'https://raw.github.com/chaijs/chai/master/chai.js'
-  file 'javascripts/mocha.js',  'https://raw.github.com/visionmedia/mocha/master/mocha.js'
-  file 'stylesheets/mocha.css', 'https://raw.github.com/visionmedia/mocha/master/mocha.css'
-end
