@@ -13,10 +13,7 @@ the asset pipeline and engines.}
   gem.homepage      = "http://github.com/jfirebaugh/konacha"
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-  gem.files         = `git ls-files`.split("\n") + \
-      ['vendor/assets/javascripts/mocha.js',
-       'vendor/assets/stylesheets/mocha.css',
-       'vendor/assets/javascripts/chai.js']
+  gem.files         = `git ls-files`.split("\n")
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.name          = "konacha"
   gem.require_paths = ["lib"]
