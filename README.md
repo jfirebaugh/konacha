@@ -215,7 +215,7 @@ Run `bundle exec rake` to run the test suite.
 
 The Konacha repository includes the
 [Mocha](https://github.com/visionmedia/mocha) and
-[Chai](https://github.com/logicalparadox/chai) repositories as submodules, so
+[Chai](https://github.com/chaijs/chai) repositories as submodules, so
 you can hack on them directly:
 
 ```bash
