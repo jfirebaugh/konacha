@@ -74,9 +74,11 @@ module Konacha
       begin
         sleep 0.1
         done, dots = session.evaluate_script('[Konacha.done, Konacha.dots]')
-        io.write dots[dots_printed..-1]
-        io.flush
-        dots_printed = dots.length
+        if dots
+          io.write dots[dots_printed..-1]
+          io.flush
+          dots_printed = dots.length
+        end
       end until done
 
       @examples = JSON.parse(session.evaluate_script('Konacha.getResults()')).map do |row|
