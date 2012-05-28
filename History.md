@@ -1,5 +1,7 @@
 # master
 
+* Update chai (1.0.3)
+
 # 1.2.1
 
 * Update chai (1.0.1)
