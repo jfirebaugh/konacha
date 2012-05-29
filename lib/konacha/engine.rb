@@ -4,6 +4,8 @@ module Konacha
 
     def self.application(app)
       Rack::Builder.app do
+        use Rack::ShowExceptions
+
         map app.config.assets.prefix do
           run app.assets
         end
