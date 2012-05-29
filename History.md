@@ -1,5 +1,7 @@
 # master
 
+# 1.2.2
+
 * Update chai (1.0.3)
 * Improve compatibility with WebKit driver
 * Improve error reporting
