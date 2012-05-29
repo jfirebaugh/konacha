@@ -1,6 +1,7 @@
 # master
 
 * Update chai (1.0.3)
+* Improve error reporting
 
 # 1.2.1
 
