@@ -84,6 +84,8 @@ module Konacha
       @examples = JSON.parse(session.evaluate_script('Konacha.getResults()')).map do |row|
         Example.new(row)
       end
+    rescue => e
+      raise Konacha::Error, "Error communicating with browser process: #{e.inspect}"
     end
   end
 
@@ -105,5 +107,8 @@ module Konacha
         msg.join("\n")
       end
     end
+  end
+
+  class Error < StandardError
   end
 end
