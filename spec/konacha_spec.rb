@@ -23,6 +23,26 @@ describe Konacha do
       subject.should include("subdirectory/subdirectory_spec.js")
     end
 
+    it "traverses symlinked directories" do
+      begin
+        # Create a directory with specs outside of 'spec/javascripts'.
+        Dir.mkdir "spec/dummy/app/external_specs"
+        File.new "spec/dummy/app/external_specs/my_spec.js", "w"
+
+        # Symlink it into 'spec/javascripts'.
+        File.symlink "../../app/external_specs/", "spec/dummy/spec/javascripts/external_specs"
+
+        subject.should include("external_specs/my_spec.js")
+
+        File.unlink "spec/dummy/spec/javascripts/external_specs"
+      rescue NotImplementedError
+        # Don't test this on platforms that don't support symlinking.
+      end
+
+      File.unlink "spec/dummy/app/external_specs/my_spec.js"
+      Dir.unlink "spec/dummy/app/external_specs"
+    end
+
     it "does not include spec_helper" do
       subject.should_not include("spec_helper.js")
     end
