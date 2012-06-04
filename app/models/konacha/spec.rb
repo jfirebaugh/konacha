@@ -4,7 +4,11 @@ module Konacha
     end
 
     def self.all
-      Konacha.spec_paths.map { |path| new(path) }
+      paths = Konacha.spec_paths
+      if ENV["SPEC"]
+        paths =  ENV["SPEC"].split(",")
+      end
+      paths.map {|path| new(path)}
     end
 
     def self.find(path)
