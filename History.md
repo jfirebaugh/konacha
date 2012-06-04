@@ -1,6 +1,7 @@
 # master
 
 * Update mocha (1.1.0) and chai (1.0.4)
+* Traverse symlinked directories when discovering specs
 
 # 1.2.2
 
