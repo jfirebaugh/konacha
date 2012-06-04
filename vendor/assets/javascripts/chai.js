@@ -305,11 +305,11 @@ Assertion.addChainableMethod('a', an);
  * @api public
  */
 
-function includeChainingBehavior() {
+function includeChainingBehavior () {
   flag(this, 'contains', true);
 }
 
-function include(val) {
+function include (val) {
   var obj = flag(this, 'object')
   this.assert(
       ~obj.indexOf(val)
@@ -527,24 +527,22 @@ Object.defineProperty(Assertion.prototype, 'empty',
  *     }
  *
  * @name arguments
+ * @alias Arguments
  * @api public
  */
 
-Object.defineProperty(Assertion.prototype, 'arguments',
-  { get: function () {
-      var obj = flag(this, 'object');
-      this.assert(
-          '[object Arguments]' == Object.prototype.toString.call(obj)
-        , 'expected #{this} to be arguments'
-        , 'expected #{this} to not be arguments'
-        , '[object Arguments]'
-        , Object.prototype.toString.call(obj)
-      );
+function checkArguments () {
+  var obj = flag(this, 'object')
+    , type = Object.prototype.toString.call(obj);
+  this.assert(
+      '[object Arguments]' === type
+    , 'expected #{this} to be arguments but got ' + type
+    , 'expected #{this} to not be arguments'
+  );
+}
 
-      return this;
-    }
-  , configurable: true
-});
+Assertion.addProperty('arguments', checkArguments);
+Assertion.addProperty('Arguments', checkArguments);
 
 /**
  * ### .equal(value)
@@ -1042,8 +1040,15 @@ Assertion.prototype.Throw = function (constructor, msg) {
  *
  * Asserts that the object or class target will respond to a method.
  *
+ *     Klass.prototype.bar = function(){};
  *     expect(Klass).to.respondTo('bar');
  *     expect(obj).to.respondTo('bar');
+ *
+ * To check if a constructor will respond to a static function,
+ * set the `itself` flag.
+ *
+ *    Klass.baz = function(){};
+ *    expect(Klass).itself.to.respondTo('baz');
  *
  * @name respondTo
  * @param {String} method
@@ -1052,7 +1057,8 @@ Assertion.prototype.Throw = function (constructor, msg) {
 
 Assertion.prototype.respondTo = function (method) {
   var obj = flag(this, 'object')
-    , context = ('function' === typeof obj)
+    , itself = flag(this, 'itself')
+    , context = ('function' === typeof obj && !itself)
       ? obj.prototype[method]
       : obj[method];
 
@@ -1066,6 +1072,29 @@ Assertion.prototype.respondTo = function (method) {
 
   return this;
 };
+
+/**
+ * ### .itself
+ *
+ * Sets the `itself` flag, later used by the `respondTo` assertion.
+ *
+ *    function Foo() {}
+ *    Foo.bar = function() {}
+ *    Foo.prototype.baz = function() {}
+ *
+ *    expect(Foo).itself.to.respondTo('bar');
+ *    expect(Foo).itself.not.to.respondTo('baz');
+ *
+ * @name itself
+ * @api public
+ */
+Object.defineProperty(Assertion.prototype, 'itself',
+  { get: function () {
+      flag(this, 'itself', true);
+      return this;
+    }
+  , configurable: true
+});
 
 /**
  * ### .satisfy(method)
@@ -1183,7 +1212,7 @@ var used = []
  * Chai version
  */
 
-exports.version = '1.0.3';
+exports.version = '1.0.4';
 
 /*!
  * Primary `Assertion` prototype
@@ -2336,9 +2365,8 @@ var transferFlags = require('./transferFlags');
  */
 
 module.exports = function (ctx, name, method, chainingBehavior) {
-  if (typeof chainingBehavior !== 'function') {
+  if (typeof chainingBehavior !== 'function')
     chainingBehavior = function () { };
-  }
 
   Object.defineProperty(ctx, name,
     { get: function () {
@@ -2352,20 +2380,15 @@ module.exports = function (ctx, name, method, chainingBehavior) {
         // Re-enumerate every time to better accomodate plugins.
         var asserterNames = Object.getOwnPropertyNames(ctx);
         asserterNames.forEach(function (asserterName) {
-          var pd = Object.getOwnPropertyDescriptor(ctx, asserterName);
-
-          // Avoid trying to overwrite things that we can't, like `length`
-          // and `arguments`.
-          var functionProtoPD = Object.getOwnPropertyDescriptor(Function.prototype, asserterName);
-          if (functionProtoPD && !functionProtoPD.configurable) {
-            return;
-          }
-
+          var pd = Object.getOwnPropertyDescriptor(ctx, asserterName)
+            , functionProtoPD = Object.getOwnPropertyDescriptor(Function.prototype, asserterName);
+          // Avoid trying to overwrite things that we can't, like `length` and `arguments`.
+          if (functionProtoPD && !functionProtoPD.configurable) return;
+          if (asserterName === 'arguments') return; // @see chaijs/chai/issues/69
           Object.defineProperty(assert, asserterName, pd);
         });
 
         transferFlags(this, assert);
-
         return assert;
       }
     , configurable: true
@@ -3000,7 +3023,7 @@ function formatValue(ctx, value, recurseTimes) {
 
   // Make error with message first say the error
   if (isError(value)) {
-    base = ' ' + formatError(value);
+    return formatError(value);
   }
 
   if (keys.length === 0 && (!array || value.length == 0)) {
@@ -3181,6 +3204,7 @@ function isError(e) {
 function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
+
 }); // module: utils/inspect.js
 
 require.register("utils/overwriteMethod.js", function(module, exports, require){
