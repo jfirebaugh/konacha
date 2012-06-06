@@ -7,29 +7,7 @@
     <%= stylesheet_link_tag "konacha", :debug => false %>
     <%= javascript_include_tag "mocha", "chai", "konacha/#{Konacha.mode}", :debug => false %>
     <%= javascript_include_tag("konacha_config", :debug => false) if Rails.application.assets.find_asset('konacha_config') %>
-    <script>
-      mocha.setup(Konacha.mochaOptions);
-
-      beforeEach(function () {
-        var e = document.getElementById('konacha'),
-            p = e.parentNode;
-
-        p.removeChild(e);
-
-        e = document.createElement("div");
-        e.id = "konacha";
-
-        p.appendChild(e);
-      });
-
-      var expect = chai.expect,
-          should = chai.should(),
-          assert = chai.assert;
-
-      window.onload = function () {
-        mocha.run();
-      };
-    </script>
+    <%= javascript_include_tag "konacha", :debug => false %>
     <%= spec_include_tag *@specs %>
   </head>
   <body>
