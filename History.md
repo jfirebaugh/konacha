@@ -1,5 +1,7 @@
 # master
 
+* Loosen up Rails dependency
+
 # 1.2.3
 
 * Update mocha (1.1.0) and chai (1.0.4)
