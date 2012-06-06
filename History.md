@@ -1,6 +1,7 @@
 # master
 
 * Loosen up Rails dependency
+* Fix crash when `#konacha` element is removed in test
 
 # 1.2.3
 
