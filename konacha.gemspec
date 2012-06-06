@@ -19,7 +19,9 @@ the asset pipeline and engines.}
   gem.require_paths = ["lib"]
   gem.version       = "1.2.3"
 
-  gem.add_dependency "rails", "~> 3.1"
+  gem.add_dependency "railties", "~> 3.1"
+  gem.add_dependency "actionpack", "~> 3.1"
+  gem.add_dependency "sprockets"
   gem.add_dependency "capybara"
 
   gem.add_development_dependency "jquery-rails"
