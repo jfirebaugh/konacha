@@ -30,4 +30,5 @@ the asset pipeline and engines.}
   gem.add_development_dependency "coffee-script"
   gem.add_development_dependency "ejs"
   gem.add_development_dependency "vendorer"
+  gem.add_development_dependency "tzinfo"
 end
