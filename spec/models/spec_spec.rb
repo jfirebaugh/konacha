@@ -28,6 +28,15 @@ describe Konacha::Spec do
       all = described_class.all
       all.length.should == 2
     end
+
+    it "returns specs passed via the ENV['spec'] parameter" do
+      ENV["SPEC"] = "foo_spec,bar_spec,baz_spec"
+      all = described_class.all
+      all.length.should == 3
+      paths = all.map {|p| p.path}
+      paths =~ %w{foo_spec bar_spec baz_spec}
+      ENV["SPEC"] = nil
+    end
   end
 
   describe ".find" do
