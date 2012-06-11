@@ -1,5 +1,7 @@
 # master
 
+* `rake konacha:run` exits with exit code 1 when spec suite fails
+
 # 1.2.4
 
 * Loosen up Rails dependency
