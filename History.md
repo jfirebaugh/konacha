@@ -1,6 +1,7 @@
 # master
 
 * `rake konacha:run` exits with exit code 1 when spec suite fails
+* Add SPEC environment variable for running individual spec files
 
 # 1.2.4
 

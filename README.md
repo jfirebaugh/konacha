@@ -81,7 +81,8 @@ run a subset of specs (e.g. `http://localhost:3500/models`).
 
 The `konacha:run` rake task will let you run your tests from the command line.
 
-To an individual spec, or specs, you can pass a comma seperated list of specs via the `SPEC` parameter
+To run individual specs, pass a comma seperated list of spec file names via the
+`SPEC` environment variable.
 
 ```
 $ rake konacha:run SPEC=foo_spec
