@@ -26,16 +26,17 @@ module Konacha
       yield config
     end
 
-    delegate :port, :spec_dir, :application, :driver, :to => :config
+    delegate :port, :spec_dir, :application, :driver, :backup_pattern, :to => :config
 
     def spec_root
       File.join(Rails.root, config.spec_dir)
     end
 
     def spec_paths
-      Dir[File.join(spec_root, "**{,/*/**}/*{_spec,_test}.*")].map do |path|
+      Dir[File.join(spec_root, "**{,/*/**}/*{_spec,_test}.*")].uniq.map do |path|
+        next if path =~ backup_pattern
         path.gsub(File.join(spec_root, ''), '')
-      end
+      end.compact
     end
   end
 end
