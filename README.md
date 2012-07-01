@@ -143,6 +143,10 @@ named `konacha_config.js` or `konacha_config.js.coffee` in `spec/javascripts` an
 setting properties of `Konacha.mochaOptions`:
 
 ```javascript
+// set the Mocha test interface
+// see http://visionmedia.github.com/mocha/#interfaces
+Konacha.mochaOptions.ui = 'bdd';
+
 // ignore the following globals during leak detection
 Konacha.mochaOptions.globals = ['YUI'];
 
@@ -158,8 +162,9 @@ The `ui` and `reporter` Mocha options are set by Konacha and must not be modifie
 ## Test Interface and Assertions
 
 Konacha includes a vendored copy of mocha.js and the [chai](http://chaijs.com/)
-assertion libraries. It configures Mocha to use the "BDD" test interface, which
-provides `describe()`, `it()`, `before()`, `after()`, `beforeEach()`, and `afterEach()`.
+assertion libraries. By default, it configures Mocha to use the "BDD" test
+interface, which provides `describe()`, `it()`, `before()`, `after()`,
+`beforeEach()`, and `afterEach()`.
 
 Konacha will make all three of chai's assertion styles available to you: `expect`,
 `should`, and `assert`. See the chai documentation for the details.

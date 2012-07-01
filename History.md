@@ -1,6 +1,7 @@
 # master
 
 * Update mocha (1.2.2)
+* Support all Mocha interfaces (set through `Konacha.mochaOptions.ui`)
 
 # 1.3.0
 
