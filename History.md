@@ -1,5 +1,7 @@
 # master
 
+* Update mocha (1.2.2)
+
 # 1.3.0
 
 * `rake konacha:run` exits with exit code 1 when spec suite fails
