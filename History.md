@@ -1,5 +1,7 @@
 # master
 
+# 1.3.0
+
 * `rake konacha:run` exits with exit code 1 when spec suite fails
 * Add SPEC environment variable for running individual spec files
 * Update mocha (1.2.1) and chai (1.1.0)
