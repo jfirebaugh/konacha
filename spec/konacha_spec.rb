@@ -23,6 +23,10 @@ describe Konacha do
       subject.should include("subdirectory/subdirectory_spec.js")
     end
 
+    it "doesn't dup paths" do
+      subject.should == subject.uniq
+    end
+
     it "traverses symlinked directories" do
       begin
         # Create a directory with specs outside of 'spec/javascripts'.
