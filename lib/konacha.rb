@@ -33,7 +33,7 @@ module Konacha
     end
 
     def spec_paths
-      Dir[File.join(spec_root, "**{,/*/**}/*{_spec,_test}.*")].map do |path|
+      Dir[File.join(spec_root, "**{,/*/**}/*{_spec,_test}.*")].uniq.map do |path|
         path.gsub(File.join(spec_root, ''), '')
       end
     end
