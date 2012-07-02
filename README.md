@@ -170,7 +170,8 @@ Konacha will make all three of chai's assertion styles available to you: `expect
 `should`, and `assert`. See the chai documentation for the details.
 
 If you use jQuery, you may want to check out [chai-jquery](https://github.com/jfirebaugh/chai-jquery)
-for some jQuery-specific assertions.
+for some jQuery-specific assertions. You can add it painlessly with the
+[chai-jquery-rails](https://github.com/wordofchristian/chai-jquery-rails) gem.
 
 ## Transactions
 
