@@ -54,6 +54,14 @@ describe Konacha do
     it "includes *_test.* files" do
       subject.should include("file_ending_in_test.js")
     end
+
+    it "only includes JavaScript files" do
+      subject.should_not include("do_not_include_spec.png")
+    end
+
+    it "does not include non-asset files" do
+      subject.should_not include("do_not_include_spec.js.bak")
+    end
   end
 
   it "can be configured in an initializer" do

@@ -1,3 +1,4 @@
+require "tilt"
 require "konacha/engine"
 require "konacha/runner"
 require "konacha/server"
@@ -33,9 +34,14 @@ module Konacha
     end
 
     def spec_paths
-      Dir[File.join(spec_root, "**{,/*/**}/*{_spec,_test}.*")].uniq.map do |path|
-        path.gsub(File.join(spec_root, ''), '')
-      end
+      Rails.application.assets.each_file.find_all { |pathname|
+        pathname.to_s.start_with?(spec_root) &&
+        pathname.basename.to_s =~ /_spec\.|_test\./ &&
+        (pathname.extname == '.js' || Tilt[pathname]) &&
+        Rails.application.assets.content_type_of(pathname) == 'application/javascript'
+      }.map { |pathname|
+        pathname.to_s.gsub(File.join(spec_root, ''), '')
+      }
     end
   end
 end
