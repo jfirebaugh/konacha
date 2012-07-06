@@ -1,5 +1,7 @@
 # master
 
+# 1.4.0
+
 * Update mocha (1.3.0)
 * Support all Mocha interfaces (set through `Konacha.mochaOptions.ui`)
 * Backup spec files (.js.bak, .js.orig, etc.) are ignored

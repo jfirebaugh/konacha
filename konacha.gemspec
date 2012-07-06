@@ -17,7 +17,7 @@ the asset pipeline and engines.}
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.name          = "konacha"
   gem.require_paths = ["lib"]
-  gem.version       = "1.3.1"
+  gem.version       = "1.4.0"
 
   gem.add_dependency "railties", "~> 3.1"
   gem.add_dependency "actionpack", "~> 3.1"
