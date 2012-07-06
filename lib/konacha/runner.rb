@@ -103,8 +103,22 @@ module Konacha
         msg = []
         msg << "  Failed: #{@row['name']}"
         msg << "    #{@row['message']}"
-        msg << "    in #{@row['trace']['fileName']}:#{@row['trace']['lineNumber']}" if @row['trace']
-        msg.join("\n")
+        msg << failure_additional_info
+        msg.compact.join("\n")
+      end
+    end
+
+    def failure_additional_info
+      trace = @row['trace'] || {}
+      if trace =~ /timeout of [\d\.]+ms exceeded/
+        "Execution of spec took too long (or forgot to call done())"
+      elsif trace['fileName'].present?
+        # TODO: Investigate if mocha even returns errors with fileName and 
+        #       lineNumber
+        #
+        #      - I've seen @row["trace"] coming back as a straight strings
+        #         instead of hashes
+        "    in: #{[trace['fileName'],trace['lineNumber']].compact.join(":")}"
       end
     end
   end
