@@ -3,6 +3,10 @@
 * Update mocha (1.2.2)
 * Support all Mocha interfaces (set through `Konacha.mochaOptions.ui`)
 
+# 1.3.1
+
+* Specs in subdirectories no longer run twice
+
 # 1.3.0
 
 * `rake konacha:run` exits with exit code 1 when spec suite fails
