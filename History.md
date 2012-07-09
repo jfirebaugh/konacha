@@ -1,5 +1,7 @@
 # master
 
+# 1.4.1
+
 * Fix performance regression in projects which have many assets
 
 # 1.4.0
