@@ -1,5 +1,7 @@
 # master
 
+* Fix performance regression in projects which have many assets
+
 # 1.4.0
 
 * Update mocha (1.3.0)

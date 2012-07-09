@@ -34,8 +34,7 @@ module Konacha
     end
 
     def spec_paths
-      Rails.application.assets.each_file.find_all { |pathname|
-        pathname.to_s.start_with?(spec_root) &&
+      Rails.application.assets.each_entry(spec_root).find_all { |pathname|
         pathname.basename.to_s =~ /_spec\.|_test\./ &&
         (pathname.extname == '.js' || Tilt[pathname]) &&
         Rails.application.assets.content_type_of(pathname) == 'application/javascript'
