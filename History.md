@@ -1,5 +1,7 @@
 # master
 
+* Update chai (1.1.1)
+
 # 1.4.1
 
 * Fix performance regression in projects which have many assets
