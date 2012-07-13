@@ -85,7 +85,9 @@ module Konacha
         Example.new(row)
       end
     rescue => e
-      raise Konacha::Error, "Error communicating with browser process: #{e.inspect}"
+      msg = [e.inspect]
+      msg << e.message unless e.message.blank?
+      raise Konacha::Error, "Error communicating with browser process:\n#{msg.join("\n")}"
     end
   end
 
