@@ -1,6 +1,7 @@
 # master
 
 * Update chai (1.1.1)
+* Improved error messaging (rake konacha:run)
 
 # 1.4.1
 
