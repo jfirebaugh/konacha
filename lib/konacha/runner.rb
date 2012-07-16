@@ -22,7 +22,7 @@ module Konacha
 
       seconds = "%.2f" % (Time.now - before)
       io.puts "Finished in #{seconds} seconds"
-      io.puts "#{examples.size} examples, #{failed_examples.size} failures"
+      io.puts "#{examples.size} examples, #{failed_examples.size} failures, #{pending_examples.size} pending"
       passed?
     end
 
@@ -30,8 +30,12 @@ module Konacha
       spec_runners.map { |spec_runner| spec_runner.examples }.flatten
     end
 
+    def pending_examples
+      examples.select { |example| example.pending? }
+    end
+
     def failed_examples
-      examples.select { |example| not example.passed? }
+      examples.select { |example| example.failed? }
     end
 
     def passed?
@@ -100,13 +104,23 @@ module Konacha
       @row['passed']
     end
 
+    def pending?
+      @row['pending']
+    end
+
+    def failed?
+      !(@row['passed'] || @row['pending'])
+    end
+
     def failure_message
-      unless passed?
+      if failed?
         msg = []
         msg << "  Failed: #{@row['name']}"
         msg << "    #{@row['message']}"
         msg << "    in #{@row['trace']['fileName']}:#{@row['trace']['lineNumber']}" if @row['trace']
         msg.join("\n")
+      elsif pending?
+        "  Pending: #{@row['name']}"
       end
     end
   end
