@@ -18,9 +18,12 @@ describe Konacha::Runner do
       # Failure output present?
       results.should include 'F'
       results.should include 'expected 4 to equal 5'
+      # Pending output present?
+      results.should include 'P'
+      results.should include 'is pending'
       # Summary and dots
-      results.should include "#{runner.examples.length} examples, 1 failure"
-      results.should match /^[.F]{#{runner.examples.length}}$/
+      results.should include "#{runner.examples.length} examples, 1 failures, 1 pending"
+      results.should match /^[.FP]{#{runner.examples.length}}$/
     end
   end
 end
