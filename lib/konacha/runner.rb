@@ -1,4 +1,5 @@
 require "capybara"
+require "colorize"
 
 module Konacha
   class Runner
@@ -71,6 +72,18 @@ module Konacha
       runner.io
     end
 
+    def colorize_dots(dots)
+      dots = dots.chars.map do |d|
+        case d
+        when 'E', 'F'; d.red
+        when 'P'; d.yellow
+        when '.'; d.green
+        else;     d
+        end
+      end
+      dots.join ''
+    end
+
     def run
       session.visit(spec.url)
 
@@ -79,7 +92,7 @@ module Konacha
         sleep 0.1
         done, dots = session.evaluate_script('[Konacha.done, Konacha.dots]')
         if dots
-          io.write dots[dots_printed..-1]
+          io.write colorize_dots(dots[dots_printed..-1])
           io.flush
           dots_printed = dots.length
         end
@@ -118,9 +131,9 @@ module Konacha
         msg << "  Failed: #{@row['name']}"
         msg << "    #{@row['message']}"
         msg << "    in #{@row['trace']['fileName']}:#{@row['trace']['lineNumber']}" if @row['trace']
-        msg.join("\n")
+        msg.join("\n").red
       elsif pending?
-        "  Pending: #{@row['name']}"
+        "  Pending: #{@row['name']}".yellow
       end
     end
   end

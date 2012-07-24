@@ -15,6 +15,8 @@ describe Konacha::Runner do
     it "prints results to the output" do
       buffer.rewind
       results = buffer.read
+      # Strip colors
+      results.gsub!(/\e\[([0-9]{1,2}(;[0-9]{1,2})*)?[m|K]/, '')
       # Failure output present?
       results.should include 'F'
       results.should include 'expected 4 to equal 5'
