@@ -25,7 +25,7 @@ Add konacha to the `:test` and `:development` groups in the Gemfile and `bundle 
 
 ```ruby
 group :test, :development do
-  gem "konacha"
+  gem 'konacha'
 end
 ```
 
@@ -70,23 +70,37 @@ describe "Array#sum", ->
 
 ## Running (Rake Tasks)
 
-### `rake konacha:serve`
+### In The Browser
 
-The `konacha:serve` rake task starts a server for your tests. You can go to the root
-page to run all specs (e.g. `http://localhost:3500/`), a sub page to run an individual
-spec file (e.g. `http://localhost:3500/array_sum_spec`), or a path to a subdirectory to
-run a subset of specs (e.g. `http://localhost:3500/models`).
-
-### `rake konacha:run`
-
-The `konacha:run` rake task will let you run your tests from the command line.
-
-To run individual specs, pass a comma seperated list of spec file names via the
-`SPEC` environment variable.
+To start a server for your tests, type:
 
 ```
-$ rake konacha:run SPEC=foo_spec
-$ rake konacha:run SPEC=foo_spec,bar_spec,etc_spec
+$ bundle exec rake konacha:serve
+```
+
+Then open [http://localhost:3500](http://localhost:3500) in your browser, and
+you will see all your tests running. You can also go to a sub-page to run an
+individual spec file (e.g. `http://localhost:3500/array_sum_spec`), or a path
+to a subdirectory to run a subset of specs (e.g.
+`http://localhost:3500/models`).
+
+This is the recommended mode for development, since you can simply hit refresh
+to reload all your test and asset files.
+
+### Command-Line Runner
+
+To run your tests from the command line, type:
+
+```
+$ bundle exec rake konacha:run
+```
+
+To run individual specs, pass a comma seperated list of spec file names via
+the `SPEC` environment variable.
+
+```
+$ bundle exec rake konacha:run SPEC=foo_spec
+$ bundle exec rake konacha:run SPEC=foo_spec,bar_spec,etc_spec
 ```
 
 ## Spec Helper
