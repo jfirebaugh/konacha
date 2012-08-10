@@ -70,7 +70,7 @@ describe "Array#sum", ->
 
 ## Running (Rake Tasks)
 
-### In The Browser
+### In the Browser
 
 To start a server for your tests, type:
 
