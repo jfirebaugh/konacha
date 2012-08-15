@@ -9,6 +9,7 @@ module Konacha
     def self.application(app)
       Rack::Builder.app do
         use Rack::ShowExceptions
+        use ActionDispatch::Reloader
 
         map app.config.assets.prefix do
           run app.assets
@@ -20,19 +21,24 @@ module Konacha
       end
     end
 
-    initializer "konacha.environment" do |app|
-      unless app.config.assets.enabled
-        raise RuntimeError, "konacha requires the asset pipeline to be enabled"
-      end
-
+    def options(app)
       options = app.config.konacha
-
       options.spec_dir    ||= "spec/javascripts"
       options.port        ||= 3500
-      options.application ||= self.class.application(app)
       options.driver      ||= :selenium
+      options
+    end
 
-      app.config.assets.paths << app.root.join(options.spec_dir).to_s
+    initializer 'konacha.autoload', :before => :set_autoload_paths do |app|
+      app.config.autoload_paths << app.root.join(options(app).spec_dir).to_s
+    end
+
+    initializer "konacha.environment" do |app|
+      unless app.config.assets.enabled
+        raise RuntimeError, "Konacha requires the asset pipeline to be enabled"
+      end
+
+      app.config.assets.paths << app.root.join(options(app).spec_dir).to_s
     end
   end
 end

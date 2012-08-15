@@ -27,7 +27,11 @@ module Konacha
       yield config
     end
 
-    delegate :port, :spec_dir, :application, :driver, :to => :config
+    delegate :port, :spec_dir, :driver, :to => :config
+
+    def application
+      Konacha::Engine.application(Rails.application)
+    end
 
     def spec_root
       File.join(Rails.root, config.spec_dir)
@@ -41,6 +45,17 @@ module Konacha
       }.map { |pathname|
         pathname.to_s.gsub(File.join(spec_root, ''), '')
       }
+    end
+
+    def ruby_fixtures_json
+      begin
+        # Try to autoload.
+        # http://stackoverflow.com/questions/11973369/defined-for-autoloadable-classes
+        RubyFixtures
+      rescue NameError
+        return nil.to_json
+      end
+      RubyFixtures.fixtures.to_json
     end
   end
 end
