@@ -1,5 +1,7 @@
 # master
 
+# 1.4.2
+
 * Update chai (1.1.1)
 * Improved error messaging (rake konacha:run)
 * Show pending specs in `konacha:run` output
