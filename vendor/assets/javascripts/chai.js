@@ -1,9 +1,14 @@
 !function (name, context, definition) {
-  if (typeof module !== 'undefined') module.exports = definition(name, context);
-  else if (typeof define === 'function' && typeof define.amd  === 'object') define(definition);
-  else context[name] = definition(name, context);
-}('chai', this, function (name, context) {
-
+  if (typeof require === 'function' && typeof exports === 'object' && typeof module === 'object') {
+    module.exports = definition();
+  } else if (typeof define === 'function' && typeof define.amd  === 'object') {
+    define(function () {
+      return definition();
+    });
+  } else {
+    context[name] = definition();
+  }
+}('chai', this, function () {
 
   function require(p) {
     var path = require.resolve(p)
@@ -69,7 +74,7 @@
      * Chai version
      */
 
-    exports.version = '1.1.1';
+    exports.version = '1.2.0';
 
     /*!
      * Primary `Assertion` prototype
@@ -224,11 +229,11 @@
      */
 
     Assertion.prototype.assert = function (expr, msg, negateMsg, expected, _actual) {
-      var msg = util.getMessage(this, arguments)
-        , actual = util.getActual(this, arguments)
-        , ok = util.test(this, arguments);
+      var ok = util.test(this, arguments);
 
       if (!ok) {
+        var msg = util.getMessage(this, arguments)
+          , actual = util.getActual(this, arguments);
         throw new AssertionError({
             message: msg
           , actual: actual
@@ -913,10 +918,12 @@
        */
 
       Assertion.addMethod('property', function (name, val) {
-        var obj = flag(this, 'object')
-          , value = flag(this, 'deep') ? _.getPathValue(name, obj) : obj[name]
-          , descriptor = flag(this, 'deep') ? 'deep property ' : 'property '
-          , negate = flag(this, 'negate');
+        var descriptor = flag(this, 'deep') ? 'deep property ' : 'property '
+          , negate = flag(this, 'negate')
+          , obj = flag(this, 'object')
+          , value = flag(this, 'deep')
+            ? _.getPathValue(name, obj)
+            : obj[name];
 
         if (negate && undefined !== val) {
           if (undefined === value) {
@@ -1341,22 +1348,6 @@
     };
 
   }); // module: chai/core/assertions.js
-
-  require.register("chai/interface/expect.js", function(module, exports, require){
-    /*!
-     * chai
-     * Copyright(c) 2011-2012 Jake Luer <jake@alogicalparadox.com>
-     * MIT Licensed
-     */
-
-    module.exports = function (chai, util) {
-      chai.expect = function (val, message) {
-        return new chai.Assertion(val, message);
-      };
-    };
-
-
-  }); // module: chai/interface/expect.js
 
   require.register("chai/interface/assert.js", function(module, exports, require){
     /*!
@@ -2303,6 +2294,25 @@
           , 'expected ' + util.inspect(val) + ' to not be ' + operator + ' ' + util.inspect(val2) );
       };
 
+      /**
+       * ### .closeTo(actual, expected, delta, [message])
+       *
+       * Asserts that the target is equal `expected`, to within a +/- `delta` range.
+       *
+       *     assert.closeTo(1.5, 1, 0.5, 'numbers are close');
+       *
+       * @name closeTo
+       * @param {Number} actual
+       * @param {Number} expected
+       * @param {Number} delta
+       * @param {String} message
+       * @api public
+       */
+
+      assert.closeTo = function (act, exp, delta, msg) {
+        new Assertion(act, msg).to.be.closeTo(exp, delta);
+      };
+
       /*!
        * Undocumented / untested
        */
@@ -2324,6 +2334,22 @@
     };
 
   }); // module: chai/interface/assert.js
+
+  require.register("chai/interface/expect.js", function(module, exports, require){
+    /*!
+     * chai
+     * Copyright(c) 2011-2012 Jake Luer <jake@alogicalparadox.com>
+     * MIT Licensed
+     */
+
+    module.exports = function (chai, util) {
+      chai.expect = function (val, message) {
+        return new chai.Assertion(val, message);
+      };
+    };
+
+
+  }); // module: chai/interface/expect.js
 
   require.register("chai/interface/should.js", function(module, exports, require){
     /*!
@@ -2391,178 +2417,79 @@
 
   }); // module: chai/interface/should.js
 
-  require.register("chai/utils/getActual.js", function(module, exports, require){
+  require.register("chai/utils/addChainableMethod.js", function(module, exports, require){
     /*!
-     * Chai - getActual utility
-     * Copyright(c) 2012 Jake Luer <jake@alogicalparadox.com>
-     * MIT Licensed
-     */
-
-    /**
-     * # getActual(object, [actual])
-     *
-     * Returns the `actual` value for an Assertion
-     *
-     * @param {Object} object (constructed Assertion)
-     * @param {Arguments} chai.Assertion.prototype.assert arguments
-     */
-
-    module.exports = function (obj, args) {
-      var actual = args[4];
-      return 'undefined' !== actual ? actual : obj.obj;
-    };
-
-  }); // module: chai/utils/getActual.js
-
-  require.register("chai/utils/getMessage.js", function(module, exports, require){
-    /*!
-     * Chai - message composition utility
+     * Chai - addChainingMethod utility
      * Copyright(c) 2012 Jake Luer <jake@alogicalparadox.com>
      * MIT Licensed
      */
 
     /*!
-     * Module dependancies
+     * Module dependencies
      */
 
-    var flag = require('./flag')
-      , getActual = require('./getActual')
-      , inspect = require('./inspect');
+    var transferFlags = require('./transferFlags');
 
     /**
-     * # getMessage(object, message, negateMessage)
+     * ### addChainableMethod (ctx, name, method, chainingBehavior)
      *
-     * Construct the error message based on flags
-     * and template tags. Template tags will return
-     * a stringified inspection of the object referenced.
+     * Adds a method to an object, such that the method can also be chained.
      *
-     * Messsage template tags:
-     * - `#{this}` current asserted object
-     * - `#{act}` actual value
-     * - `#{exp}` expected value
+     *     utils.addChainableMethod(chai.Assertion.prototype, 'foo', function (str) {
+     *       var obj = utils.flag(this, 'object');
+     *       new chai.Assertion(obj).to.be.equal(str);
+     *     });
      *
-     * @param {Object} object (constructed Assertion)
-     * @param {Arguments} chai.Assertion.prototype.assert arguments
+     * Can also be accessed directly from `chai.Assertion`.
+     *
+     *     chai.Assertion.addChainableMethod('foo', fn, chainingBehavior);
+     *
+     * The result can then be used as both a method assertion, executing both `method` and
+     * `chainingBehavior`, or as a language chain, which only executes `chainingBehavior`.
+     *
+     *     expect(fooStr).to.be.foo('bar');
+     *     expect(fooStr).to.be.foo.equal('foo');
+     *
+     * @param {Object} ctx object to which the method is added
+     * @param {String} name of method to add
+     * @param {Function} method function to be used for `name`, when called
+     * @param {Function} chainingBehavior function to be called every time the property is accessed
+     * @name addChainableMethod
+     * @api public
      */
 
-    module.exports = function (obj, args) {
-      var negate = flag(obj, 'negate')
-        , val = flag(obj, 'object')
-        , expected = args[3]
-        , actual = getActual(obj, args)
-        , msg = negate ? args[2] : args[1]
-        , flagMsg = flag(obj, 'message');
+    module.exports = function (ctx, name, method, chainingBehavior) {
+      if (typeof chainingBehavior !== 'function')
+        chainingBehavior = function () { };
 
-      msg = msg || '';
-      msg = msg
-        .replace(/#{this}/g, inspect(val))
-        .replace(/#{act}/g, inspect(actual))
-        .replace(/#{exp}/g, inspect(expected));
+      Object.defineProperty(ctx, name,
+        { get: function () {
+            chainingBehavior.call(this);
 
-      return flagMsg ? flagMsg + ': ' + msg : msg;
+            var assert = function () {
+              var result = method.apply(this, arguments);
+              return result === undefined ? this : result;
+            };
+
+            // Re-enumerate every time to better accomodate plugins.
+            var asserterNames = Object.getOwnPropertyNames(ctx);
+            asserterNames.forEach(function (asserterName) {
+              var pd = Object.getOwnPropertyDescriptor(ctx, asserterName)
+                , functionProtoPD = Object.getOwnPropertyDescriptor(Function.prototype, asserterName);
+              // Avoid trying to overwrite things that we can't, like `length` and `arguments`.
+              if (functionProtoPD && !functionProtoPD.configurable) return;
+              if (asserterName === 'arguments') return; // @see chaijs/chai/issues/69
+              Object.defineProperty(assert, asserterName, pd);
+            });
+
+            transferFlags(this, assert);
+            return assert;
+          }
+        , configurable: true
+      });
     };
 
-  }); // module: chai/utils/getMessage.js
-
-  require.register("chai/utils/index.js", function(module, exports, require){
-    /*!
-     * chai
-     * Copyright(c) 2011 Jake Luer <jake@alogicalparadox.com>
-     * MIT Licensed
-     */
-
-    /*!
-     * Main exports
-     */
-
-    var exports = module.exports = {};
-
-    /*!
-     * test utility
-     */
-
-    exports.test = require('./test');
-
-    /*!
-     * message utility
-     */
-
-    exports.getMessage = require('./getMessage');
-
-    /*!
-     * actual utility
-     */
-
-    exports.getActual = require('./getActual');
-
-    /*!
-     * Inspect util
-     */
-
-    exports.inspect = require('./inspect');
-
-    /*!
-     * Flag utility
-     */
-
-    exports.flag = require('./flag');
-
-    /*!
-     * Flag transferring utility
-     */
-
-    exports.transferFlags = require('./transferFlags');
-
-    /*!
-     * Deep equal utility
-     */
-
-    exports.eql = require('./eql');
-
-    /*!
-     * Deep path value
-     */
-
-    exports.getPathValue = require('./getPathValue');
-
-    /*!
-     * Function name
-     */
-
-    exports.getName = require('./getName');
-
-    /*!
-     * add Property
-     */
-
-    exports.addProperty = require('./addProperty');
-
-    /*!
-     * add Method
-     */
-
-    exports.addMethod = require('./addMethod');
-
-    /*!
-     * overwrite Property
-     */
-
-    exports.overwriteProperty = require('./overwriteProperty');
-
-    /*!
-     * overwrite Method
-     */
-
-    exports.overwriteMethod = require('./overwriteMethod');
-
-    /*!
-     * Add a chainable method
-     */
-
-    exports.addChainableMethod = require('./addChainableMethod');
-
-
-  }); // module: chai/utils/index.js
+  }); // module: chai/utils/addChainableMethod.js
 
   require.register("chai/utils/addMethod.js", function(module, exports, require){
     /*!
@@ -2572,7 +2499,7 @@
      */
 
     /**
-     * ### addMethod (ctx, name, method)
+     * ### .addMethod (ctx, name, method)
      *
      * Adds a method to the prototype of an object.
      *
@@ -2605,41 +2532,49 @@
 
   }); // module: chai/utils/addMethod.js
 
-  require.register("chai/utils/flag.js", function(module, exports, require){
+  require.register("chai/utils/addProperty.js", function(module, exports, require){
     /*!
-     * Chai - flag utility
+     * Chai - addProperty utility
      * Copyright(c) 2012 Jake Luer <jake@alogicalparadox.com>
      * MIT Licensed
      */
 
     /**
-     * ### flag(object ,key, [value])
+     * ### addProperty (ctx, name, getter)
      *
-     * Get or set a flag value on an object. If a
-     * value is provided it will be set, else it will
-     * return the currently set value or `undefined` if
-     * the value is not set.
+     * Adds a property to the prototype of an object.
      *
-     *     utils.flag(this, 'foo', 'bar'); // setter
-     *     utils.flag(this, 'foo'); // getter, returns `bar`
+     *     utils.addProperty(chai.Assertion.prototype, 'foo', function () {
+     *       var obj = utils.flag(this, 'object');
+     *       new chai.Assertion(obj).to.be.instanceof(Foo);
+     *     });
      *
-     * @param {Object} object (constructed Assertion
-     * @param {String} key
-     * @param {Mixed} value (optional)
-     * @name flag
-     * @api private
+     * Can also be accessed directly from `chai.Assertion`.
+     *
+     *     chai.Assertion.addProperty('foo', fn);
+     *
+     * Then can be used as any other assertion.
+     *
+     *     expect(myFoo).to.be.foo;
+     *
+     * @param {Object} ctx object to which the property is added
+     * @param {String} name of property to add
+     * @param {Function} getter function to be used for name
+     * @name addProperty
+     * @api public
      */
 
-    module.exports = function (obj, key, value) {
-      var flags = obj.__flags || (obj.__flags = Object.create(null));
-      if (arguments.length === 3) {
-        flags[key] = value;
-      } else {
-        return flags[key];
-      }
+    module.exports = function (ctx, name, getter) {
+      Object.defineProperty(ctx, name,
+        { get: function () {
+            var result = getter.call(this);
+            return result === undefined ? this : result;
+          }
+        , configurable: true
+      });
     };
 
-  }); // module: chai/utils/flag.js
+  }); // module: chai/utils/addProperty.js
 
   require.register("chai/utils/eql.js", function(module, exports, require){
     // This is directly from Node.js assert
@@ -2744,64 +2679,68 @@
     }
   }); // module: chai/utils/eql.js
 
-  require.register("chai/utils/overwriteMethod.js", function(module, exports, require){
+  require.register("chai/utils/flag.js", function(module, exports, require){
     /*!
-     * Chai - overwriteMethod utility
+     * Chai - flag utility
      * Copyright(c) 2012 Jake Luer <jake@alogicalparadox.com>
      * MIT Licensed
      */
 
     /**
-     * ### overwriteMethod (ctx, name, fn)
+     * ### flag(object ,key, [value])
      *
-     * Overwites an already existing method and provides
-     * access to previous function. Must return function
-     * to be used for name.
+     * Get or set a flag value on an object. If a
+     * value is provided it will be set, else it will
+     * return the currently set value or `undefined` if
+     * the value is not set.
      *
-     *     utils.overwriteMethod(chai.Assertion.prototype, 'equal', function (_super) {
-     *       return function (str) {
-     *         var obj = utils.flag(this, 'object');
-     *         if (obj instanceof Foo) {
-     *           new chai.Assertion(obj.value).to.equal(str);
-     *         } else {
-     *           _super.apply(this, arguments);
-     *         }
-     *       }
-     *     });
+     *     utils.flag(this, 'foo', 'bar'); // setter
+     *     utils.flag(this, 'foo'); // getter, returns `bar`
      *
-     * Can also be accessed directly from `chai.Assertion`.
-     *
-     *     chai.Assertion.overwriteMethod('foo', fn);
-     *
-     * Then can be used as any other assertion.
-     *
-     *     expect(myFoo).to.equal('bar');
-     *
-     * @param {Object} ctx object whose method is to be overwritten
-     * @param {String} name of method to overwrite
-     * @param {Function} method function that returns a function to be used for name
-     * @name overwriteMethod
-     * @api public
+     * @param {Object} object (constructed Assertion
+     * @param {String} key
+     * @param {Mixed} value (optional)
+     * @name flag
+     * @api private
      */
 
-    module.exports = function (ctx, name, method) {
-      var _method = ctx[name]
-        , _super = function () { return this; };
-
-      if (_method && 'function' === typeof _method)
-        _super = _method;
-
-      ctx[name] = function () {
-        var result = method(_super).apply(this, arguments);
-        return result === undefined ? this : result;
+    module.exports = function (obj, key, value) {
+      var flags = obj.__flags || (obj.__flags = Object.create(null));
+      if (arguments.length === 3) {
+        flags[key] = value;
+      } else {
+        return flags[key];
       }
     };
 
-  }); // module: chai/utils/overwriteMethod.js
+  }); // module: chai/utils/flag.js
 
-  require.register("chai/utils/test.js", function(module, exports, require){
+  require.register("chai/utils/getActual.js", function(module, exports, require){
     /*!
-     * Chai - test utility
+     * Chai - getActual utility
+     * Copyright(c) 2012 Jake Luer <jake@alogicalparadox.com>
+     * MIT Licensed
+     */
+
+    /**
+     * # getActual(object, [actual])
+     *
+     * Returns the `actual` value for an Assertion
+     *
+     * @param {Object} object (constructed Assertion)
+     * @param {Arguments} chai.Assertion.prototype.assert arguments
+     */
+
+    module.exports = function (obj, args) {
+      var actual = args[4];
+      return 'undefined' !== actual ? actual : obj._obj;
+    };
+
+  }); // module: chai/utils/getActual.js
+
+  require.register("chai/utils/getMessage.js", function(module, exports, require){
+    /*!
+     * Chai - message composition utility
      * Copyright(c) 2012 Jake Luer <jake@alogicalparadox.com>
      * MIT Licensed
      */
@@ -2810,72 +2749,47 @@
      * Module dependancies
      */
 
-    var flag = require('./flag');
+    var flag = require('./flag')
+      , getActual = require('./getActual')
+      , inspect = require('./inspect')
+      , objDisplay = require('./objDisplay');
 
     /**
-     * # test(object, expression)
+     * ### .getMessage(object, message, negateMessage)
      *
-     * Test and object for expression.
+     * Construct the error message based on flags
+     * and template tags. Template tags will return
+     * a stringified inspection of the object referenced.
+     *
+     * Messsage template tags:
+     * - `#{this}` current asserted object
+     * - `#{act}` actual value
+     * - `#{exp}` expected value
      *
      * @param {Object} object (constructed Assertion)
      * @param {Arguments} chai.Assertion.prototype.assert arguments
+     * @name getMessage
+     * @api public
      */
 
     module.exports = function (obj, args) {
       var negate = flag(obj, 'negate')
-        , expr = args[0];
-      return negate ? !expr : expr;
+        , val = flag(obj, 'object')
+        , expected = args[3]
+        , actual = getActual(obj, args)
+        , msg = negate ? args[2] : args[1]
+        , flagMsg = flag(obj, 'message');
+
+      msg = msg || '';
+      msg = msg
+        .replace(/#{this}/g, objDisplay(val))
+        .replace(/#{act}/g, objDisplay(actual))
+        .replace(/#{exp}/g, objDisplay(expected));
+
+      return flagMsg ? flagMsg + ': ' + msg : msg;
     };
 
-  }); // module: chai/utils/test.js
-
-  require.register("chai/utils/transferFlags.js", function(module, exports, require){
-    /*!
-     * Chai - transferFlags utility
-     * Copyright(c) 2012 Jake Luer <jake@alogicalparadox.com>
-     * MIT Licensed
-     */
-
-    /**
-     * ### transferFlags(assertion, object, includeAll = true)
-     *
-     * Transfer all the flags for `assertion` to `object`. If
-     * `includeAll` is set to `false`, then the base Chai
-     * assertion flags (namely `object`, `ssfi`, and `message`)
-     * will not be transferred.
-     *
-     *
-     *     var newAssertion = new Assertion();
-     *     utils.transferFlags(assertion, newAssertion);
-     *
-     *     var anotherAsseriton = new Assertion(myObj);
-     *     utils.transferFlags(assertion, anotherAssertion, false);
-     *
-     * @param {Assertion} assertion the assertion to transfer the flags from
-     * @param {Object} object the object to transfer the flags too; usually a new assertion
-     * @param {Boolean} includeAll
-     * @name getAllFlags
-     * @api private
-     */
-
-    module.exports = function (assertion, object, includeAll) {
-      var flags = assertion.__flags || (assertion.__flags = Object.create(null));
-
-      if (!object.__flags) {
-        object.__flags = Object.create(null);
-      }
-
-      includeAll = arguments.length === 3 ? includeAll : true;
-
-      for (var flag in flags) {
-        if (includeAll ||
-            (flag !== 'object' && flag !== 'ssfi' && flag != 'message')) {
-          object.__flags[flag] = flags[flag];
-        }
-      }
-    };
-
-  }); // module: chai/utils/transferFlags.js
+  }); // module: chai/utils/getMessage.js
 
   require.register("chai/utils/getName.js", function(module, exports, require){
     /*!
@@ -2900,64 +2814,6 @@
     };
 
   }); // module: chai/utils/getName.js
-
-  require.register("chai/utils/overwriteProperty.js", function(module, exports, require){
-    /*!
-     * Chai - overwriteProperty utility
-     * Copyright(c) 2012 Jake Luer <jake@alogicalparadox.com>
-     * MIT Licensed
-     */
-
-    /**
-     * ### overwriteProperty (ctx, name, fn)
-     *
-     * Overwites an already existing property getter and provides
-     * access to previous value. Must return function to use as getter.
-     *
-     *     utils.overwriteProperty(chai.Assertion.prototype, 'ok', function (_super) {
-     *       return function () {
-     *         var obj = utils.flag(this, 'object');
-     *         if (obj instanceof Foo) {
-     *           new chai.Assertion(obj.name).to.equal('bar');
-     *         } else {
-     *           _super.call(this);
-     *         }
-     *       }
-     *     });
-     *
-     *
-     * Can also be accessed directly from `chai.Assertion`.
-     *
-     *     chai.Assertion.overwriteProperty('foo', fn);
-     *
-     * Then can be used as any other assertion.
-     *
-     *     expect(myFoo).to.be.ok;
-     *
-     * @param {Object} ctx object whose property is to be overwritten
-     * @param {String} name of property to overwrite
-     * @param {Function} getter function that returns a getter function to be used for name
-     * @name overwriteProperty
-     * @api public
-     */
-
-    module.exports = function (ctx, name, getter) {
-      var _get = Object.getOwnPropertyDescriptor(ctx, name)
-        , _super = function () {};
-
-      if (_get && 'function' === typeof _get.get)
-        _super = _get.get
-
-      Object.defineProperty(ctx, name,
-        { get: function () {
-            var result = getter(_super).call(this);
-            return result === undefined ? this : result;
-          }
-        , configurable: true
-      });
-    };
-
-  }); // module: chai/utils/overwriteProperty.js
 
   require.register("chai/utils/getPathValue.js", function(module, exports, require){
     /*!
@@ -3065,6 +2921,112 @@
 
   }); // module: chai/utils/getPathValue.js
 
+  require.register("chai/utils/index.js", function(module, exports, require){
+    /*!
+     * chai
+     * Copyright(c) 2011 Jake Luer <jake@alogicalparadox.com>
+     * MIT Licensed
+     */
+
+    /*!
+     * Main exports
+     */
+
+    var exports = module.exports = {};
+
+    /*!
+     * test utility
+     */
+
+    exports.test = require('./test');
+
+    /*!
+     * message utility
+     */
+
+    exports.getMessage = require('./getMessage');
+
+    /*!
+     * actual utility
+     */
+
+    exports.getActual = require('./getActual');
+
+    /*!
+     * Inspect util
+     */
+
+    exports.inspect = require('./inspect');
+
+    /*!
+     * Object Display util
+     */
+
+    exports.objDisplay = require('./objDisplay');
+
+    /*!
+     * Flag utility
+     */
+
+    exports.flag = require('./flag');
+
+    /*!
+     * Flag transferring utility
+     */
+
+    exports.transferFlags = require('./transferFlags');
+
+    /*!
+     * Deep equal utility
+     */
+
+    exports.eql = require('./eql');
+
+    /*!
+     * Deep path value
+     */
+
+    exports.getPathValue = require('./getPathValue');
+
+    /*!
+     * Function name
+     */
+
+    exports.getName = require('./getName');
+
+    /*!
+     * add Property
+     */
+
+    exports.addProperty = require('./addProperty');
+
+    /*!
+     * add Method
+     */
+
+    exports.addMethod = require('./addMethod');
+
+    /*!
+     * overwrite Property
+     */
+
+    exports.overwriteProperty = require('./overwriteProperty');
+
+    /*!
+     * overwrite Method
+     */
+
+    exports.overwriteMethod = require('./overwriteMethod');
+
+    /*!
+     * Add a chainable method
+     */
+
+    exports.addChainableMethod = require('./addChainableMethod');
+
+
+  }); // module: chai/utils/index.js
+
   require.register("chai/utils/inspect.js", function(module, exports, require){
     // This is (almost) directly from Node.js utils
     // https://github.com/joyent/node/blob/f8c335d0caf47f16d31413f89aa28eda3878e3aa/lib/util.js
@@ -3093,6 +3055,36 @@
       return formatValue(ctx, obj, (typeof depth === 'undefined' ? 2 : depth));
     }
 
+    // https://gist.github.com/1044128/
+    var getOuterHTML = function(element) {
+      if ('outerHTML' in element) return element.outerHTML;
+      var ns = "http://www.w3.org/1999/xhtml";
+      var container = document.createElementNS(ns, '_');
+      var elemProto = (window.HTMLElement || window.Element).prototype;
+      var xmlSerializer = new XMLSerializer();
+      var html;
+      if (document.xmlVersion) {
+        return xmlSerializer.serializeToString(element);
+      } else {
+        container.appendChild(element.cloneNode(false));
+        html = container.innerHTML.replace('><', '>' + element.innerHTML + '<');
+        container.innerHTML = '';
+        return html;
+      }
+    };
+      
+    // Returns true if object is a DOM element.
+    var isDOMElement = function (object) {
+      if (typeof HTMLElement === 'object') {
+        return object instanceof HTMLElement;
+      } else {
+        return object &&
+          typeof object === 'object' &&
+          object.nodeType === 1 &&
+          typeof object.nodeName === 'string';
+      }
+    };
+
     function formatValue(ctx, value, recurseTimes) {
       // Provide a hook for user-specified inspect functions.
       // Check that value is an object with an inspect function on it
@@ -3108,6 +3100,11 @@
       var primitive = formatPrimitive(ctx, value);
       if (primitive) {
         return primitive;
+      }
+
+      // If it's DOM elem, get outer HTML.
+      if (isDOMElement(value)) {
+        return getOuterHTML(value);
       }
 
       // Look up the keys of the object.
@@ -3348,123 +3345,244 @@
 
   }); // module: chai/utils/inspect.js
 
-  require.register("chai/utils/addProperty.js", function(module, exports, require){
+  require.register("chai/utils/objDisplay.js", function(module, exports, require){
     /*!
-     * Chai - addProperty utility
+     * Chai - flag utility
+     * Copyright(c) 2012 Jake Luer <jake@alogicalparadox.com>
+     * MIT Licensed
+     */
+
+    /*!
+     * Module dependancies
+     */
+
+    var inspect = require('./inspect');
+
+    /**
+     * ### .objDisplay (object)
+     *
+     * Determines if an object or an array matches
+     * criteria to be inspected in-line for error
+     * messages or should be truncated.
+     *
+     * @param {Mixed} javascript object to inspect
+     * @name objDisplay
+     * @api public
+     */
+
+    module.exports = function (obj) {
+      var str = inspect(obj)
+        , type = Object.prototype.toString.call(obj);
+
+      if (str.length >= 40) {
+        if (type === '[object Array]') {
+          return '[ Array(' + obj.length + ') ]';
+        } else if (type === '[object Object]') {
+          var keys = Object.keys(obj)
+            , kstr = keys.length > 2
+              ? keys.splice(0, 2).join(', ') + ', ...'
+              : keys.join(', ');
+          return '{ Object (' + kstr + ') }';
+        } else {
+          return str;
+        }
+      } else {
+        return str;
+      }
+    };
+
+  }); // module: chai/utils/objDisplay.js
+
+  require.register("chai/utils/overwriteMethod.js", function(module, exports, require){
+    /*!
+     * Chai - overwriteMethod utility
      * Copyright(c) 2012 Jake Luer <jake@alogicalparadox.com>
      * MIT Licensed
      */
 
     /**
-     * ### addProperty (ctx, name, getter)
+     * ### overwriteMethod (ctx, name, fn)
      *
-     * Adds a property to the prototype of an object.
+     * Overwites an already existing method and provides
+     * access to previous function. Must return function
+     * to be used for name.
      *
-     *     utils.addProperty(chai.Assertion.prototype, 'foo', function () {
-     *       var obj = utils.flag(this, 'object');
-     *       new chai.Assertion(obj).to.be.instanceof(Foo);
+     *     utils.overwriteMethod(chai.Assertion.prototype, 'equal', function (_super) {
+     *       return function (str) {
+     *         var obj = utils.flag(this, 'object');
+     *         if (obj instanceof Foo) {
+     *           new chai.Assertion(obj.value).to.equal(str);
+     *         } else {
+     *           _super.apply(this, arguments);
+     *         }
+     *       }
      *     });
      *
      * Can also be accessed directly from `chai.Assertion`.
      *
-     *     chai.Assertion.addProperty('foo', fn);
+     *     chai.Assertion.overwriteMethod('foo', fn);
      *
      * Then can be used as any other assertion.
      *
-     *     expect(myFoo).to.be.foo;
+     *     expect(myFoo).to.equal('bar');
      *
-     * @param {Object} ctx object to which the property is added
-     * @param {String} name of property to add
-     * @param {Function} getter function to be used for name
-     * @name addProperty
+     * @param {Object} ctx object whose method is to be overwritten
+     * @param {String} name of method to overwrite
+     * @param {Function} method function that returns a function to be used for name
+     * @name overwriteMethod
+     * @api public
+     */
+
+    module.exports = function (ctx, name, method) {
+      var _method = ctx[name]
+        , _super = function () { return this; };
+
+      if (_method && 'function' === typeof _method)
+        _super = _method;
+
+      ctx[name] = function () {
+        var result = method(_super).apply(this, arguments);
+        return result === undefined ? this : result;
+      }
+    };
+
+  }); // module: chai/utils/overwriteMethod.js
+
+  require.register("chai/utils/overwriteProperty.js", function(module, exports, require){
+    /*!
+     * Chai - overwriteProperty utility
+     * Copyright(c) 2012 Jake Luer <jake@alogicalparadox.com>
+     * MIT Licensed
+     */
+
+    /**
+     * ### overwriteProperty (ctx, name, fn)
+     *
+     * Overwites an already existing property getter and provides
+     * access to previous value. Must return function to use as getter.
+     *
+     *     utils.overwriteProperty(chai.Assertion.prototype, 'ok', function (_super) {
+     *       return function () {
+     *         var obj = utils.flag(this, 'object');
+     *         if (obj instanceof Foo) {
+     *           new chai.Assertion(obj.name).to.equal('bar');
+     *         } else {
+     *           _super.call(this);
+     *         }
+     *       }
+     *     });
+     *
+     *
+     * Can also be accessed directly from `chai.Assertion`.
+     *
+     *     chai.Assertion.overwriteProperty('foo', fn);
+     *
+     * Then can be used as any other assertion.
+     *
+     *     expect(myFoo).to.be.ok;
+     *
+     * @param {Object} ctx object whose property is to be overwritten
+     * @param {String} name of property to overwrite
+     * @param {Function} getter function that returns a getter function to be used for name
+     * @name overwriteProperty
      * @api public
      */
 
     module.exports = function (ctx, name, getter) {
+      var _get = Object.getOwnPropertyDescriptor(ctx, name)
+        , _super = function () {};
+
+      if (_get && 'function' === typeof _get.get)
+        _super = _get.get
+
       Object.defineProperty(ctx, name,
         { get: function () {
-            var result = getter.call(this);
+            var result = getter(_super).call(this);
             return result === undefined ? this : result;
           }
         , configurable: true
       });
     };
 
-  }); // module: chai/utils/addProperty.js
+  }); // module: chai/utils/overwriteProperty.js
 
-  require.register("chai/utils/addChainableMethod.js", function(module, exports, require){
+  require.register("chai/utils/test.js", function(module, exports, require){
     /*!
-     * Chai - addChainingMethod utility
+     * Chai - test utility
      * Copyright(c) 2012 Jake Luer <jake@alogicalparadox.com>
      * MIT Licensed
      */
 
     /*!
-     * Module dependencies
+     * Module dependancies
      */
 
-    var transferFlags = require('./transferFlags');
+    var flag = require('./flag');
 
     /**
-     * ### addChainableMethod (ctx, name, method, chainingBehavior)
+     * # test(object, expression)
      *
-     * Adds a method to an object, such that the method can also be chained.
+     * Test and object for expression.
      *
-     *     utils.addChainableMethod(chai.Assertion.prototype, 'foo', function (str) {
-     *       var obj = utils.flag(this, 'object');
-     *       new chai.Assertion(obj).to.be.equal(str);
-     *     });
-     *
-     * Can also be accessed directly from `chai.Assertion`.
-     *
-     *     chai.Assertion.addChainableMethod('foo', fn, chainingBehavior);
-     *
-     * The result can then be used as both a method assertion, executing both `method` and
-     * `chainingBehavior`, or as a language chain, which only executes `chainingBehavior`.
-     *
-     *     expect(fooStr).to.be.foo('bar');
-     *     expect(fooStr).to.be.foo.equal('foo');
-     *
-     * @param {Object} ctx object to which the method is added
-     * @param {String} name of method to add
-     * @param {Function} method function to be used for `name`, when called
-     * @param {Function} chainingBehavior function to be called every time the property is accessed
-     * @name addChainableMethod
-     * @api public
+     * @param {Object} object (constructed Assertion)
+     * @param {Arguments} chai.Assertion.prototype.assert arguments
      */
 
-    module.exports = function (ctx, name, method, chainingBehavior) {
-      if (typeof chainingBehavior !== 'function')
-        chainingBehavior = function () { };
-
-      Object.defineProperty(ctx, name,
-        { get: function () {
-            chainingBehavior.call(this);
-
-            var assert = function () {
-              var result = method.apply(this, arguments);
-              return result === undefined ? this : result;
-            };
-
-            // Re-enumerate every time to better accomodate plugins.
-            var asserterNames = Object.getOwnPropertyNames(ctx);
-            asserterNames.forEach(function (asserterName) {
-              var pd = Object.getOwnPropertyDescriptor(ctx, asserterName)
-                , functionProtoPD = Object.getOwnPropertyDescriptor(Function.prototype, asserterName);
-              // Avoid trying to overwrite things that we can't, like `length` and `arguments`.
-              if (functionProtoPD && !functionProtoPD.configurable) return;
-              if (asserterName === 'arguments') return; // @see chaijs/chai/issues/69
-              Object.defineProperty(assert, asserterName, pd);
-            });
-
-            transferFlags(this, assert);
-            return assert;
-          }
-        , configurable: true
-      });
+    module.exports = function (obj, args) {
+      var negate = flag(obj, 'negate')
+        , expr = args[0];
+      return negate ? !expr : expr;
     };
 
-  }); // module: chai/utils/addChainableMethod.js
+  }); // module: chai/utils/test.js
+
+  require.register("chai/utils/transferFlags.js", function(module, exports, require){
+    /*!
+     * Chai - transferFlags utility
+     * Copyright(c) 2012 Jake Luer <jake@alogicalparadox.com>
+     * MIT Licensed
+     */
+
+    /**
+     * ### transferFlags(assertion, object, includeAll = true)
+     *
+     * Transfer all the flags for `assertion` to `object`. If
+     * `includeAll` is set to `false`, then the base Chai
+     * assertion flags (namely `object`, `ssfi`, and `message`)
+     * will not be transferred.
+     *
+     *
+     *     var newAssertion = new Assertion();
+     *     utils.transferFlags(assertion, newAssertion);
+     *
+     *     var anotherAsseriton = new Assertion(myObj);
+     *     utils.transferFlags(assertion, anotherAssertion, false);
+     *
+     * @param {Assertion} assertion the assertion to transfer the flags from
+     * @param {Object} object the object to transfer the flags too; usually a new assertion
+     * @param {Boolean} includeAll
+     * @name getAllFlags
+     * @api private
+     */
+
+    module.exports = function (assertion, object, includeAll) {
+      var flags = assertion.__flags || (assertion.__flags = Object.create(null));
+
+      if (!object.__flags) {
+        object.__flags = Object.create(null);
+      }
+
+      includeAll = arguments.length === 3 ? includeAll : true;
+
+      for (var flag in flags) {
+        if (includeAll ||
+            (flag !== 'object' && flag !== 'ssfi' && flag != 'message')) {
+          object.__flags[flag] = flags[flag];
+        }
+      }
+    };
+
+  }); // module: chai/utils/transferFlags.js
 
   require.alias("./chai.js", "chai");
 
