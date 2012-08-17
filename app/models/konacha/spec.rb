@@ -12,7 +12,7 @@ module Konacha
     end
 
     def self.find(path)
-      all.select { |s| s.path.starts_with?(path) }.presence or raise NotFound
+      all.select { |s| s.path.starts_with?(path) }.presence or raise Konacha::Spec::NotFound
     end
 
     attr_accessor :path
