@@ -107,7 +107,7 @@ $ bundle exec rake konacha:run SPEC=foo_spec,bar_spec,etc_spec
 
 Since Konacha integrates with the asset pipeline, using setup helpers in your specs is
 easy. Just create a `spec_helper.js` or `spec_helper.js.coffee` file in `specs/javascripts`
-and require it in your tests:
+and require it in your tests, like so:
 
 ```javascript
 //= require spec_helper
@@ -116,6 +116,13 @@ and require it in your tests:
 describe("Array#sum", function() {
   ...
 });
+```
+
+The `spec_helper` is a good place to set Mocha and Chai options as well, for instance:
+
+```javascript
+// Show stack trace on failing assertion.
+chai.Assertion.includeStack = true;
 ```
 
 ## Directives and Asset Bundling
