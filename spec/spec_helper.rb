@@ -32,3 +32,8 @@ end
 RSpec.configure do |config|
   config.include Konacha::RequestSpec, :type => :request
 end
+
+Konacha.configure do |config|
+  # We don't have an application.css in our dummy app.
+  config.stylesheets = []
+end

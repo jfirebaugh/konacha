@@ -19,6 +19,12 @@ the asset pipeline and engines.
 
 Photo credit: [FCartegnie](http://commons.wikimedia.org/wiki/File:Konacha.jpg), CC-BY-SA.
 
+## Upgrading from Konacha 1.x
+
+As of Konacha 2.0, your tests are run inside an iframe. See the section
+"[Using the DOM](#using-the-dom)" for details. You may be able to upgrade
+without any changes to your test code.
+
 ## Installation
 
 Add konacha to the `:test` and `:development` groups in the Gemfile and `bundle install`:
@@ -143,17 +149,20 @@ Konacha can be configured in an initializer, e.g. `config/initializers/konacha.r
 
 ```ruby
 Konacha.configure do |config|
-  config.spec_dir  = "spec/javascripts"
-  config.driver    = :selenium
+  config.spec_dir    = "spec/javascripts"
+  config.driver      = :selenium
+  config.stylesheets = %w(application)
 end if defined?(Konacha)
 ```
 
 The `defined?` check is necessary to avoid a dependency on Konacha in the production
 environment.
 
-The `spec_dir` option tells Konacha where to find JavaScript specs. `driver` names a
-Capybara driver used for the `run` task (try `:webkit`, after installing
-[capybara-webkit](https://github.com/thoughtbot/capybara-webkit)).
+The `spec_dir` option tells Konacha where to find JavaScript specs. `driver`
+names a Capybara driver used for the `run` task (try `:webkit`, after
+installing [capybara-webkit](https://github.com/thoughtbot/capybara-webkit)).
+The `stylesheets` option sets the stylesheets to be linked from the `<head>`
+of the test runner iframe.
 
 The values above are the defaults.
 
@@ -194,30 +203,30 @@ If you use jQuery, you may want to check out [chai-jquery](https://github.com/jf
 for some jQuery-specific assertions. You can add it painlessly with the
 [chai-jquery-rails](https://github.com/wordofchristian/chai-jquery-rails) gem.
 
-## Transactions
+## Using the DOM
 
-One problem often faced when writing unit tests for client side code is that changes
-to the page are not reverted for the next example, so that successive examples become
-dependent on each other. Konacha adds a special div to your page with an id of `konacha`.
-This div is automatically emptied before each example. You should avoid appending markup
-to the page body and instead append it to the `#konacha` div:
+Your tests are run inside an iframe. You have the entire `<body>` element to
+yourself. The body is automatically reset between tests.
 
-```coffeescript
-describe "transactions", ->
-  it "should add stuff in one test...", ->
-    $('#konacha').append('<h1 id="added">New Stuff</h1>')
-    $('#konacha h1#added').length.should.equal(1)
+For compatibility with Konacha 1.x, the `<body>` element will have
+`id="konacha"` set on it.
 
-  it "... should have been removed before the next starts", ->
-    $('#konacha h1#added').length.should.equal(0)
-```
+## Debugging
+
+To debug tests, use the `debugger` statement anywhere in a test to halt
+execution.
+
+To run code in the JavaScript console, be sure to select the `#test-context`
+frame first, so your code runs in the correct context.
+
+![Selecting the test-context frame in Chrome](https://raw.github.com/jfirebaugh/konacha/master/images/frame-select.png)
 
 ## Templates / Fixtures
 
 Konacha has no template (a.k.a. HTML fixture) support of its own. Instead, we suggest you use
 Sprocket's built in support for JavaScript template (`.jst`) files. Add a `spec/javascripts/templates`
 directory, place template files there (using any JS template language supported by Sprockets),
-require them in your spec or spec_helper, and render them into the `#konacha` div.
+require them in your spec or spec_helper, and render them into the `<body>`.
 
 For example, in `spec/javascripts/templates/hello.jst.ejs`:
 
@@ -238,8 +247,8 @@ And your spec:
 
 describe("templating", function() {
   it("is built in to Sprockets", function() {
-    $('#konacha').html(JST['templates/hello']());
-    $('#konacha h1').text().should.equal('Hello Konacha!');
+    $('body').html(JST['templates/hello']());
+    $('body h1').text().should.equal('Hello Konacha!');
   });
 });
 ```

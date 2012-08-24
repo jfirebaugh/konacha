@@ -1,6 +1,9 @@
 #= require jquery
 
-describe "the #konacha element", ->
+describe "the body#konacha element", ->
+  it "is empty", ->
+    $('#konacha').html().should.equal ''
+
   it "can have content added in one test...", ->
     $('#konacha').append('<h1 id="added">New Stuff</h1>')
     $('#konacha h1#added').length.should.equal(1)

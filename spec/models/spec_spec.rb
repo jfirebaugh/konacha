@@ -18,7 +18,7 @@ describe Konacha::Spec do
 
   describe "#url" do
     it "returns a URL path" do
-      described_class.new("array_spec.js").url.should == "/array_spec"
+      described_class.new("array_spec.js").url.should include "array_spec"
     end
   end
 

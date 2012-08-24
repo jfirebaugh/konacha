@@ -1,5 +1,7 @@
 # master
 
+* Run tests in an iframe, with `<body id="konacha">`
+
 # 1.5.0
 
 * Update mocha (1.4.0+) and chai (1.2.0)

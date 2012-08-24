@@ -3,14 +3,18 @@
   <head>
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
     <title>Konacha Tests</title>
-    <%= stylesheet_link_tag "mocha",   :debug => false %>
-    <%= stylesheet_link_tag "konacha", :debug => false %>
+
+    <% @stylesheets.each do |file| %>
+      <%# Use :debug => false for stylesheets to improve page load performance. %>
+      <%= stylesheet_link_tag file, :debug => false %>
+    <% end %>
+
     <%= javascript_include_tag "mocha", "chai", "konacha/#{Konacha.mode}", :debug => false %>
     <%= javascript_include_tag("konacha_config", :debug => false) if Rails.application.assets.find_asset('konacha_config') %>
     <%= javascript_include_tag "konacha", :debug => false %>
+
     <%= spec_include_tag *@specs %>
   </head>
   <body>
-    <div id="mocha"></div>
   </body>
 </html>

@@ -1,9 +1,9 @@
 //= require spec_helper
 //= require jquery
 
-describe("templating", function(){
-  it("is built in to Sprockets", function(){
-    $('#konacha').html(JST['templates/hello']());
-    $('#konacha h1').text().should.equal('Hello Konacha!');
+describe("templating", function() {
+  it("is built in to Sprockets", function() {
+    $('body').html(JST['templates/hello']());
+    $('body h1').text().should.equal('Hello Konacha!');
   });
 });

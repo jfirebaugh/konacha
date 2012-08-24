@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe "konacha/specs/specs" do
+  before do
+    assign(:stylesheets, [])
+  end
+
   it "includes konacha JS for given mode" do
     assign(:specs, [])
     Konacha.should_receive(:mode).any_number_of_times { :runner }
@@ -63,5 +67,14 @@ describe "konacha/specs/specs" do
 
     rendered.should have_selector("script[src='/assets/dependency_a.js?body=1']", :count => 1)
     rendered.should have_selector("script[src='/assets/dependency_b.js?body=1']", :count => 1)
+  end
+
+  it "render the stylesheets" do
+    assign(:stylesheets, %w(foo bar))
+
+    render
+
+    rendered.should have_selector("link[href='/assets/foo.css']")
+    rendered.should have_selector("link[href='/assets/bar.css']")
   end
 end
