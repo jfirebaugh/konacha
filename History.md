@@ -1,6 +1,6 @@
 # master
 
-* Update mocha (1.3.2) and chai (1.2.0)
+* Update mocha (1.4.0+) and chai (1.2.0)
 
 # 1.4.2
 
