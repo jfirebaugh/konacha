@@ -40,7 +40,7 @@ module Konacha
         Rails.application.assets.content_type_of(pathname) == 'application/javascript'
       }.map { |pathname|
         pathname.to_s.gsub(File.join(spec_root, ''), '')
-      }
+      }.sort
     end
   end
 end
