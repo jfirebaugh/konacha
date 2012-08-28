@@ -22,7 +22,7 @@ module Konacha
     end
 
     def url
-      "/#{asset_name}"
+      "/runner/#{asset_name}"
     end
 
     def asset_name

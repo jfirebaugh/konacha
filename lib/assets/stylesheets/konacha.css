@@ -1,5 +1,90 @@
-/* Keep #konacha div visible so we can test against element visibility */
-#konacha {
-  height: 0 ! important;
-  overflow: hidden ! important;
+/*
+ *= require mocha
+ */
+
+body {
+  padding: 60px 0;
+}
+
+#report {
+  -webkit-transform-origin: left top;
+     -moz-transform-origin: left top;
+      -ms-transform-origin: left top;
+       -o-transform-origin: left top;
+          transform-origin: left top;
+}
+
+#test-context {
+  -webkit-transform-origin: right top;
+     -moz-transform-origin: right top;
+      -ms-transform-origin: right top;
+       -o-transform-origin: right top;
+          transform-origin: right top;
+
+  width: 1000px;
+  height: 700px;
+
+  position: fixed;
+  top: 80px;
+  right: 25px;
+
+  /* inset */
+  border-top: 2px solid #c8c8c8;
+  border-bottom: 2px solid #eee;
+  border-left: 2px solid #ddd;
+  border-right: 2px solid #ddd;
+
+  /* opaque */
+  z-index: 1;
+  background-color: white;
+}
+
+@media (max-width: 1860px) {
+  #test-context {
+    -webkit-transform: scale(0.6666666666);
+       -moz-transform: scale(0.6666666666);
+        -ms-transform: scale(0.6666666666);
+         -o-transform: scale(0.6666666666);
+            transform: scale(0.6666666666);
+  }
+}
+
+@media (max-width: 1550px) {
+  #test-context {
+    -webkit-transform: scale(0.5);
+       -moz-transform: scale(0.5);
+        -ms-transform: scale(0.5);
+         -o-transform: scale(0.5);
+            transform: scale(0.5);
+  }
+}
+
+@media (max-width: 1380px) {
+  #report {
+    -webkit-transform: scale(0.8);
+       -moz-transform: scale(0.8);
+        -ms-transform: scale(0.8);
+         -o-transform: scale(0.8);
+            transform: scale(0.8);
+  }
+}
+
+@media (max-width: 1230px) {
+  #test-context {
+    -webkit-transform: scale(0.3333333333);
+       -moz-transform: scale(0.3333333333);
+        -ms-transform: scale(0.3333333333);
+         -o-transform: scale(0.3333333333);
+            transform: scale(0.3333333333);
+  }
+}
+
+@media (max-width: 1050px) {
+  #test-context {
+    -webkit-transform: scale(0.2);
+       -moz-transform: scale(0.2);
+        -ms-transform: scale(0.2);
+         -o-transform: scale(0.2);
+            transform: scale(0.2);
+  }
 }

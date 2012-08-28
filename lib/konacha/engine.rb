@@ -31,6 +31,7 @@ module Konacha
       options.port        ||= 3500
       options.application ||= self.class.application(app)
       options.driver      ||= :selenium
+      options.stylesheets ||= %w(application)
 
       app.config.assets.paths << app.root.join(options.spec_dir).to_s
     end
