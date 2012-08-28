@@ -998,7 +998,7 @@ function Mocha(options) {
   this.suite = new exports.Suite('', new exports.Context);
   this.ui(options.ui);
   this.reporter(options.reporter);
-  if (options.timeout) this.suite.timeout(options.timeout);
+  if (options.timeout) this.timeout(options.timeout);
 }
 
 /**
@@ -1014,16 +1014,20 @@ Mocha.prototype.addFile = function(file){
 };
 
 /**
- * Set reporter to `name`, defaults to "dot".
+ * Set reporter to `reporter`, defaults to "dot".
  *
- * @param {String} name
+ * @param {String|Function} reporter name of a reporter or a reporter constructor
  * @api public
  */
 
-Mocha.prototype.reporter = function(name){
-  name = name || 'dot';
-  this._reporter = require('./reporters/' + name);
-  if (!this._reporter) throw new Error('invalid reporter "' + name + '"');
+Mocha.prototype.reporter = function(reporter){
+  if ('function' == typeof reporter) {
+    this._reporter = reporter;
+  } else {
+    reporter = reporter || 'dot';
+    this._reporter = require('./reporters/' + reporter);
+    if (!this._reporter) throw new Error('invalid reporter "' + reporter + '"');
+  }
   return this;
 };
 
@@ -1146,6 +1150,18 @@ Mocha.prototype.growl = function(){
 
 Mocha.prototype.globals = function(globals){
   this.options.globals = globals;
+  return this;
+};
+
+/**
+ * Set the timeout in milliseconds.
+ *
+ * @param {Number} timeout
+ * @return {Mocha}
+ * @api public
+ */
+Mocha.prototype.timeout = function(timeout){
+  this.suite.timeout(timeout);
   return this;
 };
 
@@ -4573,20 +4589,13 @@ process.on = function(e, fn){
   }
 };
 
-/**
- * Expose mocha.
- */
-
-window.mocha = require('mocha');
-
 // boot
 ;(function(){
-  var utils = mocha.utils
-    , options = {}
-
-  // TODO: use new Mocha here... not mocha.grep etc
-
-  mocha.suite = new mocha.Suite('', new mocha.Context());
+  /**
+   * Expose mocha.
+   */
+  var Mocha = window.Mocha = require('mocha'),
+      mocha = window.mocha = new Mocha({reporter: 'html'});
 
   /**
    * Highlight the given string of `js`.
@@ -4620,7 +4629,7 @@ window.mocha = require('mocha');
    */
 
   function parse(qs) {
-    return utils.reduce(qs.replace('?', '').split('&'), function(obj, pair){
+    return Mocha.utils.reduce(qs.replace('?', '').split('&'), function(obj, pair){
       var i = pair.indexOf('=')
         , key = pair.slice(0, i)
         , val = pair.slice(++i);
@@ -4631,11 +4640,14 @@ window.mocha = require('mocha');
   }
 
   /**
-   * Grep.
+   * Override ui to ensure that the ui functions are initialized.
+   * Normally this would happen in Mocha.prototype.loadFiles.
    */
 
-  mocha.grep = function(str){
-    options.grep = new RegExp(utils.escapeRegexp(str));
+  mocha.ui = function(ui) {
+    Mocha.prototype.ui.call(this, ui);
+    this.suite.emit('pre-require', window, null, this);
+    return this;
   };
 
   /**
@@ -4643,14 +4655,9 @@ window.mocha = require('mocha');
    */
 
   mocha.setup = function(opts){
-    if ('string' === typeof opts) options.ui = opts;
-    else options = opts;
-
-    ui = mocha.interfaces[options.ui];
-    if (!ui) throw new Error('invalid mocha interface "' + ui + '"');
-    if (options.timeout) mocha.suite.timeout(options.timeout);
-    ui(mocha.suite);
-    mocha.suite.emit('pre-require', window, null, mocha);
+    if ('string' === typeof opts) opts = {ui: opts};
+    for (var opt in opts) this[opt](opts[opt]);
+    return this;
   };
 
   /**
@@ -4658,18 +4665,17 @@ window.mocha = require('mocha');
    */
 
   mocha.run = function(fn){
-    mocha.suite.emit('run');
-    var runner = new mocha.Runner(mocha.suite);
-    var Reporter = options.reporter || mocha.reporters.HTML;
-    var reporter = new Reporter(runner);
+    var options = this.options;
+    options.globals = options.globals || [];
+    options.globals.push('location');
+
     var query = parse(window.location.search || "");
-    if (query.grep) runner.grep(new RegExp(query.grep));
-    if (options.grep) runner.grep(options.grep);
-    if (options.ignoreLeaks) runner.ignoreLeaks = true;
-    if (options.globals) runner.globals(options.globals);
-    runner.globals(['location']);
-    runner.on('end', highlightCode);
-    return runner.run(fn);
+    if (query.grep) this.grep(query.grep);
+
+    return Mocha.prototype.run.call(this, function () {
+      highlightCode();
+      if (fn) fn();
+    });
   };
 })();
 })();
