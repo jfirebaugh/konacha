@@ -40,7 +40,7 @@ module Konacha
     end
 
     def passed?
-      examples.all? { |example| example.passed? }
+      examples.all? { |example| example.passed? || example.pending? }
     end
 
     def failure_messages
