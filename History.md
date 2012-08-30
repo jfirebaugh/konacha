@@ -2,6 +2,10 @@
 
 * Run tests in an iframe, with `<body id="konacha">`
 
+# 1.x-stable
+
+* Fix exit code to be 0 if there are pending tests
+
 # 1.5.0
 
 * Update mocha (1.4.0+) and chai (1.2.0)
