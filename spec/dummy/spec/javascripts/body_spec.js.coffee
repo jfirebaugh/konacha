@@ -17,11 +17,5 @@ describe "the body#konacha element", ->
   it "... that is removed before the next one starts", ->
     $('#konacha').hasClass('test').should.be.false
 
-  it "can be removed in one test...", ->
-    $('#konacha').remove()
-
-  it "... and is re-added before the next one starts", ->
-    $('#konacha').length.should.equal(1)
-
   it "is visible", ->
     $('#konacha').is(':visible').should.be.true
