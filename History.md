@@ -1,4 +1,6 @@
-# master
+# 1.x-stable
+
+* Fix exit code to be 0 if there are pending tests
 
 # 1.5.0
 
