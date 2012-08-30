@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "konacha/specs/specs" do
+describe "konacha/specs/runner" do
   before do
     assign(:stylesheets, [])
   end
