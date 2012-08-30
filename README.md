@@ -25,6 +25,11 @@ As of Konacha 2.0, your tests are run inside an iframe. See the section
 "[Using the DOM](#using-the-dom)" for details. You may be able to upgrade
 without any changes to your test code.
 
+As of Konacha 2.0, a `konacha_config.js` or `konacha_config.js.coffee` file
+is no longer automatically included, and `Konacha.mochaOptions` no longer
+exists. Instead, use a [`spec_helper.js`](#spec-helper) and mocha's chainable setup
+methods.
+
 ## Installation
 
 Add konacha to the `:test` and `:development` groups in the Gemfile and `bundle install`:
@@ -127,6 +132,19 @@ describe("Array#sum", function() {
 The `spec_helper` is a good place to set Mocha and Chai options as well, for instance:
 
 ```javascript
+// set the Mocha test interface
+// see http://visionmedia.github.com/mocha/#interfaces
+mocha.ui('bdd');
+
+// ignore the following globals during leak detection
+mocha.globals(['YUI']);
+
+// or, ignore all leaks
+mocha.ignoreLeaks();
+
+// set slow test timeout in ms
+mocha.timeout(5);
+
 // Show stack trace on failing assertion.
 chai.Assertion.includeStack = true;
 ```
@@ -165,29 +183,6 @@ The `stylesheets` option sets the stylesheets to be linked from the `<head>`
 of the test runner iframe.
 
 The values above are the defaults.
-
-### Mocha Configuration
-
-You can customize the Mocha options passed into `mocha.setup(..)` by creating a file
-named `konacha_config.js` or `konacha_config.js.coffee` in `spec/javascripts` and
-setting properties of `Konacha.mochaOptions`:
-
-```javascript
-// set the Mocha test interface
-// see http://visionmedia.github.com/mocha/#interfaces
-Konacha.mochaOptions.ui = 'bdd';
-
-// ignore the following globals during leak detection
-Konacha.mochaOptions.globals = ['YUI'];
-
-// or, ignore all leaks
-Konacha.mochaOptions.ignoreLeaks = true;
-
-// set slow test timeout in ms
-Konacha.mochaOptions.timeout = 5;
-```
-
-The `ui` and `reporter` Mocha options are set by Konacha and must not be modified.
 
 ## Test Interface and Assertions
 
