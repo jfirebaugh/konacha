@@ -8,7 +8,7 @@ module Konacha
       @iframe_path = runner_path + request.fullpath
     end
 
-    def specs
+    def runner
       @specs = Konacha::Spec.find(params[:path] || "")
       @stylesheets = Konacha::Engine.config.konacha.stylesheets
     end
