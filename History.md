@@ -1,6 +1,7 @@
 # master
 
 * Run tests in an iframe, with `<body id="konacha">`
+* Removed support for konacha_config.js and Konacha.mochaOptions
 
 # 1.x-stable
 
