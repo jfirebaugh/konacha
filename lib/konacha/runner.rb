@@ -102,9 +102,7 @@ module Konacha
         Example.new(row)
       end
     rescue => e
-      msg = [e.inspect]
-      msg << e.message unless e.message.blank?
-      raise Konacha::Error, "Error communicating with browser process:\n#{msg.join("\n")}"
+      raise e, "Error communicating with browser process: #{e}", e.backtrace
     end
   end
 
@@ -139,5 +137,11 @@ module Konacha
   end
 
   class Error < StandardError
+    attr_accessor :original
+
+    def initialize(msg, original=nil);
+      super(msg);
+      @original = original;
+    end
   end
 end
