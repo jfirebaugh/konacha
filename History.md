@@ -1,6 +1,8 @@
 # 1.x-stable
 
 * Fix exit code to be 0 if there are pending tests
+* Update mocha (1.4.2). If you were previously referring to objects on the
+  global `mocha` object, they might now be found on `Mocha`.
 
 # 1.5.0
 
