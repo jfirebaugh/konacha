@@ -1,6 +1,7 @@
 # 1.x-stable
 
 * Fix exit code to be 0 if there are pending tests
+* Show full backtrace when test runner fails
 * Update mocha (1.4.1)
 
 # 1.5.0
