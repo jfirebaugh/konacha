@@ -4,7 +4,7 @@
 [![Dependency Status](https://gemnasium.com/jfirebaugh/konacha.png)](https://gemnasium.com/jfirebaugh/konacha)
 
 Konacha is a Rails engine that allows you to test your JavaScript with the
-[mocha](http://visionmedia.github.com/mocha/) test framework and [chai](http://chaijs.com/)
+[Mocha](http://visionmedia.github.com/mocha/) test framework and [chai](http://chaijs.com/)
 assertion library.
 
 [![Konacha][2]][1]
@@ -21,12 +21,16 @@ Photo credit: [FCartegnie](http://commons.wikimedia.org/wiki/File:Konacha.jpg), 
 
 ## Upgrading from Konacha 1.x
 
+### Iframe
+
 As of Konacha 2.0, your tests are run inside an iframe. See the section
 "[Using the DOM](#using-the-dom)" for details. You may be able to upgrade
 without any changes to your test code.
 
-Also, in Konacha 1.x you would set `Konacha.mochaOptions` in
-`konacha_config.js`, like so:
+### Options
+
+In Konacha 1.x you would set `Konacha.mochaOptions` in `konacha_config.js`,
+like so:
 
 ```javascript
 // Old syntax
@@ -34,13 +38,19 @@ Konacha.mochaOptions.ignoreLeaks = true;
 ```
 
 Starting with Konacha 2.0, the `konacha_config.js` file is no longer used.
-Instead, call mocha's own methods in [`spec_helper.js`](#spec-helper), like
+Instead, call Mocha's own methods in [`spec_helper.js`](#spec-helper), like
 so:
 
 ```javascript
 // New syntax; see "Spec Helper" section below
 mocha.ignoreLeaks();
 ```
+
+### Global `mocha`
+
+Konacha 2.0 ships with an upgraded Mocha. Some objects that were previously
+available on the global `mocha` object might now be located on `Mocha`. If you
+get an error message to this effect, adjust your code accordingly.
 
 ## Installation
 

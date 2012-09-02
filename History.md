@@ -3,6 +3,7 @@
 * Run tests in an iframe, with `<body id="konacha">`
 * Removed support for konacha_config.js and Konacha.mochaOptions in favor of
   Mocha's own configuration methods. See the README for update instructions.
+* Update mocha (1.4.2)
 
 # 1.x-stable
 

@@ -999,7 +999,7 @@ function Mocha(options) {
   this.suite = new exports.Suite('', new exports.Context);
   this.ui(options.ui);
   this.reporter(options.reporter);
-  if (options.timeout) this.suite.timeout(options.timeout);
+  if (options.timeout) this.timeout(options.timeout);
 }
 
 /**
@@ -1015,16 +1015,24 @@ Mocha.prototype.addFile = function(file){
 };
 
 /**
- * Set reporter to `name`, defaults to "dot".
+ * Set reporter to `reporter`, defaults to "dot".
  *
- * @param {String} name
+ * @param {String|Function} reporter name of a reporter or a reporter constructor
  * @api public
  */
 
-Mocha.prototype.reporter = function(name){
-  name = name || 'dot';
-  this._reporter = require('./reporters/' + name);
-  if (!this._reporter) throw new Error('invalid reporter "' + name + '"');
+Mocha.prototype.reporter = function(reporter){
+  if ('function' == typeof reporter) {
+    this._reporter = reporter;
+  } else {
+    reporter = reporter || 'dot';
+    try {
+      this._reporter = require('./reporters/' + reporter);
+    } catch (err) {
+      this._reporter = require(reporter);
+    }
+    if (!this._reporter) throw new Error('invalid reporter "' + reporter + '"');
+  }
   return this;
 };
 
@@ -1138,15 +1146,28 @@ Mocha.prototype.growl = function(){
 };
 
 /**
- * Ignore `globals`.
+ * Ignore `globals` array or string.
  *
- * @param {Array} globals
+ * @param {Array|String} globals
  * @return {Mocha}
  * @api public
  */
 
 Mocha.prototype.globals = function(globals){
-  this.options.globals = globals;
+  this.options.globals = (this.options.globals || []).concat(globals);
+  return this;
+};
+
+/**
+ * Set the timeout in milliseconds.
+ *
+ * @param {Number} timeout
+ * @return {Mocha}
+ * @api public
+ */
+
+Mocha.prototype.timeout = function(timeout){
+  this.suite.timeout(timeout);
   return this;
 };
 
@@ -1759,13 +1780,12 @@ var statsTemplate = '<ul id="stats">'
  * @api public
  */
 
-function HTML(runner) {
+function HTML(runner, root) {
   Base.call(this, runner);
 
   var self = this
     , stats = this.stats
     , total = runner.total
-    , root = document.getElementById('mocha')
     , stat = fragment(statsTemplate)
     , items = stat.getElementsByTagName('li')
     , passes = items[1].getElementsByTagName('em')[0]
@@ -1778,6 +1798,8 @@ function HTML(runner) {
     , stack = [report]
     , progress
     , ctx
+
+  root = root || document.getElementById('mocha');
 
   if (canvas.getContext) {
     var ratio = window.devicePixelRatio || 1;
@@ -1813,8 +1835,7 @@ function HTML(runner) {
     if (suite.root) return;
 
     // suite
-    var grep = '^' + encodeURIComponent(utils.escapeRegexp(suite.fullTitle()));
-    var url = location.protocol + '//' + location.host + location.pathname + '?grep=' + grep;
+    var url = '?grep=' + encodeURIComponent(suite.fullTitle());
     var el = fragment('<li class="suite"><h1><a href="%s">%s</a></h1></li>', url, escape(suite.title));
 
     // container
@@ -4511,6 +4532,59 @@ exports.escapeRegexp = function(str){
 exports.trim = function(str){
   return str.replace(/^\s+|\s+$/g, '');
 };
+
+/**
+ * Parse the given `qs`.
+ *
+ * @param {String} qs
+ * @return {Object}
+ * @api private
+ */
+
+exports.parseQuery = function(qs){
+  return exports.reduce(qs.replace('?', '').split('&'), function(obj, pair){
+    var i = pair.indexOf('=')
+      , key = pair.slice(0, i)
+      , val = pair.slice(++i);
+
+    obj[key] = decodeURIComponent(val);
+    return obj;
+  }, {});
+};
+
+/**
+ * Highlight the given string of `js`.
+ *
+ * @param {String} js
+ * @return {String}
+ * @api private
+ */
+
+function highlight(js) {
+  return js
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\/\/(.*)/gm, '<span class="comment">//$1</span>')
+    .replace(/('.*?')/gm, '<span class="string">$1</span>')
+    .replace(/(\d+\.\d+)/gm, '<span class="number">$1</span>')
+    .replace(/(\d+)/gm, '<span class="number">$1</span>')
+    .replace(/\bnew *(\w+)/gm, '<span class="keyword">new</span> <span class="init">$1</span>')
+    .replace(/\b(function|new|throw|return|var|if|else)\b/gm, '<span class="keyword">$1</span>')
+}
+
+/**
+ * Highlight the contents of tag `name`.
+ *
+ * @param {String} name
+ * @api private
+ */
+
+exports.highlightTags = function(name) {
+  var code = document.getElementsByTagName(name);
+  for (var i = 0, len = code.length; i < len; ++i) {
+    code[i].innerHTML = highlight(code[i].innerHTML);
+  }
+};
 }); // module: utils.js
 /**
  * Node shims.
@@ -4574,69 +4648,25 @@ process.on = function(e, fn){
   }
 };
 
-/**
- * Expose mocha.
- */
-
-window.mocha = require('mocha');
-
 // boot
 ;(function(){
-  var utils = mocha.utils
-    , options = {}
-
-  // TODO: use new Mocha here... not mocha.grep etc
-
-  mocha.suite = new mocha.Suite('', new mocha.Context());
 
   /**
-   * Highlight the given string of `js`.
+   * Expose mocha.
    */
 
-  function highlight(js) {
-    return js
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/\/\/(.*)/gm, '<span class="comment">//$1</span>')
-      .replace(/('.*?')/gm, '<span class="string">$1</span>')
-      .replace(/(\d+\.\d+)/gm, '<span class="number">$1</span>')
-      .replace(/(\d+)/gm, '<span class="number">$1</span>')
-      .replace(/\bnew *(\w+)/gm, '<span class="keyword">new</span> <span class="init">$1</span>')
-      .replace(/\b(function|new|throw|return|var|if|else)\b/gm, '<span class="keyword">$1</span>')
-  }
+  var Mocha = window.Mocha = require('mocha'),
+      mocha = window.mocha = new Mocha({ reporter: 'html' });
 
   /**
-   * Highlight code contents.
+   * Override ui to ensure that the ui functions are initialized.
+   * Normally this would happen in Mocha.prototype.loadFiles.
    */
 
-  function highlightCode() {
-    var code = document.getElementsByTagName('code');
-    for (var i = 0, len = code.length; i < len; ++i) {
-      code[i].innerHTML = highlight(code[i].innerHTML);
-    }
-  }
-
-  /**
-   * Parse the given `qs`.
-   */
-
-  function parse(qs) {
-    return utils.reduce(qs.replace('?', '').split('&'), function(obj, pair){
-      var i = pair.indexOf('=')
-        , key = pair.slice(0, i)
-        , val = pair.slice(++i);
-
-      obj[key] = decodeURIComponent(val);
-      return obj;
-    }, {});
-  }
-
-  /**
-   * Grep.
-   */
-
-  mocha.grep = function(str){
-    options.grep = new RegExp(utils.escapeRegexp(str));
+  mocha.ui = function(ui){
+    Mocha.prototype.ui.call(this, ui);
+    this.suite.emit('pre-require', window, null, this);
+    return this;
   };
 
   /**
@@ -4644,14 +4674,9 @@ window.mocha = require('mocha');
    */
 
   mocha.setup = function(opts){
-    if ('string' === typeof opts) options.ui = opts;
-    else options = opts;
-
-    ui = mocha.interfaces[options.ui];
-    if (!ui) throw new Error('invalid mocha interface "' + ui + '"');
-    if (options.timeout) mocha.suite.timeout(options.timeout);
-    ui(mocha.suite);
-    mocha.suite.emit('pre-require', window, null, mocha);
+    if ('string' == typeof opts) opts = { ui: opts };
+    for (var opt in opts) this[opt](opts[opt]);
+    return this;
   };
 
   /**
@@ -4659,18 +4684,16 @@ window.mocha = require('mocha');
    */
 
   mocha.run = function(fn){
-    mocha.suite.emit('run');
-    var runner = new mocha.Runner(mocha.suite);
-    var Reporter = options.reporter || mocha.reporters.HTML;
-    var reporter = new Reporter(runner);
-    var query = parse(window.location.search || "");
-    if (query.grep) runner.grep(new RegExp(query.grep));
-    if (options.grep) runner.grep(options.grep);
-    if (options.ignoreLeaks) runner.ignoreLeaks = true;
-    if (options.globals) runner.globals(options.globals);
-    runner.globals(['location']);
-    runner.on('end', highlightCode);
-    return runner.run(fn);
+    var options = mocha.options;
+    mocha.globals('location');
+
+    var query = Mocha.utils.parseQuery(window.location.search || '');
+    if (query.grep) mocha.grep(query.grep);
+
+    return Mocha.prototype.run.call(mocha, function(){
+      Mocha.utils.highlightTags('code');
+      if (fn) fn();
+    });
   };
 })();
 })();
