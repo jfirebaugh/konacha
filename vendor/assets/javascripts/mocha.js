@@ -940,7 +940,8 @@ require.register("mocha.js", function(module, exports, require){
  * Module dependencies.
  */
 
-var path = require('browser/path');
+var path = require('browser/path')
+  , utils = require('./utils');
 
 /**
  * Expose `Mocha`.
@@ -952,7 +953,7 @@ exports = module.exports = Mocha;
  * Expose internals.
  */
 
-exports.utils = require('./utils');
+exports.utils = utils;
 exports.interfaces = require('./interfaces');
 exports.reporters = require('./reporters');
 exports.Runnable = require('./runnable');
@@ -1025,7 +1026,11 @@ Mocha.prototype.reporter = function(reporter){
     this._reporter = reporter;
   } else {
     reporter = reporter || 'dot';
-    this._reporter = require('./reporters/' + reporter);
+    try {
+      this._reporter = require('./reporters/' + reporter);
+    } catch (err) {
+      this._reporter = require(reporter);
+    }
     if (!this._reporter) throw new Error('invalid reporter "' + reporter + '"');
   }
   return this;
@@ -1090,16 +1095,16 @@ Mocha.prototype._growl = function(runner, reporter) {
 };
 
 /**
- * Add regexp to grep for to the options object
+ * Add regexp to grep, if `re` is a string it is escaped.
  *
- * @param {RegExp} or {String} re
+ * @param {RegExp|String} re
  * @return {Mocha}
  * @api public
  */
 
 Mocha.prototype.grep = function(re){
   this.options.grep = 'string' == typeof re
-    ? new RegExp(re)
+    ? new RegExp(utils.escapeRegexp(re))
     : re;
   return this;
 };
@@ -1141,15 +1146,15 @@ Mocha.prototype.growl = function(){
 };
 
 /**
- * Ignore `globals`.
+ * Ignore `globals` array or string.
  *
- * @param {Array} globals
+ * @param {Array|String} globals
  * @return {Mocha}
  * @api public
  */
 
 Mocha.prototype.globals = function(globals){
-  this.options.globals = globals;
+  this.options.globals = (this.options.globals || []).concat(globals);
   return this;
 };
 
@@ -1160,6 +1165,7 @@ Mocha.prototype.globals = function(globals){
  * @return {Mocha}
  * @api public
  */
+
 Mocha.prototype.timeout = function(timeout){
   this.suite.timeout(timeout);
   return this;
@@ -1829,8 +1835,7 @@ function HTML(runner, root) {
     if (suite.root) return;
 
     // suite
-    var grep = '^' + encodeURIComponent(utils.escapeRegexp(suite.fullTitle()));
-    var url = '?grep=' + grep;
+    var url = '?grep=' + encodeURIComponent(suite.fullTitle());
     var el = fragment('<li class="suite"><h1><a href="%s">%s</a></h1></li>', url, escape(suite.title));
 
     // container
@@ -1973,6 +1978,7 @@ exports.Min = require('./min');
 exports.Spec = require('./spec');
 exports.Nyan = require('./nyan');
 exports.XUnit = require('./xunit');
+exports.Markdown = require('./markdown');
 exports.Progress = require('./progress');
 exports.Landing = require('./landing');
 exports.JSONCov = require('./json-cov');
@@ -4526,6 +4532,59 @@ exports.escapeRegexp = function(str){
 exports.trim = function(str){
   return str.replace(/^\s+|\s+$/g, '');
 };
+
+/**
+ * Parse the given `qs`.
+ *
+ * @param {String} qs
+ * @return {Object}
+ * @api private
+ */
+
+exports.parseQuery = function(qs){
+  return exports.reduce(qs.replace('?', '').split('&'), function(obj, pair){
+    var i = pair.indexOf('=')
+      , key = pair.slice(0, i)
+      , val = pair.slice(++i);
+
+    obj[key] = decodeURIComponent(val);
+    return obj;
+  }, {});
+};
+
+/**
+ * Highlight the given string of `js`.
+ *
+ * @param {String} js
+ * @return {String}
+ * @api private
+ */
+
+function highlight(js) {
+  return js
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\/\/(.*)/gm, '<span class="comment">//$1</span>')
+    .replace(/('.*?')/gm, '<span class="string">$1</span>')
+    .replace(/(\d+\.\d+)/gm, '<span class="number">$1</span>')
+    .replace(/(\d+)/gm, '<span class="number">$1</span>')
+    .replace(/\bnew *(\w+)/gm, '<span class="keyword">new</span> <span class="init">$1</span>')
+    .replace(/\b(function|new|throw|return|var|if|else)\b/gm, '<span class="keyword">$1</span>')
+}
+
+/**
+ * Highlight the contents of tag `name`.
+ *
+ * @param {String} name
+ * @api private
+ */
+
+exports.highlightTags = function(name) {
+  var code = document.getElementsByTagName(name);
+  for (var i = 0, len = code.length; i < len; ++i) {
+    code[i].innerHTML = highlight(code[i].innerHTML);
+  }
+};
 }); // module: utils.js
 /**
  * Node shims.
@@ -4591,60 +4650,20 @@ process.on = function(e, fn){
 
 // boot
 ;(function(){
+
   /**
    * Expose mocha.
    */
+
   var Mocha = window.Mocha = require('mocha'),
-      mocha = window.mocha = new Mocha({reporter: 'html'});
-
-  /**
-   * Highlight the given string of `js`.
-   */
-
-  function highlight(js) {
-    return js
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/\/\/(.*)/gm, '<span class="comment">//$1</span>')
-      .replace(/('.*?')/gm, '<span class="string">$1</span>')
-      .replace(/(\d+\.\d+)/gm, '<span class="number">$1</span>')
-      .replace(/(\d+)/gm, '<span class="number">$1</span>')
-      .replace(/\bnew *(\w+)/gm, '<span class="keyword">new</span> <span class="init">$1</span>')
-      .replace(/\b(function|new|throw|return|var|if|else)\b/gm, '<span class="keyword">$1</span>')
-  }
-
-  /**
-   * Highlight code contents.
-   */
-
-  function highlightCode() {
-    var code = document.getElementsByTagName('code');
-    for (var i = 0, len = code.length; i < len; ++i) {
-      code[i].innerHTML = highlight(code[i].innerHTML);
-    }
-  }
-
-  /**
-   * Parse the given `qs`.
-   */
-
-  function parse(qs) {
-    return Mocha.utils.reduce(qs.replace('?', '').split('&'), function(obj, pair){
-      var i = pair.indexOf('=')
-        , key = pair.slice(0, i)
-        , val = pair.slice(++i);
-
-      obj[key] = decodeURIComponent(val);
-      return obj;
-    }, {});
-  }
+      mocha = window.mocha = new Mocha({ reporter: 'html' });
 
   /**
    * Override ui to ensure that the ui functions are initialized.
    * Normally this would happen in Mocha.prototype.loadFiles.
    */
 
-  mocha.ui = function(ui) {
+  mocha.ui = function(ui){
     Mocha.prototype.ui.call(this, ui);
     this.suite.emit('pre-require', window, null, this);
     return this;
@@ -4655,7 +4674,7 @@ process.on = function(e, fn){
    */
 
   mocha.setup = function(opts){
-    if ('string' === typeof opts) opts = {ui: opts};
+    if ('string' == typeof opts) opts = { ui: opts };
     for (var opt in opts) this[opt](opts[opt]);
     return this;
   };
@@ -4665,15 +4684,14 @@ process.on = function(e, fn){
    */
 
   mocha.run = function(fn){
-    var options = this.options;
-    options.globals = options.globals || [];
-    options.globals.push('location');
+    var options = mocha.options;
+    mocha.globals('location');
 
-    var query = parse(window.location.search || "");
-    if (query.grep) this.grep(query.grep);
+    var query = Mocha.utils.parseQuery(window.location.search || '');
+    if (query.grep) mocha.grep(query.grep);
 
-    return Mocha.prototype.run.call(this, function () {
-      highlightCode();
+    return Mocha.prototype.run.call(mocha, function(){
+      Mocha.utils.highlightTags('code');
       if (fn) fn();
     });
   };
