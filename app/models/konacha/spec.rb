@@ -22,7 +22,7 @@ module Konacha
     end
 
     def url
-      "/runner/#{asset_name}"
+      "/iframe/#{asset_name}"
     end
 
     def asset_name
