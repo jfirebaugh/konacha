@@ -135,13 +135,4 @@ module Konacha
       end
     end
   end
-
-  class Error < StandardError
-    attr_accessor :original
-
-    def initialize(msg, original=nil);
-      super(msg);
-      @original = original;
-    end
-  end
 end
