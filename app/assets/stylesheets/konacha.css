@@ -6,7 +6,7 @@ body {
   padding: 60px 0;
 }
 
-#test-context {
+.test-context {
   -webkit-transform-origin: right top;
      -moz-transform-origin: right top;
       -ms-transform-origin: right top;
@@ -29,10 +29,13 @@ body {
   /* opaque */
   z-index: 1;
   background-color: white;
+
+  /* dynamically shown */
+  display: none;
 }
 
 @media (max-width: 1860px) {
-  #test-context {
+  .test-context {
     -webkit-transform: scale(0.6666666666);
        -moz-transform: scale(0.6666666666);
         -ms-transform: scale(0.6666666666);
@@ -42,7 +45,7 @@ body {
 }
 
 @media (max-width: 1550px) {
-  #test-context {
+  .test-context {
     -webkit-transform: scale(0.5);
        -moz-transform: scale(0.5);
         -ms-transform: scale(0.5);
@@ -52,7 +55,7 @@ body {
 }
 
 @media (max-width: 1230px) {
-  #test-context {
+  .test-context {
     -webkit-transform: scale(0.3333333333);
        -moz-transform: scale(0.3333333333);
         -ms-transform: scale(0.3333333333);
@@ -62,7 +65,7 @@ body {
 }
 
 @media (max-width: 1050px) {
-  #test-context {
+  .test-context {
     -webkit-transform: scale(0.2);
        -moz-transform: scale(0.2);
         -ms-transform: scale(0.2);

@@ -91,8 +91,8 @@ This is the recommended mode for development, since you can simply hit refresh
 to reload all your test and asset files. To debug tests, use the `debugger`
 statement anywhere in a test to halt execution.
 
-To run code in the JavaScript console, be sure to select the `#test-context`
-frame first, so your code runs in the correct context.
+To run code in the JavaScript console, be sure to select the desired iframe
+first, so your code runs in the correct context.
 
 ![Selecting the test-context frame in Chrome](https://raw.github.com/jfirebaugh/konacha/master/images/frame-select.png)
 
@@ -149,8 +149,8 @@ chai.Assertion.includeStack = true;
 
 ## Directives and Asset Bundling
 
-We suggest that you explicitly require just the assets necessary for each spec. In CI
-mode, Konacha will run each spec in isolation, and requiring things explicitly will help
+We suggest that you explicitly require just the assets necessary for each spec.
+Konacha runs each spec file in isolation, and requiring things explicitly will help
 ensure your scripts don't accumulate hidden dependencies and tight coupling.
 
 However, you are free to ignore this advice and require the entire application.js asset
@@ -230,9 +230,10 @@ describe("templating", function() {
 
 ### Iframe
 
-As of Konacha 2.0, your tests are run inside an iframe.  For compatibility with
-Konacha 1.x, the iframe's `<body>` element will have `id="konacha"` set on it, so
-you may be able to upgrade without any changes to your test code.
+As of Konacha 2.0, each test file is run inside an isolated iframe. For
+compatibility with Konacha 1.x, the iframe's `<body>` element will have
+`id="konacha"` set on it. If your specs are already self-contained, you may be
+able to upgrade without any changes to your test code.
 
 ### Options
 

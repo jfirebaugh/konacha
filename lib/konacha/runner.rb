@@ -7,7 +7,7 @@ module Konacha
       new.run
     end
 
-    attr_reader :io
+    attr_reader :io, :examples
 
     def initialize(options = {})
       @io = options[:output] || STDOUT
@@ -16,7 +16,27 @@ module Konacha
     def run
       before = Time.now
 
-      spec_runners.each { |spec_runner| spec_runner.run } # prints dots
+      begin
+        session.visit("/")
+
+        dots_printed = 0
+        begin
+          sleep 0.1
+          done, dots = session.evaluate_script('[Konacha.done, Konacha.dots]')
+          if dots
+            io.write colorize_dots(dots[dots_printed..-1])
+            io.flush
+            dots_printed = dots.length
+          end
+        end until done
+
+        @examples = JSON.parse(session.evaluate_script('Konacha.getResults()')).map do |row|
+          Example.new(row)
+        end
+      rescue => e
+        raise e, "Error communicating with browser process: #{e}", e.backtrace
+      end
+
       io.puts ""
       io.puts ""
       failure_messages.each { |msg| io.write("#{msg}\n\n") }
@@ -25,10 +45,6 @@ module Konacha
       io.puts "Finished in #{seconds} seconds"
       io.puts "#{examples.size} examples, #{failed_examples.size} failures, #{pending_examples.size} pending"
       passed?
-    end
-
-    def examples
-      spec_runners.map { |spec_runner| spec_runner.examples }.flatten
     end
 
     def pending_examples
@@ -51,27 +67,6 @@ module Konacha
       @session ||= Capybara::Session.new(Konacha.driver, Konacha.application)
     end
 
-    def spec_runners
-      @spec_runners ||= Konacha::Spec.all.map { |spec| SpecRunner.new(self, spec) }
-    end
-  end
-
-  class SpecRunner
-    attr_reader :runner, :spec, :examples
-
-    def initialize(runner, spec)
-      @runner = runner
-      @spec = spec
-    end
-
-    def session
-      runner.session
-    end
-
-    def io
-      runner.io
-    end
-
     def colorize_dots(dots)
       dots = dots.chars.map do |d|
         case d
@@ -82,27 +77,6 @@ module Konacha
         end
       end
       dots.join ''
-    end
-
-    def run
-      session.visit(spec.url)
-
-      dots_printed = 0
-      begin
-        sleep 0.1
-        done, dots = session.evaluate_script('[Konacha.done, Konacha.dots]')
-        if dots
-          io.write colorize_dots(dots[dots_printed..-1])
-          io.flush
-          dots_printed = dots.length
-        end
-      end until done
-
-      @examples = JSON.parse(session.evaluate_script('Konacha.getResults()')).map do |row|
-        Example.new(row)
-      end
-    rescue => e
-      raise e, "Error communicating with browser process: #{e}", e.backtrace
     end
   end
 

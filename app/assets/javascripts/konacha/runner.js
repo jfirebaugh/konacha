@@ -1,9 +1,8 @@
-//= require konacha
-
-Konacha.dots = "";
-
-Konacha.getResults = function() {
-  return JSON.stringify(Konacha.results);
+Konacha = {
+  dots: "",
+  getResults: function() {
+    return JSON.stringify(Konacha.results);
+  }
 };
 
 mocha.reporter(function(runner) {

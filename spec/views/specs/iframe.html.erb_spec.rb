@@ -5,15 +5,6 @@ describe "konacha/specs/iframe" do
     assign(:stylesheets, [])
   end
 
-  it "includes konacha JS for given mode" do
-    assign(:specs, [])
-    Konacha.should_receive(:mode).any_number_of_times { :runner }
-
-    render
-
-    rendered.should have_css("script[src='/assets/konacha/runner.js']")
-  end
-
   def asset_double(asset_name, dependencies = [])
     asset = double("asset called '#{asset_name}'")
     asset.stub(:to_a).and_return([dependencies, asset].flatten)
