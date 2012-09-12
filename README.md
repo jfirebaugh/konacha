@@ -19,39 +19,6 @@ the asset pipeline and engines.
 
 Photo credit: [FCartegnie](http://commons.wikimedia.org/wiki/File:Konacha.jpg), CC-BY-SA.
 
-## Upgrading from Konacha 1.x
-
-### Iframe
-
-As of Konacha 2.0, your tests are run inside an iframe. See the section
-"[Using the DOM](#using-the-dom)" for details. You may be able to upgrade
-without any changes to your test code.
-
-### Options
-
-In Konacha 1.x you would set `Konacha.mochaOptions` in `konacha_config.js`,
-like so:
-
-```javascript
-// Old syntax
-Konacha.mochaOptions.ignoreLeaks = true;
-```
-
-Starting with Konacha 2.0, the `konacha_config.js` file is no longer used.
-Instead, call Mocha's own methods in [`spec_helper.js`](#spec-helper), like
-so:
-
-```javascript
-// New syntax; see "Spec Helper" section below
-mocha.ignoreLeaks();
-```
-
-### Global `mocha`
-
-Konacha 2.0 ships with an upgraded Mocha. Some objects that were previously
-available on the global `mocha` object might now be located on `Mocha`. If you
-get an error message to this effect, adjust your code accordingly.
-
 ## Installation
 
 Add konacha to the `:test` and `:development` groups in the Gemfile and `bundle install`:
@@ -269,6 +236,39 @@ describe("templating", function() {
   });
 });
 ```
+
+## Upgrading from Konacha 1.x
+
+### Iframe
+
+As of Konacha 2.0, your tests are run inside an iframe. See the section
+"[Using the DOM](#using-the-dom)" for details. You may be able to upgrade
+without any changes to your test code.
+
+### Options
+
+In Konacha 1.x you would set `Konacha.mochaOptions` in `konacha_config.js`,
+like so:
+
+```javascript
+// Old syntax
+Konacha.mochaOptions.ignoreLeaks = true;
+```
+
+Starting with Konacha 2.0, the `konacha_config.js` file is no longer used.
+Instead, call Mocha's own methods in [`spec_helper.js`](#spec-helper), like
+so:
+
+```javascript
+// New syntax; see "Spec Helper" section below
+mocha.ignoreLeaks();
+```
+
+### Global `mocha`
+
+Konacha 2.0 ships with an upgraded Mocha. Some objects that were previously
+available on the global `mocha` object might now be located on `Mocha`. If you
+get an error message to this effect, adjust your code accordingly.
 
 ## Contributing
 
