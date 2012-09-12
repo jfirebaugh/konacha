@@ -68,6 +68,9 @@ describe "Array#sum", ->
     [1,2,3].sum().should.equal(6)
 ```
 
+Your tests are run inside an iframe. You have the entire `<body>` element to
+yourself, and it is automatically reset between tests.
+
 ## Running (Rake Tasks)
 
 ### In the Browser
@@ -85,7 +88,13 @@ to a subdirectory to run a subset of specs (e.g.
 `http://localhost:3500/models`).
 
 This is the recommended mode for development, since you can simply hit refresh
-to reload all your test and asset files.
+to reload all your test and asset files. To debug tests, use the `debugger`
+statement anywhere in a test to halt execution.
+
+To run code in the JavaScript console, be sure to select the `#test-context`
+frame first, so your code runs in the correct context.
+
+![Selecting the test-context frame in Chrome](https://raw.github.com/jfirebaugh/konacha/master/images/frame-select.png)
 
 ### Command-Line Runner
 
@@ -95,7 +104,7 @@ To run your tests from the command line, type:
 $ bundle exec rake konacha:run
 ```
 
-To run individual specs, pass a comma seperated list of spec file names via
+To run individual specs, pass a comma separated list of spec file names via
 the `SPEC` environment variable.
 
 ```
@@ -107,7 +116,7 @@ $ bundle exec rake konacha:run SPEC=foo_spec,bar_spec,etc_spec
 
 Since Konacha integrates with the asset pipeline, using setup helpers in your specs is
 easy. Just create a `spec_helper.js` or `spec_helper.js.coffee` file in `specs/javascripts`
-and require it in your tests, like so:
+and require it in your tests:
 
 ```javascript
 //= require spec_helper
@@ -169,9 +178,7 @@ The `spec_dir` option tells Konacha where to find JavaScript specs. `driver`
 names a Capybara driver used for the `run` task (try `:webkit`, after
 installing [capybara-webkit](https://github.com/thoughtbot/capybara-webkit)).
 The `stylesheets` option sets the stylesheets to be linked from the `<head>`
-of the test runner iframe.
-
-The values above are the defaults.
+of the test runner iframe. The values above are the defaults.
 
 ## Test Interface and Assertions
 
@@ -186,24 +193,6 @@ Konacha will make all three of chai's assertion styles available to you: `expect
 If you use jQuery, you may want to check out [chai-jquery](https://github.com/jfirebaugh/chai-jquery)
 for some jQuery-specific assertions. You can add it painlessly with the
 [chai-jquery-rails](https://github.com/wordofchristian/chai-jquery-rails) gem.
-
-## Using the DOM
-
-Your tests are run inside an iframe. You have the entire `<body>` element to
-yourself. The body is automatically reset between tests.
-
-For compatibility with Konacha 1.x, the `<body>` element will have
-`id="konacha"` set on it.
-
-## Debugging
-
-To debug tests, use the `debugger` statement anywhere in a test to halt
-execution.
-
-To run code in the JavaScript console, be sure to select the `#test-context`
-frame first, so your code runs in the correct context.
-
-![Selecting the test-context frame in Chrome](https://raw.github.com/jfirebaugh/konacha/master/images/frame-select.png)
 
 ## Templates / Fixtures
 
@@ -241,26 +230,24 @@ describe("templating", function() {
 
 ### Iframe
 
-As of Konacha 2.0, your tests are run inside an iframe. See the section
-"[Using the DOM](#using-the-dom)" for details. You may be able to upgrade
-without any changes to your test code.
+As of Konacha 2.0, your tests are run inside an iframe.  For compatibility with
+Konacha 1.x, the iframe's `<body>` element will have `id="konacha"` set on it, so
+you may be able to upgrade without any changes to your test code.
 
 ### Options
 
-In Konacha 1.x you would set `Konacha.mochaOptions` in `konacha_config.js`,
-like so:
+In Konacha 1.x you would set `Konacha.mochaOptions` in `konacha_config.js`:
 
 ```javascript
 // Old syntax
 Konacha.mochaOptions.ignoreLeaks = true;
 ```
 
-Starting with Konacha 2.0, the `konacha_config.js` file is no longer used.
-Instead, call Mocha's own methods in [`spec_helper.js`](#spec-helper), like
-so:
+The `konacha_config.js` file is no longer used by Konacha 2.0. Instead, call
+Mocha's own methods in [`spec_helper.js`](#spec-helper):
 
 ```javascript
-// New syntax; see "Spec Helper" section below
+// New syntax
 mocha.ignoreLeaks();
 ```
 
