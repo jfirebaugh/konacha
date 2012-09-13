@@ -6,14 +6,6 @@ body {
   padding: 60px 0;
 }
 
-#report {
-  -webkit-transform-origin: left top;
-     -moz-transform-origin: left top;
-      -ms-transform-origin: left top;
-       -o-transform-origin: left top;
-          transform-origin: left top;
-}
-
 #test-context {
   -webkit-transform-origin: right top;
      -moz-transform-origin: right top;
@@ -56,16 +48,6 @@ body {
         -ms-transform: scale(0.5);
          -o-transform: scale(0.5);
             transform: scale(0.5);
-  }
-}
-
-@media (max-width: 1380px) {
-  #report {
-    -webkit-transform: scale(0.8);
-       -moz-transform: scale(0.8);
-        -ms-transform: scale(0.8);
-         -o-transform: scale(0.8);
-            transform: scale(0.8);
   }
 }
 
