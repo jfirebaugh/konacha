@@ -5,6 +5,7 @@
 * Removed support for konacha_config.js and Konacha.mochaOptions in favor of
   Mocha's own configuration methods. See the README for update instructions.
 * Update mocha (1.6.0) and chai (1.3.0)
+* Adopt the RSpec reporter interface
 
 # 1.x-stable
 

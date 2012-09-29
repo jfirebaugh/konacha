@@ -1,5 +1,4 @@
 require "capybara"
-require "colorize"
 
 module Konacha
   class Runner
@@ -7,105 +6,54 @@ module Konacha
       new.run
     end
 
-    attr_reader :io, :examples
+    attr_reader :reporter
 
-    def initialize(options = {})
-      @io = options[:output] || STDOUT
+    def initialize
+      @reporter = Konacha::Reporter.new(*formatters)
     end
 
     def run
-      before = Time.now
+      reporter.start
 
       begin
-        session.visit("/")
+        session.visit('/')
 
-        dots_printed = 0
+        events_consumed = 0
+        done = false
         begin
           sleep 0.1
-          done, dots = session.evaluate_script('[Konacha.done, Konacha.dots]')
-          if dots
-            io.write colorize_dots(dots[dots_printed..-1])
-            io.flush
-            dots_printed = dots.length
+          events = JSON.parse(session.evaluate_script('Konacha.getEvents()'))
+          if events
+            events[events_consumed..-1].each do |event|
+              done = true if event['event'] == 'end'
+              reporter.process_mocha_event(event)
+            end
+
+            events_consumed = events.length
           end
         end until done
-
-        @examples = JSON.parse(session.evaluate_script('Konacha.getResults()')).map do |row|
-          Example.new(row)
-        end
       rescue => e
         raise e, "Error communicating with browser process: #{e}", e.backtrace
       end
 
-      io.puts ""
-      io.puts ""
-      failure_messages.each { |msg| io.write("#{msg}\n\n") }
-
-      seconds = "%.2f" % (Time.now - before)
-      io.puts "Finished in #{seconds} seconds"
-      io.puts "#{examples.size} examples, #{failed_examples.size} failures, #{pending_examples.size} pending"
-      passed?
-    end
-
-    def pending_examples
-      examples.select { |example| example.pending? }
-    end
-
-    def failed_examples
-      examples.select { |example| example.failed? }
-    end
-
-    def passed?
-      examples.all? { |example| example.passed? || example.pending? }
-    end
-
-    def failure_messages
-      examples.map { |example| example.failure_message }.compact
+      reporter.finish
+      reporter.passed?
     end
 
     def session
       @session ||= Capybara::Session.new(Konacha.driver, Konacha.application)
     end
 
-    def colorize_dots(dots)
-      dots = dots.chars.map do |d|
-        case d
-        when 'E', 'F'; d.red
-        when 'P'; d.yellow
-        when '.'; d.green
-        else;     d
+    private
+    def formatters
+      if ENV['FORMAT']
+        ENV['FORMAT'].split(',').map do |string|
+          string.match(/^(.*?[^:]+):?([^:]+)?$/)
+          klass, path = $1, $2
+          eval(klass).new(path ? File.open(path, 'w') : STDOUT)
         end
-      end
-      dots.join ''
-    end
-  end
-
-  class Example
-    def initialize(row)
-      @row = row
-    end
-
-    def passed?
-      @row['passed']
-    end
-
-    def pending?
-      @row['pending']
-    end
-
-    def failed?
-      !(@row['passed'] || @row['pending'])
-    end
-
-    def failure_message
-      if failed?
-        msg = []
-        msg << "  Failed: #{@row['name']}"
-        msg << "    #{@row['message']}"
-        msg << "    in #{@row['trace']['fileName']}:#{@row['trace']['lineNumber']}" if @row['trace']
-        msg.join("\n").red
-      elsif pending?
-        "  Pending: #{@row['name']}".yellow
+      else
+        [Konacha::Formatter.new(STDOUT)]
       end
     end
   end
