@@ -4,9 +4,13 @@
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
     <title>Konacha Tests</title>
     <%= stylesheet_link_tag "konacha", :debug => false %>
+    <%= javascript_include_tag "mocha", "konacha/parent", :debug => false %>
+    <%= javascript_include_tag("konacha/runner", :debug => false) if Konacha.mode == :runner %>
   </head>
   <body>
-    <%= content_tag :iframe, '', :src => @iframe_path, :id => 'test-context' %>
+    <% @specs.each do |spec| %>
+      <%= content_tag :iframe, '', :src => spec.url, :class => 'test-context', "data-path" => spec.path %>
+    <% end %>
     <div id="mocha"></div>
   </body>
 </html>
