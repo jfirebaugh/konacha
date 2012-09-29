@@ -13,5 +13,6 @@ module Dummy
     config.encoding = "utf-8"
     config.assets.enabled = true
     config.assets.version = '1.0'
+    config.assets.paths << Rails.root.join("spec/isolated/errors").to_s
   end
 end

@@ -9,7 +9,7 @@
   </head>
   <body>
     <% @specs.each do |spec| %>
-      <%= content_tag :iframe, '', :src => spec.url, :class => 'test-context' %>
+      <%= content_tag :iframe, '', :src => spec.url, :class => 'test-context', "data-path" => spec.path %>
     <% end %>
     <div id="mocha"></div>
   </body>
