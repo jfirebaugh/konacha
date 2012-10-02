@@ -1,6 +1,3 @@
-window.mocha = parent.mocha;
-window.Mocha = parent.Mocha;
-
 window.Konacha = {
   reset: function() {
     document.body = document.createElement('body');
@@ -8,19 +5,26 @@ window.Konacha = {
   }
 };
 
-var suite = Mocha.Suite.create(mocha.suite);
+window.Mocha = Object.create(parent.Mocha);
+window.mocha = Object.create(parent.mocha);
 
+// In order to isolate top-level before/beforeEach hooks,
+// the specs in each iframe are wrapped in an anonymous suite.
+mocha.suite = Mocha.Suite.create(mocha.suite);
+
+// Override mocha.ui so that the pre-require event is emitted
+// with the iframe's `window` reference, rather than the parent's.
 mocha.ui = function (name) {
   this._ui = Mocha.interfaces[name];
   if (!this._ui) throw new Error('invalid interface "' + name + '"');
-  this._ui = this._ui(suite);
-  suite.emit('pre-require', window, null, this);
+  this._ui = this._ui(this.suite);
+  this.suite.emit('pre-require', window, null, this);
   return this;
 };
 
 mocha.ui('bdd');
 
-suite.beforeAll(function () {
+mocha.suite.beforeAll(function () {
   var contexts = parent.document.getElementsByClassName("test-context");
   for (var i = 0; i < contexts.length; ++i) {
     if (contexts[i].contentWindow == window) {
@@ -31,7 +35,7 @@ suite.beforeAll(function () {
   }
 });
 
-suite.beforeEach(function () {
+mocha.suite.beforeEach(function () {
   Konacha.reset();
 });
 
