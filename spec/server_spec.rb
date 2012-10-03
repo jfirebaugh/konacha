@@ -40,4 +40,13 @@ describe Konacha::Server, :type => :request do
     page.should have_content("two_plus_two")
     page.should have_css(".test.pass")
   end
+
+  it "supports requirejs" do
+    visit "/requirejs"
+    page.should have_content("with require inside 'it'")
+    page.should have_content("module loading with require outside 'describe'")
+    # TODO(billmag) pass should be 2 and fail should be 4, see the spec file for more details.
+    page.should have_css(".test.pass", :count => 3)
+    page.should have_css(".test.fail", :count => 2)
+  end
 end

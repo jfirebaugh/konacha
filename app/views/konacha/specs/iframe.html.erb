@@ -10,6 +10,7 @@
     <% end %>
 
     <%= javascript_include_tag "chai", "konacha/iframe", :debug => false %>
+    <%= requirejs_include_tag %>
 
     <%= spec_include_tag *@specs %>
   </head>
