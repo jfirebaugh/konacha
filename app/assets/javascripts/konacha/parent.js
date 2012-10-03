@@ -4,7 +4,8 @@ window.onload = function () {
     if (!iframes[i].contentWindow.mocha) {
       (function (path) {
         mocha.suite.addTest(new Mocha.Test(path, function () {
-          throw new Error("Failed to load " + path + ". Perhaps it failed to compile?");
+          throw new Error("Failed to load " + path + ".\n" +
+                          "Perhaps it failed to compile? Check the rake output for errors.");
         }));
       })(iframes[i].getAttribute("data-path"));
     }
