@@ -232,8 +232,13 @@ describe("templating", function() {
 
 As of Konacha 2.0, each test file is run inside an isolated iframe. For
 compatibility with Konacha 1.x, the iframe's `<body>` element will have
-`id="konacha"` set on it. If your specs are already self-contained, you may be
-able to upgrade without any changes to your test code.
+`id="konacha"` set on it.
+
+Previously, all test files would run in the same environment. Thus, if only
+one test file pulled in an external library, all tests would be able to use
+it. Now test files are run in isolation. If you encounter an undefined
+JavaScript module in your test, you may be missing an explicit `//= require`
+call somewhere.
 
 ### Options
 

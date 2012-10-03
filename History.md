@@ -1,6 +1,7 @@
 # master
 
-* Run tests in an iframe, with `<body id="konacha">`
+* Run tests in an iframe, with `<body id="konacha">`. Each test file is run in
+  isolation.
 * Removed support for konacha_config.js and Konacha.mochaOptions in favor of
   Mocha's own configuration methods. See the README for update instructions.
 * Update mocha (1.5.0) and chai (1.3.0)
