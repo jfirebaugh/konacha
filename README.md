@@ -112,6 +112,8 @@ $ bundle exec rake konacha:run SPEC=foo_spec
 $ bundle exec rake konacha:run SPEC=foo_spec,bar_spec,etc_spec
 ```
 
+To automatically trigger reruns when files change, try [guard-konacha](https://github.com/alexgb/guard-konacha).
+
 ## Spec Helper
 
 Since Konacha integrates with the asset pipeline, using setup helpers in your specs is
