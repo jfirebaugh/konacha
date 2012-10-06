@@ -61,7 +61,7 @@ module Konacha
     def seed(seed); end
 
     def close
-      io.close
+      io.close if IO === io && io != $stdout
     end
 
     private
