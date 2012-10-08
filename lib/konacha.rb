@@ -2,6 +2,8 @@ require "tilt"
 require "konacha/engine"
 require "konacha/runner"
 require "konacha/server"
+require "konacha/reporter"
+require "konacha/formatter"
 
 module Konacha
   class << self

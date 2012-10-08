@@ -112,6 +112,22 @@ $ bundle exec rake konacha:run SPEC=foo_spec
 $ bundle exec rake konacha:run SPEC=foo_spec,bar_spec,etc_spec
 ```
 
+Konacha includes a default formatter modeled upon RSpec's ProgressFormatter.
+Additionally, Konacha's runner implements the same protocol as RSpec, so many
+RSpec formatters also work with Konacha.
+
+To specify one or more formatters, provide a comma separated list of class names
+to the `FORMAT` environment variable. Output can be directed to a file by
+appending a colon and the file path to the class name.
+
+```
+$ bundle exec rake konacha:run FORMAT=Konacha::Formatter,RSpec::Core::Formatters::ProgressFormatter
+$ bundle exec rake konacha:run FORMAT=Konacha::Formatter:results.txt
+```
+
+You will need to `require` any formatters you use. It's a good idea to do this
+within a `defined?` check in your [Konacha initializer](#configuration).
+
 To automatically trigger reruns when files change, try [guard-konacha](https://github.com/alexgb/guard-konacha).
 
 ## Spec Helper
