@@ -48,9 +48,7 @@ module Konacha
     def formatters
       if ENV['FORMAT']
         ENV['FORMAT'].split(',').map do |string|
-          string.match(/^(.*?[^:]+):?([^:]+)?$/)
-          klass, path = $1, $2
-          eval(klass).new(path ? File.open(path, 'w') : STDOUT)
+          eval(string).new(STDOUT)
         end
       else
         [Konacha::Formatter.new(STDOUT)]
