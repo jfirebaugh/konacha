@@ -13,8 +13,6 @@ module Konacha
     end
 
     def run
-      reporter.start
-
       begin
         session.visit('/')
 
@@ -25,7 +23,8 @@ module Konacha
           events = JSON.parse(session.evaluate_script('Konacha.getEvents()'))
           if events
             events[events_consumed..-1].each do |event|
-              done = true if event['event'] == 'end'
+              done = true                        if event['event'] == 'end'
+              reporter.start(event['testCount']) if event['event'] == 'start'
               reporter.process_mocha_event(event)
             end
 

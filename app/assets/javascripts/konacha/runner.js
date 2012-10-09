@@ -35,7 +35,9 @@ mocha.reporter(function(runner) {
   Mocha.reporters.Base.call(this, runner);
 
   runner.on('start', function() {
-    Konacha.events = [];
+    Konacha.events = [
+      {event:'start', testCount:runner.total}
+    ];
   });
 
   runner.on('suite', function(suite) {

@@ -87,6 +87,7 @@ describe Konacha::Runner do
     end
 
     it "passes along the right events" do
+      subject.reporter.should_receive(:start).with(kind_of(Integer))
       subject.reporter.should_receive(:process_mocha_event).with(suite)
       subject.reporter.should_receive(:process_mocha_event).with(suite_end)
       subject.reporter.should_receive(:process_mocha_event).with(test)
@@ -94,6 +95,7 @@ describe Konacha::Runner do
       subject.reporter.should_receive(:process_mocha_event).with(pass)
       subject.reporter.should_receive(:process_mocha_event).with(pending)
       subject.reporter.should_receive(:process_mocha_event).any_number_of_times
+      Konacha::Formatter.any_instance.stub(:dump_summary)
       subject.run
     end
   end
