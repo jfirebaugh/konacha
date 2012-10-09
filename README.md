@@ -117,12 +117,11 @@ Additionally, Konacha's runner implements the same protocol as RSpec, so many
 RSpec formatters also work with Konacha.
 
 To specify one or more formatters, provide a comma separated list of class names
-to the `FORMAT` environment variable. Output can be directed to a file by
-appending a colon and the file path to the class name.
+in the `FORMAT` environment variable. For example, you can run both Ruby and JavaScript
+specs with CI integration using [ci_reporter](https://github.com/nicksieger/ci_reporter):
 
 ```
-$ bundle exec rake konacha:run FORMAT=Konacha::Formatter,RSpec::Core::Formatters::ProgressFormatter
-$ bundle exec rake konacha:run FORMAT=Konacha::Formatter:results.txt
+$ bundle exec rake ci:setup:rspec spec konacha:run FORMAT=CI::Reporter::RSpec
 ```
 
 You will need to `require` any formatters you use. It's a good idea to do this
