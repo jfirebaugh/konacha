@@ -47,8 +47,19 @@ describe Konacha::Reporter do
   end
 
   describe "#process_mocha_event" do
+    before { subject.stub(:process_event) }
+
+    it "calls #start if passed the start event" do
+      subject.should_receive(:start).with(4)
+      subject.process_mocha_event({'event' => 'start', 'testCount' => 4})
+    end
+
+    it "calls #finish if passed the end event" do
+      subject.should_receive(:finish)
+      subject.process_mocha_event({'event' => 'end'})
+    end
+
     it "creates the object" do
-      subject.stub(:process_event)
       subject.should_receive(:update_or_create_object).with('data', 'type')
       subject.process_mocha_event({'data' => 'data', 'type' => 'type'})
     end

@@ -86,16 +86,19 @@ describe Konacha::Runner do
          'status'          => 'pending'}}
     end
 
+    let(:start)     { {'event' => 'start', 'testCount' => kind_of(Integer), 'data' => {} } }
+    let(:end_event) { {'event' => 'end', 'data' => {} } }
+
     it "passes along the right events" do
-      subject.reporter.should_receive(:start).with(kind_of(Integer))
+      subject.reporter.should_receive(:process_mocha_event).with(start)
       subject.reporter.should_receive(:process_mocha_event).with(suite)
       subject.reporter.should_receive(:process_mocha_event).with(suite_end)
       subject.reporter.should_receive(:process_mocha_event).with(test)
       subject.reporter.should_receive(:process_mocha_event).with(failure)
       subject.reporter.should_receive(:process_mocha_event).with(pass)
       subject.reporter.should_receive(:process_mocha_event).with(pending)
+      subject.reporter.should_receive(:process_mocha_event).with(end_event)
       subject.reporter.should_receive(:process_mocha_event).any_number_of_times
-      Konacha::Formatter.any_instance.stub(:dump_summary)
       subject.run
     end
   end

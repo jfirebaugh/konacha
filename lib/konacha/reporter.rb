@@ -53,7 +53,11 @@ module Konacha
     end
 
     def process_mocha_event(event)
-      if event['type']
+      if event['event'] == 'start'
+        start(event['testCount'])
+      elsif event['event'] == 'end'
+        finish
+      elsif event['type']
         object = update_or_create_object(event['data'], event['type'])
         process_event EVENT_CONVERSIONS[event['event']], object
       end

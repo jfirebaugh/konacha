@@ -13,30 +13,26 @@ module Konacha
     end
 
     def run
+      session.visit('/')
+
+      events_consumed = 0
+      done = false
       begin
-        session.visit('/')
-
-        events_consumed = 0
-        done = false
-        begin
-          sleep 0.1
-          events = JSON.parse(session.evaluate_script('Konacha.getEvents()'))
-          if events
-            events[events_consumed..-1].each do |event|
-              done = true                        if event['event'] == 'end'
-              reporter.start(event['testCount']) if event['event'] == 'start'
-              reporter.process_mocha_event(event)
-            end
-
-            events_consumed = events.length
+        sleep 0.1
+        events = JSON.parse(session.evaluate_script('Konacha.getEvents()'))
+        if events
+          events[events_consumed..-1].each do |event|
+            done = true if event['event'] == 'end'
+            reporter.process_mocha_event(event)
           end
-        end until done
-      rescue => e
-        raise e, "Error communicating with browser process: #{e}", e.backtrace
-      end
 
-      reporter.finish
+          events_consumed = events.length
+        end
+      end until done
+
       reporter.passed?
+    rescue => e
+      raise e, "Error communicating with browser process: #{e}", e.backtrace
     end
 
     def session
