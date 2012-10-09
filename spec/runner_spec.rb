@@ -3,8 +3,27 @@ require 'spec_helper'
 describe Konacha::Runner do
   before do
     Konacha.mode = :runner
-    Konacha.config.driver = :selenium_with_firebug
     STDOUT.stub(:puts)
+  end
+
+  describe ".new" do
+    before do
+      class TestFormatter
+        def initialize(io)
+        end
+      end
+      ENV['FORMAT'] = 'Konacha::Formatter,TestFormatter'
+    end
+
+    after do
+      Object.send(:remove_const, :TestFormatter)
+      ENV.delete('FORMAT')
+    end
+
+    it "initializes a reporter with formatters named by the FORMAT environment variable" do
+      Konacha::Reporter.should_receive(:new).with(instance_of(Konacha::Formatter), instance_of(TestFormatter))
+      described_class.new
+    end
   end
 
   describe "#run" do
