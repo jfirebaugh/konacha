@@ -37,7 +37,7 @@ describe Konacha::Reporter::Metadata do
 
   describe "#execution_result" do
     it "returns a hash with execution details" do
-      subject.execution_result.keys.sort.should == [:exception, :finished_at, :run_time, :started_at, :status]
+      subject.execution_result.keys.map(&:to_s).sort.should == [:exception, :finished_at, :run_time, :started_at, :status].map(&:to_s)
     end
   end
 

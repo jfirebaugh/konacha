@@ -62,6 +62,7 @@ describe "konacha/specs/iframe" do
 
   it "render the stylesheets" do
     assign(:stylesheets, %w(foo bar))
+    assign(:specs, [])
 
     render
 
