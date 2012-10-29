@@ -15,7 +15,7 @@ describe "konacha/specs/iframe" do
 
   def spec_double(asset_name, dependencies = [])
     asset_double(asset_name, dependencies)
-    double("spec called '#{asset_name}'", :asset_name => asset_name)
+    double("spec called '#{asset_name}'", :asset_name => asset_name, :path => "#{asset_name}.js")
   end
 
   let(:dependency) { asset_double("dependency") }
@@ -58,5 +58,13 @@ describe "konacha/specs/iframe" do
 
     rendered.should have_selector("link[href='/assets/foo.css']")
     rendered.should have_selector("link[href='/assets/bar.css']")
+  end
+
+  it "includes a path data attribute" do
+    assign(:spec, spec_double("a_spec"))
+
+    render
+
+    rendered.should have_selector("[data-path='a_spec.js']")
   end
 end

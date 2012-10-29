@@ -1,4 +1,8 @@
 window.onload = function () {
+  mocha.suite.suites.sort(function (a, b) {
+    return a.path.localeCompare(b.path);
+  });
+
   var iframes = document.getElementsByTagName('iframe');
   for (var i = 0; i < iframes.length; ++i) {
     if (!iframes[i].contentWindow.mocha) {
