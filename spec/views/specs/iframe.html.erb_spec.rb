@@ -20,18 +20,16 @@ describe "konacha/specs/iframe" do
 
   let(:dependency) { asset_double("dependency") }
 
-  it "renders a script tag for each spec in @specs" do
-    assign(:specs, [spec_double("a_spec"),
-                    spec_double("b_spec")])
+  it "renders a script tag for @spec" do
+    assign(:spec, spec_double("a_spec"))
 
     render
 
     rendered.should have_selector("script[src='/assets/a_spec.js?body=1']")
-    rendered.should have_selector("script[src='/assets/b_spec.js?body=1']")
   end
 
   it "renders a script tag for a spec's dependencies" do
-    assign(:specs, [spec_double("spec", [dependency])])
+    assign(:spec, spec_double("spec", [dependency]))
 
     render
 
@@ -39,20 +37,11 @@ describe "konacha/specs/iframe" do
     rendered.should have_selector("script[src='/assets/spec.js?body=1']")
   end
 
-  it "renders only one script tag for common dependencies" do
-    assign(:specs, [spec_double("a_spec", [dependency]),
-                    spec_double("b_spec", [dependency])])
-
-    render
-
-    rendered.should have_selector("script[src='/assets/dependency.js?body=1']", :count => 1)
-  end
-
   it "renders only one script tag for dependencies of dependencies" do
     dependency_a = asset_double("dependency_a")
     dependency_b = asset_double("dependency_b", [dependency_a])
 
-    assign(:specs, [spec_double("a_spec", [dependency_a, dependency_b])])
+    assign(:spec, spec_double("a_spec", [dependency_a, dependency_b]))
 
     render
 
@@ -61,6 +50,7 @@ describe "konacha/specs/iframe" do
   end
 
   it "render the stylesheets" do
+    assign(:spec, spec_double("a_spec"))
     assign(:stylesheets, %w(foo bar))
     assign(:specs, [])
 
