@@ -32,7 +32,8 @@ describe Konacha::Runner do
        'type' => 'suite',
        'data' => {
          'title' => 'failure',
-         'fullTitle' => 'failure'
+         'fullTitle' => 'failure',
+         'path' => 'failing_spec.js'
        }}
     end
 
@@ -41,7 +42,8 @@ describe Konacha::Runner do
        'type' => 'suite',
        'data' => {
          'title' => 'failure',
-         'fullTitle' => 'failure'
+         'fullTitle' => 'failure',
+         'path' => 'failing_spec.js'
        }}
     end
 
@@ -51,7 +53,8 @@ describe Konacha::Runner do
        'data'  => {
          'title'           => 'fails',
          'fullTitle'       => 'failure fails',
-         'parentFullTitle' => 'failure'}}
+         'parentFullTitle' => 'failure',
+         'path'            => 'failing_spec.js'}}
     end
 
     let(:failure) do
@@ -62,6 +65,7 @@ describe Konacha::Runner do
          'fullTitle'       => 'failure fails',
          'parentFullTitle' => 'failure',
          'status'          => 'failed',
+         'path'            => 'failing_spec.js',
          'error'           => {'message' => 'expected 4 to equal 5', 'expected' => 5}}}
     end
 
@@ -73,6 +77,7 @@ describe Konacha::Runner do
          'fullTitle'       => 'the body#konacha element is empty',
          'parentFullTitle' => 'the body#konacha element',
          'status'          => 'passed',
+         'path'            => 'body_spec.js.coffee',
          'duration'        => anything}}
     end
 
@@ -83,6 +88,7 @@ describe Konacha::Runner do
          'title'           => 'is pending',
          'fullTitle'       => 'pending test is pending',
          'parentFullTitle' => 'pending test',
+         'path'            => 'pending_spec.js',
          'status'          => 'pending'}}
     end
 

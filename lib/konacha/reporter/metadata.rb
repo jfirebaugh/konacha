@@ -24,8 +24,7 @@ module Konacha
       end
 
       def file_path
-        STDERR.puts "file_path not implemented" if Konacha.config.verbose
-        "" # RSpec's BaseFormatter expects the return value to be a string
+        data['path']
       end
 
       alias_method :location, :file_path
