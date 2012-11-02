@@ -11,7 +11,8 @@ mocha.reporter(function(runner) {
       fullTitle:test.fullTitle(),
       duration:test.duration,
       parentFullTitle:test.parent.fullTitle(),
-      status:status
+      status:status,
+      path:test.parent.path
     };
 
     if (status == "failed")
@@ -21,9 +22,14 @@ mocha.reporter(function(runner) {
   };
 
   var createSuiteObject = function(suite) {
+    // We need to propagate the path down the suite tree
+    if (suite.parent)
+      suite.path = suite.parent.path;
+
     var obj = {
       title:suite.title,
-      fullTitle:suite.fullTitle()
+      fullTitle:suite.fullTitle(),
+      path:suite.path
     };
 
     if (suite.parent)

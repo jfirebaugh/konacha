@@ -52,17 +52,22 @@ describe Konacha::Reporter::Metadata do
     end
   end
 
-  describe "#description" do
-    it "looks for data['title']" do
-      subject.update('title' => 'super test')
-      subject.description.should == 'super test'
+  shared_examples_for "data delegation method" do |key, method|
+    it "returns data['#{key}']" do
+      subject.update(key => 'super test')
+      subject.send(method).should == 'super test'
     end
   end
 
+  describe "#file_path" do
+    it_behaves_like "data delegation method", "path", "file_path"
+  end
+
+  describe "#description" do
+    it_behaves_like "data delegation method", "title", "description"
+  end
+
   describe "#full_description" do
-    it "looks for data['fullTitle']" do
-      subject.update('fullTitle' => 'super test')
-      subject.full_description.should == 'super test'
-    end
+    it_behaves_like "data delegation method", "fullTitle", "full_description"
   end
 end
