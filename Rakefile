@@ -19,6 +19,6 @@ end
 
 task :default => :spec
 
-task :runserver do
+task :server do
   sh 'rackup -p 3500 config.ru'
 end

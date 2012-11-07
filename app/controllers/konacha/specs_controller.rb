@@ -5,11 +5,11 @@ module Konacha
     end
 
     def parent
-      @specs = Konacha::Spec.find(params[:path] || "")
+      @specs = Konacha::Spec.all(params[:path])
     end
 
     def iframe
-      @specs = Konacha::Spec.find(params[:path])
+      @spec = Konacha::Spec.find_by_name(params[:name])
       @stylesheets = Konacha::Engine.config.konacha.stylesheets
     end
   end

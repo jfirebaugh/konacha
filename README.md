@@ -112,6 +112,23 @@ $ bundle exec rake konacha:run SPEC=foo_spec
 $ bundle exec rake konacha:run SPEC=foo_spec,bar_spec,etc_spec
 ```
 
+Konacha includes a default formatter modeled upon RSpec's ProgressFormatter.
+Additionally, Konacha's runner implements the same protocol as RSpec, so many
+RSpec formatters also work with Konacha.
+
+To specify one or more formatters, provide a comma separated list of class names
+in the `FORMAT` environment variable. For example, you can run both Ruby and JavaScript
+specs with CI integration using [ci_reporter](https://github.com/nicksieger/ci_reporter):
+
+```
+$ bundle exec rake ci:setup:rspec spec konacha:run FORMAT=CI::Reporter::RSpec
+```
+
+You will need to `require` any formatters you use. It's a good idea to do this
+within a `defined?` check in your [Konacha initializer](#configuration).
+
+To automatically trigger reruns when files change, try [guard-konacha](https://github.com/alexgb/guard-konacha).
+
 ## Spec Helper
 
 Since Konacha integrates with the asset pipeline, using setup helpers in your specs is
@@ -232,8 +249,13 @@ describe("templating", function() {
 
 As of Konacha 2.0, each test file is run inside an isolated iframe. For
 compatibility with Konacha 1.x, the iframe's `<body>` element will have
-`id="konacha"` set on it. If your specs are already self-contained, you may be
-able to upgrade without any changes to your test code.
+`id="konacha"` set on it.
+
+Previously, all test files would run in the same environment. Thus, if only
+one test file pulled in an external library, all tests would be able to use
+it. Now test files are run in isolation. If you encounter an undefined
+JavaScript module in your test, you may be missing an explicit `//= require`
+call somewhere.
 
 ### Options
 

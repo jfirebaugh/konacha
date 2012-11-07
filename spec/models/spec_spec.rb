@@ -16,12 +16,6 @@ describe Konacha::Spec do
     end
   end
 
-  describe "#url" do
-    it "returns a URL path" do
-      described_class.new("array_spec.js").url.should include "array_spec"
-    end
-  end
-
   describe ".all" do
     it "returns an array of specs" do
       Konacha.should_receive(:spec_paths) { ["a_spec.js", "b_spec.js"] }
@@ -37,30 +31,41 @@ describe Konacha::Spec do
       paths =~ %w{foo_spec bar_spec baz_spec}
       ENV["SPEC"] = nil
     end
-  end
 
-  describe ".find" do
     it "returns all Specs if given an empty path" do
       all = ["a_spec.js", "b_spec.js"]
       Konacha.should_receive(:spec_paths) { all }
-      described_class.find("").map(&:path).should == all
+      described_class.all("").map(&:path).should == all
     end
 
     it "returns an array containing the Spec with the given asset_name" do
       all = ["a_spec.js", "b_spec.js"]
       Konacha.should_receive(:spec_paths) { all }
-      described_class.find("b_spec").map(&:path).should == [all[1]]
+      described_class.all("b_spec").map(&:path).should == [all[1]]
     end
 
     it "returns Specs that are children of the given path" do
       all = ["a/a_spec_1.js", "a/a_spec_2.js", "b/b_spec.js"]
       Konacha.should_receive(:spec_paths) { all }
-      described_class.find("a").map(&:path).should == all[0..1]
+      described_class.all("a").map(&:path).should == all[0..1]
     end
 
     it "raises NotFound if no Specs match" do
       Konacha.should_receive(:spec_paths) { [] }
-      expect { described_class.find("b_spec") }.to raise_error(Konacha::Spec::NotFound)
+      expect { described_class.all("b_spec") }.to raise_error(Konacha::Spec::NotFound)
+    end
+  end
+
+  describe ".find_by_name" do
+    it "returns the spec with the given asset name" do
+      all = ["a_spec.js", "b_spec.js"]
+      Konacha.should_receive(:spec_paths) { all }
+      described_class.find_by_name("a_spec").path.should == "a_spec.js"
+    end
+
+    it "raises NotFound if no Specs match" do
+      Konacha.should_receive(:spec_paths) { [] }
+      expect { described_class.find_by_name("b_spec") }.to raise_error(Konacha::Spec::NotFound)
     end
   end
 end

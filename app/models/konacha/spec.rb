@@ -3,26 +3,24 @@ module Konacha
     class NotFound < StandardError
     end
 
-    def self.all
+    def self.all(path = nil)
       paths = Konacha.spec_paths
-      if ENV["SPEC"]
-        paths =  ENV["SPEC"].split(",")
+      paths = ENV["SPEC"].split(",") if ENV["SPEC"]
+      paths = paths.map { |p| new(p) }
+      if path.present?
+        paths = paths.select { |s| s.path.starts_with?(path) }.presence or raise NotFound
       end
-      paths.map {|path| new(path)}
+      paths
     end
 
-    def self.find(path)
-      all.select { |s| s.path.starts_with?(path) }.presence or raise NotFound
+    def self.find_by_name(name)
+      all.find { |s| s.asset_name == name } or raise NotFound
     end
 
     attr_accessor :path
 
     def initialize(path)
       @path = path
-    end
-
-    def url
-      "/iframe/#{asset_name}"
     end
 
     def asset_name

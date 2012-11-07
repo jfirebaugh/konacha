@@ -32,6 +32,7 @@ module Konacha
       options.application ||= self.class.application(app)
       options.driver      ||= :selenium
       options.stylesheets ||= %w(application)
+      options.verbose     ||= false
 
       app.config.assets.paths << app.root.join(options.spec_dir).to_s
     end
