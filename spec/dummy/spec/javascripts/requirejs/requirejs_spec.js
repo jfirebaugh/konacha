@@ -39,7 +39,7 @@ describe("with a valid require in 'before'", function () {
 });
 
 // TODO(billmag) - Due to an issue with Konacha's handling of failures in before() calls, this is
-// listed last. See: https://github.com/visionmedia/mocha/issues/648
+// listed last. See: https://github.com/visionmedia/mocha/issues/581
 describe("with an invalid require in 'before' there should be failure", function () {
   var module;
   before(function(done) {
