@@ -42,3 +42,7 @@ mocha.suite.beforeEach(function () {
 var expect = chai.expect,
     should = chai.should(),
     assert = chai.assert;
+
+// The iFrame is currently giving us trouble with leaks of navigator and other random browser stuff, so ignore them
+// for now.
+mocha.ignoreLeaks();
