@@ -12,19 +12,20 @@ describe "konacha/specs/iframe" do
   it "renders a script tag for @spec" do
     assign(:spec, spec_double("a_spec"))
 
-    render
+    view.stub(:javascript_include_tag)
+    view.should_receive(:javascript_include_tag).with("a_spec")
 
-    rendered.should have_selector("script[src='/assets/a_spec.js']")
+    render
   end
 
   it "renders the stylesheets" do
     assign(:spec, spec_double("a_spec"))
     assign(:stylesheets, %w(foo bar))
 
-    render
+    view.should_receive(:stylesheet_link_tag).with("foo", :debug => false)
+    view.should_receive(:stylesheet_link_tag).with("bar", :debug => false)
 
-    rendered.should have_selector("link[href='/assets/foo.css']")
-    rendered.should have_selector("link[href='/assets/bar.css']")
+    render
   end
 
   it "includes a path data attribute" do

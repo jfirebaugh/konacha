@@ -1,0 +1,7 @@
+source 'https://rubygems.org'
+gemspec
+
+gem "railties",        github: "rails/rails"
+gem "activemodel",     github: "rails/rails"
+gem "journey",         github: "rails/journey"
+gem "sprockets-rails", github: "rails/sprockets-rails"

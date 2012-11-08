@@ -19,8 +19,8 @@ the asset pipeline and engines.}
   gem.require_paths = ["lib"]
   gem.version       = "2.1.0"
 
-  gem.add_dependency "railties", "~> 3.1"
-  gem.add_dependency "actionpack", "~> 3.1"
+  gem.add_dependency "railties", ">= 3.1", "< 5"
+  gem.add_dependency "actionpack", ">= 3.1", "< 5"
   gem.add_dependency "sprockets"
   gem.add_dependency "capybara", "~> 2.0"
   gem.add_dependency "colorize"
