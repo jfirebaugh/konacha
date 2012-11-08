@@ -10,8 +10,7 @@
     <% end %>
 
     <%= javascript_include_tag "chai", "konacha/iframe", :debug => false %>
-
-    <%= spec_include_tag @spec %>
+    <%= javascript_include_tag @spec.asset_name, :body => true %>
   </head>
   <body>
   </body>
