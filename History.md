@@ -1,5 +1,11 @@
 # master
 
+* Update mocha (1.7.0+)
+* Fix mocha error detection in `done()` (#74)
+* Make spec file path is available to reporters
+
+# 2.0.0
+
 * Run tests in an iframe, with `<body id="konacha">`. Each test file is run in
   isolation.
 * Removed support for konacha_config.js and Konacha.mochaOptions in favor of
