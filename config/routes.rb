@@ -1,5 +1,5 @@
 Konacha::Engine.routes.draw do
-  match '/iframe/*name' => 'specs#iframe'
-  match '/'             => 'specs#parent'
-  match '*path'         => 'specs#parent'
+  get '/iframe/*name' => 'specs#iframe'
+  get '/'             => 'specs#parent'
+  get '*path'         => 'specs#parent'
 end
