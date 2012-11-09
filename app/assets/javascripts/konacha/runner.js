@@ -15,8 +15,17 @@ mocha.reporter(function(runner) {
       path:test.parent.path
     };
 
-    if (status == "failed")
-      obj.error = test.err; // Contains message, expected, actual, operator, stack
+    if (status == "failed") {
+      // Error objects don't serialize properly, so we copy attributes. Note
+      // that iterating over test.err skips name and message.
+      obj.error = {
+        name: test.err.name,
+        message: test.err.message,
+        // We could copy stack, fileName, and lineNumber here, but they're not
+        // available for AssertionErrors. If we had them reliably, we could
+        // easily display them as well.
+      };
+    }
 
     return obj;
   };

@@ -28,9 +28,9 @@ describe Konacha::Reporter::Metadata do
     end
 
     it "builds a SpecException object" do
-      subject.update('status' => 'failed', 'error' => {'message' => 'expected this to work'})
+      subject.update('status' => 'failed', 'error' => {'name' => 'Error', 'message' => 'expected this to work'})
       subject.exception.should be_a(Konacha::Reporter::SpecException)
-      subject.exception.message.should == 'expected this to work'
+      subject.exception.message.should == 'Error: expected this to work'
       subject.exception.backtrace.should == []
     end
   end

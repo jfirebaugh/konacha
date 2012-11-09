@@ -66,7 +66,19 @@ describe Konacha::Runner do
          'parentFullTitle' => 'failure',
          'status'          => 'failed',
          'path'            => 'failing_spec.js',
-         'error'           => {'message' => 'expected 4 to equal 5', 'expected' => 5}}}
+         'error'           => {'message' => 'expected 4 to equal 5', 'name' => 'AssertionError'}}}
+    end
+
+    let(:error) do
+      {'event' => 'fail',
+       'type'  => 'test',
+       'data'  => {
+         'title'           => 'errors',
+         'fullTitle'       => 'failure errors',
+         'parentFullTitle' => 'failure',
+         'status'          => 'failed',
+         'path'            => 'failing_spec.js',
+         'error'           => {'message' => 'this one errors out', 'name' => 'Error'}}}
     end
 
     let(:pass) do
@@ -101,6 +113,7 @@ describe Konacha::Runner do
       subject.reporter.should_receive(:process_mocha_event).with(suite_end)
       subject.reporter.should_receive(:process_mocha_event).with(test)
       subject.reporter.should_receive(:process_mocha_event).with(failure)
+      subject.reporter.should_receive(:process_mocha_event).with(error)
       subject.reporter.should_receive(:process_mocha_event).with(pass)
       subject.reporter.should_receive(:process_mocha_event).with(pending)
       subject.reporter.should_receive(:process_mocha_event).with(end_event)

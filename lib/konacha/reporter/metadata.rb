@@ -48,7 +48,7 @@ module Konacha
         return unless data['status'] == "failed"
 
         @exception ||= begin
-          e = Reporter::SpecException.new(data['error']['message'])
+          e = Reporter::SpecException.new("#{data['error']['name']}: #{data['error']['message']}")
           e.set_backtrace([])
           e
         end

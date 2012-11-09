@@ -3,6 +3,7 @@
 * Update mocha (1.7.0+)
 * Fix mocha error detection in `done()` (#74)
 * Make spec file path is available to reporters
+* Improve error reporting for `konacha:run` output
 
 # 2.0.0
 
