@@ -14,7 +14,7 @@ describe "konacha/specs/iframe" do
 
     render
 
-    rendered.should have_selector("script[src='/assets/a_spec.js?body=1']")
+    rendered.should have_selector("script[src='/assets/a_spec.js']")
   end
 
   it "renders the stylesheets" do
