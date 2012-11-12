@@ -1,5 +1,8 @@
 # master
 
+# 2.1.0
+
+* Improve capybara-webkit compatibility (#79)
 * Update mocha (1.7.0+)
 * Fix mocha error detection in `done()` (#74)
 * Make spec file path is available to reporters
