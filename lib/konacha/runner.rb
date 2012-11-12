@@ -19,7 +19,7 @@ module Konacha
       done = false
       begin
         sleep 0.1
-        events = JSON.parse(session.evaluate_script('Konacha.getEvents()'))
+        events = JSON.parse(session.evaluate_script('window.top.Konacha.getEvents()'))
         if events
           events[events_consumed..-1].each do |event|
             done = true if event['event'] == 'end'
