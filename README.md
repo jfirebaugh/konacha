@@ -192,8 +192,8 @@ The `defined?` check is necessary to avoid a dependency on Konacha in the produc
 environment.
 
 The `spec_dir` option tells Konacha where to find JavaScript specs. `driver`
-names a Capybara driver used for the `run` task (try `:webkit`, after
-installing [capybara-webkit](https://github.com/thoughtbot/capybara-webkit)).
+names a Capybara driver used for the `run` task (try `:poltergeist`, after
+installing [PhantomJS](https://github.com/jonleighton/poltergeist#installing-phantomjs)).
 The `stylesheets` option sets the stylesheets to be linked from the `<head>`
 of the test runner iframe. The values above are the defaults.
 
