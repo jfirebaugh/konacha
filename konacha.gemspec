@@ -22,11 +22,11 @@ the asset pipeline and engines.}
   gem.add_dependency "railties", "~> 3.1"
   gem.add_dependency "actionpack", "~> 3.1"
   gem.add_dependency "sprockets"
-  gem.add_dependency "capybara"
+  gem.add_dependency "capybara", "~> 2.0"
   gem.add_dependency "colorize"
 
   gem.add_development_dependency "jquery-rails"
-  gem.add_development_dependency "rspec-rails"
+  gem.add_development_dependency "rspec-rails", "~> 2.12"
   gem.add_development_dependency "capybara-firebug", "~> 1.1"
   gem.add_development_dependency "coffee-script"
   gem.add_development_dependency "ejs"

@@ -21,7 +21,7 @@ Capybara.configure do |config|
 end
 
 module Konacha
-  module RequestSpec
+  module FeatureSpec
     def app
       # Override the RSpec default of `Rails.application`.
       Konacha.application
@@ -30,7 +30,7 @@ module Konacha
 end
 
 RSpec.configure do |config|
-  config.include Konacha::RequestSpec, :type => :request
+  config.include Konacha::FeatureSpec, :type => :feature
 end
 
 Konacha.configure do |config|

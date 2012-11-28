@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Konacha, :type => :request do
+describe Konacha, :type => :feature do
   before do
     Konacha.mode = :server
   end
