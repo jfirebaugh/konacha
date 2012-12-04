@@ -6,6 +6,8 @@ describe "konacha/specs/parent" do
   end
 
   it "renders an iframe tag for a spec" do
+    view.singleton_class.send(:include, Konacha::Engine.routes.url_helpers)
+
     spec = spec_double("a_spec")
     assign(:specs, [spec])
 
