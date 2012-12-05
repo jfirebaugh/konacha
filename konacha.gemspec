@@ -18,6 +18,7 @@ the asset pipeline and engines.}
   gem.name          = "konacha"
   gem.require_paths = ["lib"]
   gem.version       = "2.1.0"
+  gem.license       = "MIT"
 
   gem.add_dependency "railties", ">= 3.1", "< 5"
   gem.add_dependency "actionpack", ">= 3.1", "< 5"
