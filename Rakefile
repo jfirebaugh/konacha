@@ -18,3 +18,7 @@ task :assets do
 end
 
 task :default => :spec
+
+task :server do
+  sh 'rackup -p 3500 config.ru'
+end
