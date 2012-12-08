@@ -13,4 +13,4 @@ matrix:
     - gemfile: Gemfile-rails4
       rvm: 1.8.7
   allow_failures:
-    - { rvm: 1.8.7 }
+    - { gemfile: Gemfile-rails4 }
