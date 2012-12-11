@@ -13,6 +13,7 @@ require "ejs"
 
 require "capybara/rails"
 require "capybara/firebug"
+require "capybara/poltergeist"
 
 Capybara.configure do |config|
   config.default_selector = :css
