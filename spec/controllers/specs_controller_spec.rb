@@ -5,6 +5,19 @@ describe Konacha::SpecsController do
     @routes = Konacha::Engine.routes
   end
 
+  describe '#parent' do
+    it 'accepts a mode parameter and assigns it to @run_mode' do
+      get :parent, :mode => 'runner'
+      assigns[:run_mode].should == :runner
+    end
+
+    it 'uses the Konacha.mode if no mode parameter is specified' do
+      Konacha.stub(:mode => :konacha_mode)
+      get :parent
+      assigns[:run_mode].should == :konacha_mode
+    end
+  end
+
   describe "#iframe" do
     it "assigns the result of Spec.find_by_name to @spec" do
       Konacha::Spec.should_receive(:find_by_name).with("spec_name") { :spec }
