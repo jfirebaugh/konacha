@@ -5,8 +5,8 @@ describe Konacha::Runner do
     Konacha.mode = :runner
     STDOUT.stub(:puts)
   end
-
   describe ".new" do
+
     before do
       class TestFormatter
         def initialize(io)
@@ -23,6 +23,11 @@ describe Konacha::Runner do
     it "initializes a reporter with formatters named by the FORMAT environment variable" do
       Konacha::Reporter.should_receive(:new).with(instance_of(Konacha::Formatter), instance_of(TestFormatter))
       described_class.new
+    end
+
+    it 'accepts an existing capybara session' do
+      instance = described_class.new 'existing_session'
+      instance.session.should == 'existing_session'
     end
   end
 
@@ -127,6 +132,15 @@ describe Konacha::Runner do
         subject.reporter.should_receive(:process_mocha_event).any_number_of_times
         subject.run
       end
+    end
+
+    it 'accepts paths to test' do
+      session = double('capybara session')
+      session.stub(:evaluate_script).and_return([start, pass, end_event].to_json)
+      session.should_receive(:visit).with('/test_path')
+
+      instance = described_class.new session
+      instance.run('/test_path')
     end
   end
 
