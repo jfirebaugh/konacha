@@ -1,5 +1,9 @@
 # master
 
+# 2.3.0
+
+* Improved support for guard-konacha
+
 # 2.2.0
 
 * Update mocha (1.8.1) and chai (1.4.2)
