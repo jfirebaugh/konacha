@@ -5,7 +5,7 @@ module Konacha
     end
 
     def parent
-      @run_mode = (params[:mode].try(:to_sym) || Konacha.mode)
+      @run_mode = params.fetch(:mode, Konacha.mode).to_s.inquiry
       @specs = Konacha::Spec.all(params[:path])
     end
 

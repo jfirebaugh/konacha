@@ -8,13 +8,13 @@ describe Konacha::SpecsController do
   describe '#parent' do
     it 'accepts a mode parameter and assigns it to @run_mode' do
       get :parent, :mode => 'runner'
-      assigns[:run_mode].should == :runner
+      assigns[:run_mode].should be_runner
     end
 
     it 'uses the Konacha.mode if no mode parameter is specified' do
       Konacha.stub(:mode => :konacha_mode)
       get :parent
-      assigns[:run_mode].should == :konacha_mode
+      assigns[:run_mode].should be_konacha_mode
     end
   end
 

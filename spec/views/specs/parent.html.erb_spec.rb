@@ -12,6 +12,7 @@ describe "konacha/specs/parent" do
 
     spec = spec_double("a_spec")
     assign(:specs, [spec])
+    assign(:run_mode, "server".inquiry)
 
     render
 
