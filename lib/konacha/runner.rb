@@ -8,12 +8,13 @@ module Konacha
 
     attr_reader :reporter
 
-    def initialize
+    def initialize(session = nil)
+      @session = session
       @reporter = Konacha::Reporter.new(*formatters)
     end
 
-    def run
-      session.visit('/')
+    def run(path = '/')
+      session.visit path
 
       events_consumed = 0
       done = false

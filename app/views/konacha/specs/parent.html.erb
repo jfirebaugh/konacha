@@ -5,7 +5,7 @@
     <title>Konacha Tests</title>
     <%= stylesheet_link_tag "konacha", :debug => false %>
     <%= javascript_include_tag "mocha", "konacha/parent", :debug => false %>
-    <%= javascript_include_tag("konacha/runner", :debug => false) if Konacha.mode == :runner %>
+    <%= javascript_include_tag("konacha/runner", :debug => false) if @run_mode.runner? %>
   </head>
   <body>
     <% @specs.each do |spec| %>
