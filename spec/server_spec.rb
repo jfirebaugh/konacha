@@ -35,6 +35,12 @@ describe Konacha::Server, :type => :feature do
     page.should have_css(".test.pass")
   end
 
+  it "serves a file with a period in the name" do
+    visit "/jquery.plugin_spec"
+    page.should have_content("jQuery.fn.plugin()")
+    page.should have_css(".test.pass", :count => 1)
+  end
+
   it "supports spec helpers" do
     visit "/spec_helper_spec"
     page.should have_content("two_plus_two")
