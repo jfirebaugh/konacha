@@ -25,6 +25,10 @@ mocha.ui = function (name) {
 
 mocha.ui('bdd');
 
+// Disable leak detection by default. It doesn't seem to be reliable
+// with Konacha's iframe setup.
+mocha.ignoreLeaks();
+
 mocha.suite.beforeAll(function () {
   var contexts = parent.document.getElementsByClassName("test-context");
   for (var i = 0; i < contexts.length; ++i) {
