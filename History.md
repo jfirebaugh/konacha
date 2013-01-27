@@ -1,7 +1,10 @@
 # master
 
+# 2.4.0
+
 * Support requesting files with periods in the name
 * Allow customisation of the spec filename via `spec_matcher` config option
+* Disable mocha's leak detection by default (#80)
 
 # 2.3.0
 
