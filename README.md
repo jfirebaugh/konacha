@@ -182,9 +182,10 @@ Konacha can be configured in an initializer, e.g. `config/initializers/konacha.r
 
 ```ruby
 Konacha.configure do |config|
-  config.spec_dir    = "spec/javascripts"
-  config.driver      = :selenium
-  config.stylesheets = %w(application)
+  config.spec_dir     = "spec/javascripts"
+  config.driver       = :selenium
+  config.stylesheets  = %w(application)
+  config.spec_matcher = /_spec\.|_test\./
 end if defined?(Konacha)
 ```
 
@@ -195,7 +196,11 @@ The `spec_dir` option tells Konacha where to find JavaScript specs. `driver`
 names a Capybara driver used for the `run` task (try `:poltergeist`, after
 installing [PhantomJS](https://github.com/jonleighton/poltergeist#installing-phantomjs)).
 The `stylesheets` option sets the stylesheets to be linked from the `<head>`
-of the test runner iframe. The values above are the defaults.
+of the test runner iframe. The `spec_matcher` option is used to match spec files, it
+can be any object responding to `===` (most likely a `Regexp`), it will recieve
+the filename and should return `true` if the file is a spec.
+
+The values above are the defaults.
 
 ## Test Interface and Assertions
 

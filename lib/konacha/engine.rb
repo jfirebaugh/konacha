@@ -27,12 +27,13 @@ module Konacha
 
       options = app.config.konacha
 
-      options.spec_dir    ||= "spec/javascripts"
-      options.port        ||= 3500
-      options.application ||= self.class.application(app)
-      options.driver      ||= :selenium
-      options.stylesheets ||= %w(application)
-      options.verbose     ||= false
+      options.spec_dir     ||= "spec/javascripts"
+      options.spec_matcher ||= /_spec\.|_test\./
+      options.port         ||= 3500
+      options.application  ||= self.class.application(app)
+      options.driver       ||= :selenium
+      options.stylesheets  ||= %w(application)
+      options.verbose      ||= false
 
       app.config.assets.paths << app.root.join(options.spec_dir).to_s
     end
