@@ -29,7 +29,7 @@ module Konacha
       yield config
     end
 
-    delegate :port, :spec_dir, :application, :driver, :to => :config
+    delegate :port, :spec_dir, :spec_matcher, :application, :driver, :to => :config
 
     def spec_root
       File.join(Rails.root, config.spec_dir)
@@ -37,7 +37,7 @@ module Konacha
 
     def spec_paths
       Rails.application.assets.each_entry(spec_root).find_all { |pathname|
-        pathname.basename.to_s =~ /_spec\.|_test\./ &&
+        config.spec_matcher === pathname.basename.to_s &&
         (pathname.extname == '.js' || Tilt[pathname]) &&
         Rails.application.assets.content_type_of(pathname) == 'application/javascript'
       }.map { |pathname|
