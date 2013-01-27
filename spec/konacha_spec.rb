@@ -81,6 +81,16 @@ describe Konacha do
         Konacha.config.spec_matcher = /\.spec\./
         subject.should include("file.with.periods.spec.js")
       end
+
+      it "works with any object responding to ===" do
+        Konacha.config.spec_matcher = Module.new do
+          def self.===(path)
+            path == "array_sum_js_spec.js"
+          end
+        end
+        subject.should include("array_sum_js_spec.js")
+        subject.size.should == 1
+      end
     end
   end
 
