@@ -1,5 +1,8 @@
 # master
 
+* Support requesting files with periods in the name
+* Allow customisation of the spec filename via `spec_matcher` config option
+
 # 2.3.0
 
 * Improved support for guard-konacha
