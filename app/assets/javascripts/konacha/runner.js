@@ -1,6 +1,6 @@
 Konacha = {
   getEvents: function() {
-    return JSON.stringify(Konacha.events);
+    return JSON.stringify(Konacha.events || []);
   }
 };
 
