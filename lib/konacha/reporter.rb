@@ -49,7 +49,7 @@ module Konacha
     end
 
     def passed?
-      @examples.values.all? { |example| example.passed? || example.pending? }
+      @failure_count == 0
     end
 
     def process_mocha_event(event)
