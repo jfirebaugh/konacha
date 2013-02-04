@@ -120,4 +120,15 @@ describe Konacha::Reporter do
       object.parent.should == suite
     end
   end
+
+  describe "#passed?" do
+    it 'passes if failure count is zero' do
+      subject.should be_passed
+    end
+
+    it 'does not pass if failure count is not zero' do
+      subject.process_event(:example_failed)
+      subject.should_not be_passed
+    end
+  end
 end
