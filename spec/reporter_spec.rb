@@ -73,23 +73,6 @@ describe Konacha::Reporter do
   end
 
   describe "#process_event" do
-    describe "increments counts" do
-      it "increments example count" do
-        subject.process_event(:example_started)
-        subject.example_count.should == 1
-      end
-
-      it "increments pending count" do
-        subject.process_event(:example_pending)
-        subject.pending_count.should == 1
-      end
-
-      it "increments failed count" do
-        subject.process_event(:example_failed)
-        subject.failure_count.should == 1
-      end
-    end
-
     it "forwards the call on to the formatters" do
       formatter.should_receive(:example_started).with('arg!')
       subject.process_event(:example_started, 'arg!')
@@ -127,8 +110,35 @@ describe Konacha::Reporter do
     end
 
     it 'does not pass if failure count is not zero' do
-      subject.process_event(:example_failed)
+      subject.stub(:failure_count => 1)
       subject.should_not be_passed
+    end
+  end
+
+  context "counters" do
+    describe "#example_count" do
+      it "is 0 by default" do
+        subject.example_count.should be_zero
+      end
+
+      it "returns examples count" do
+        subject.stub(:examples => {:omg => :two, :examples => :wow})
+        subject.example_count.should == 2
+      end
+    end
+
+    describe "#pending_count" do
+      it "returns pending examples count" do
+        subject.stub(:examples => {:first => double(:pending? => true), :second => double(:pending? => false)})
+        subject.pending_count.should == 1
+      end
+    end
+
+    describe "#failure_count" do
+      it "returns failed examples count" do
+        subject.stub(:examples => {:first => double(:failed? => true), :second => double(:failed? => false)})
+        subject.failure_count.should == 1
+      end
     end
   end
 end
