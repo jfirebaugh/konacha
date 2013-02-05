@@ -16,11 +16,10 @@ module Konacha
       'suite end' => :example_group_finished,
     }
 
-    attr_reader :start_time, :duration, :example_count, :failure_count, :pending_count
+    attr_reader :start_time, :duration, :examples
 
     def initialize(*formatters)
       @formatters = formatters
-      @example_count = @failure_count = @pending_count = 0
       @duration = @start_time = nil
       @examples, @groups = {}, {}
     end
@@ -36,7 +35,7 @@ module Konacha
         process_event :start_dump
         process_event :dump_pending
         process_event :dump_failures
-        process_event :dump_summary, @duration, @example_count, @failure_count, @pending_count
+        process_event :dump_summary, duration, example_count, failure_count, pending_count
         process_event :seed, seed if seed
       ensure
         process_event :close
@@ -49,7 +48,7 @@ module Konacha
     end
 
     def passed?
-      @failure_count == 0
+      failure_count == 0
     end
 
     def process_mocha_event(event)
@@ -63,23 +62,26 @@ module Konacha
       end
     end
 
-    def process_event(method, *args, &block)
-      case method
-        when :example_started
-          @example_count += 1
-        when :example_failed
-          @failure_count += 1
-        when :example_pending
-          @pending_count += 1
-      end
+    def example_count
+      examples.count
+    end
 
+    def failure_count
+      examples.values.count { |example| example.failed? }
+    end
+
+    def pending_count
+      examples.values.count { |example| example.pending? }
+    end
+
+    def process_event(method, *args, &block)
       @formatters.each do |formatter|
         formatter.send method, *args, &block
       end
     end
 
     def update_or_create_object(data, type)
-      collection = type == 'test' ? @examples : @groups
+      collection = type == 'test' ? examples : @groups
       object = collection[data['fullTitle']]
       if object
         object.update_metadata(data)
