@@ -2,6 +2,14 @@ var Konacha = {};
 
 window.onload = function () {
   var suites = Konacha.specs.slice();
+  var total  = suites.length;
+  var count  = document.createTextNode(0);
+  var status = document.createElement('div');
+
+  status.className = 'konacha-status';
+  status.appendChild(count);
+  status.appendChild(document.createTextNode(' of ' + total + ' specs loaded…'));
+  document.body.appendChild(status);
 
   function runSuite() {
     mocha.suite.suites.sort(function (a, b) {
@@ -20,10 +28,13 @@ window.onload = function () {
       }
     }
 
+    document.body.removeChild(status);
     mocha.run();
   }
 
   (function next() {
+    count.nodeValue = total - suites.length;
+
     if (suites.length) {
       var suite = suites.shift();
 
