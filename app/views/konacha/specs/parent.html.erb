@@ -6,11 +6,9 @@
     <%= stylesheet_link_tag "konacha", :debug => false %>
     <%= javascript_include_tag "mocha", "konacha/parent", :debug => false %>
     <%= javascript_include_tag("konacha/runner", :debug => false) if @run_mode.runner? %>
+    <script>Konacha.specs = <%= @specs.to_json.html_safe %></script>
   </head>
   <body>
-    <% @specs.each do |spec| %>
-      <%= content_tag :iframe, "", :src => iframe_path(spec.asset_name), :class => "test-context", "data-path" => spec.path %>
-    <% end %>
     <div id="mocha"></div>
   </body>
 </html>
