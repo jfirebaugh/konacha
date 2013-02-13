@@ -1,5 +1,9 @@
 # master
 
+# 2.5.0
+
+* Made port of the runner configurable
+
 # 2.4.0
 
 * Support requesting files with periods in the name
