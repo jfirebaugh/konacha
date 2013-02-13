@@ -31,6 +31,14 @@ describe Konacha::Runner do
     end
   end
 
+  describe ".start" do
+    it 'sets the Capybara.server_port' do
+      Capybara.should_receive(:server_port=).with(Konacha.runner_port)
+      Konacha::Runner.any_instance.stub(:run)
+      Konacha::Runner.start
+    end
+  end
+
   shared_examples_for "Konacha::Runner" do |driver|
     before do
       Konacha.configure do |config|
