@@ -34,6 +34,7 @@ module Konacha
       options.driver       ||= :selenium
       options.stylesheets  ||= %w(application)
       options.verbose      ||= false
+      options.runner_port  ||= nil
 
       app.config.assets.paths << app.root.join(options.spec_dir).to_s
     end
