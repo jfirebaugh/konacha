@@ -15,6 +15,12 @@ describe Konacha do
         subject.spec_matcher.should == /_spec\.|_test\./
       end
     end
+
+    describe ".runner_port" do
+      it "defaults to nil" do
+        subject.runner_port.should == nil
+      end
+    end
   end
 
   describe ".spec_paths" do
