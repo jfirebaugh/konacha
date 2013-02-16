@@ -3,21 +3,19 @@
 [![Build Status](https://secure.travis-ci.org/jfirebaugh/konacha.png?branch=master)](http://travis-ci.org/jfirebaugh/konacha)
 [![Dependency Status](https://gemnasium.com/jfirebaugh/konacha.png)](https://gemnasium.com/jfirebaugh/konacha)
 
-Konacha is a Rails engine that allows you to test your JavaScript with the
+Konacha ([koh-NAH-cha], a type of green tea) is a Rails engine that allows you to test your JavaScript with the
 [Mocha](http://visionmedia.github.com/mocha/) test framework and [chai](http://chaijs.com/)
 assertion library.
 
-[![Konacha][2]][1]
+[![Konacha in action][2]][1]
 
-  [1]: http://en.wikipedia.org/wiki/Konacha
-  [2]: https://github.com/jfirebaugh/konacha/raw/master/vendor/images/konacha.jpg
+  [1]: http://www.youtube.com/watch?v=heK78M6Ql9Q
+  [2]: https://github.com/jfirebaugh/konacha/raw/master/images/youtube.png
 
 It is similar to [Jasmine](https://github.com/pivotal/jasmine-gem) and
 [Evergreen](https://github.com/jnicklas/evergreen), but does not attempt to be framework
 agnostic. By sticking with Rails, Konacha can take full advantage of features such as
 the asset pipeline and engines.
-
-Photo credit: [FCartegnie](http://commons.wikimedia.org/wiki/File:Konacha.jpg), CC-BY-SA.
 
 ## Installation
 
