@@ -44,5 +44,13 @@ module Konacha
         pathname.to_s.gsub(File.join(spec_root, ''), '')
       }.sort
     end
+
+    def mounted?
+      !!mount_path
+    end
+
+    def mount_path
+      @mount_path ||= Rails.application.routes.routes.find{|r| r.app == Konacha::Engine }.try(:path).try(:spec).to_s
+    end
   end
 end
