@@ -130,7 +130,7 @@ To automatically trigger reruns when files change, try [guard-konacha](https://g
 ## Spec Helper
 
 Since Konacha integrates with the asset pipeline, using setup helpers in your specs is
-easy. Just create a `spec_helper.js` or `spec_helper.js.coffee` file in `specs/javascripts`
+easy. Just create a `spec_helper.js` or `spec_helper.js.coffee` file in `spec/javascripts`
 and require it in your tests:
 
 ```javascript
