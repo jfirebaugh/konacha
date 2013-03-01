@@ -4,6 +4,8 @@ module Konacha
       render :text => "Not found", :status => 404
     end
 
+    helper_method :spec_path
+
     def parent
       @run_mode = params.fetch(:mode, Konacha.mode).to_s.inquiry
       @specs = Konacha::Spec.all(params[:path])
