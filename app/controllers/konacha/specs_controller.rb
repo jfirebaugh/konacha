@@ -13,5 +13,11 @@ module Konacha
       @spec = Konacha::Spec.find_by_name(params[:name])
       @stylesheets = Konacha::Engine.config.konacha.stylesheets
     end
+
+    protected
+
+    def spec_path(spec)
+      "#{request.env['SCRIPT_NAME']}/iframe/#{spec.asset_name}"
+    end
   end
 end
