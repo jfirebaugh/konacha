@@ -21,10 +21,6 @@ module Konacha
     end
 
     initializer "konacha.environment" do |app|
-      unless app.config.assets.enabled
-        raise RuntimeError, "konacha requires the asset pipeline to be enabled"
-      end
-
       options = app.config.konacha
 
       options.spec_dir     ||= "spec/javascripts"
