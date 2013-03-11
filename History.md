@@ -1,5 +1,9 @@
 # master
 
+# 2.5.1
+
+* Fix several Rails 4 beta compatibility issues.
+
 # 2.5.0
 
 * Made port of the runner configurable
