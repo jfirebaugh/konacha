@@ -29,7 +29,7 @@ module Konacha
       yield config
     end
 
-    delegate :port, :spec_dir, :spec_matcher, :application, :driver, :runner_port, :to => :config
+    delegate :port, :spec_dir, :spec_matcher, :iframe_economy, :application, :driver, :runner_port, :to => :config
 
     def spec_root
       File.join(Rails.root, config.spec_dir)

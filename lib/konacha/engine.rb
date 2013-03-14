@@ -23,14 +23,15 @@ module Konacha
     initializer "konacha.environment" do |app|
       options = app.config.konacha
 
-      options.spec_dir     ||= "spec/javascripts"
-      options.spec_matcher ||= /_spec\.|_test\./
-      options.port         ||= 3500
-      options.application  ||= self.class.application(app)
-      options.driver       ||= :selenium
-      options.stylesheets  ||= %w(application)
-      options.verbose      ||= false
-      options.runner_port  ||= nil
+      options.spec_dir       ||= "spec/javascripts"
+      options.spec_matcher   ||= /_spec\.|_test\./
+      options.port           ||= 3500
+      options.application    ||= self.class.application(app)
+      options.driver         ||= :selenium
+      options.stylesheets    ||= %w(application)
+      options.verbose        ||= false
+      options.runner_port    ||= nil
+      options.iframe_economy ||= false
 
       app.config.assets.paths << app.root.join(options.spec_dir).to_s
     end

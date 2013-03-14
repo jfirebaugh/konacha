@@ -6,7 +6,7 @@ module Konacha
 
     def parent
       @run_mode = params.fetch(:mode, Konacha.mode).to_s.inquiry
-      @specs = Konacha::Spec.all(params[:path])
+      @specs = Konacha::Spec.all(params[:path], params[:grep])
     end
 
     def iframe
