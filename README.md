@@ -180,10 +180,11 @@ Konacha can be configured in an initializer, e.g. `config/initializers/konacha.r
 
 ```ruby
 Konacha.configure do |config|
-  config.spec_dir     = "spec/javascripts"
-  config.spec_matcher = /_spec\.|_test\./
-  config.driver       = :selenium
-  config.stylesheets  = %w(application)
+  config.spec_dir       = "spec/javascripts"
+  config.spec_matcher   = /_spec\.|_test\./
+  config.driver         = :selenium
+  config.stylesheets    = %w(application)
+  config.iframe_economy = false
 end if defined?(Konacha)
 ```
 
@@ -197,6 +198,24 @@ for the `run` task (try `:poltergeist`, after installing
 [PhantomJS](https://github.com/jonleighton/poltergeist#installing-phantomjs)).
 The `stylesheets` option sets the stylesheets to be linked from the `<head>`
 of the test runner iframe.
+
+The `iframe_economy` option tells Konacha to only load the required iframes.
+Even if you are running a single spec, Konacha by default loads all iframes
+and lets mocha determine whether to run a single test or all the suite.
+Setting `iframe_economy` to `true` tells Konacha to load a single iframe
+when running a single test, resulting in a faster page load for single tests.
+
+**Note:** If you want to use this option, you will
+need to name your spec files the same as your spec description.
+For example, the spec with file name `hello_world_spec.js" would need to start with:
+
+```javascript
+describe('Hello World', function() {
+  //... your tests here
+});
+```
+
+
 
 The values above are the defaults.
 
