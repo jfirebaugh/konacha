@@ -6,15 +6,23 @@ require "rspec/core/rake_task"
 RSpec::Core::RakeTask.new :spec
 
 desc 'Build and copy Mocha and Chai assets from submodules into vendor/assets'
-task :assets do
-  sh 'git submodule update --init' unless File.exist?('mocha/Makefile') || File.exist?('chai/Makefile')
-  sh 'cd mocha && npm install && make clean && make'
-  sh 'cd chai && npm install && make clean && make'
-  mkdir_p 'vendor/assets/javascripts'
-  mkdir_p 'vendor/assets/stylesheets'
-  cp 'mocha/mocha.js',  'vendor/assets/javascripts/'
-  cp 'mocha/mocha.css', 'vendor/assets/stylesheets/'
-  cp 'chai/chai.js',    'vendor/assets/javascripts/'
+task :assets => ['assets:build', 'assets:copy']
+
+namespace :assets do
+  task :build do
+    sh 'git submodule update --init' unless File.exist?('mocha/Makefile') || File.exist?('chai/Makefile')
+    sh 'cd mocha && npm install && make clean && make'
+    sh 'cd chai && npm install && make clean && make'
+  end
+
+  task :copy do
+    sh 'git submodule update --init' unless File.exist?('mocha/Makefile') || File.exist?('chai/Makefile')
+    mkdir_p 'vendor/assets/javascripts'
+    mkdir_p 'vendor/assets/stylesheets'
+    cp 'mocha/mocha.js',  'vendor/assets/javascripts/'
+    cp 'mocha/mocha.css', 'vendor/assets/stylesheets/'
+    cp 'chai/chai.js',    'vendor/assets/javascripts/'
+  end
 end
 
 task :default => :spec
