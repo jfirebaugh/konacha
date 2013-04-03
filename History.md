@@ -1,5 +1,9 @@
 # master
 
+# 2.6.0
+
+* Update mocha (1.9.0) and chai (1.5.0)
+
 # 2.5.1
 
 * Fix several Rails 4 beta compatibility issues.
