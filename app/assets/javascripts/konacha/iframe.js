@@ -25,6 +25,7 @@ mocha.ui = function (name) {
 
 mocha.ui('bdd');
 
+// Show only the current iframe.
 mocha.suite.beforeAll(function () {
   var contexts = parent.document.getElementsByClassName("test-context");
   for (var i = 0; i < contexts.length; ++i) {
