@@ -7,15 +7,6 @@ require "konacha/reporter/example_group"
 
 module Konacha
   class Reporter
-    EVENT_CONVERSIONS = {
-      'suite'     => :example_group_started,
-      'test'      => :example_started,
-      'pass'      => :example_passed,
-      'fail'      => :example_failed,
-      'pending'   => :example_pending,
-      'suite end' => :example_group_finished,
-    }
-
     attr_reader :start_time, :duration, :examples
 
     def initialize(*formatters)
@@ -52,14 +43,8 @@ module Konacha
     end
 
     def process_mocha_event(event)
-      if event['event'] == 'start'
-        start(event['testCount'])
-      elsif event['event'] == 'end'
-        finish
-      elsif event['type']
-        object = update_or_create_object(event['data'], event['type'])
-        process_event EVENT_CONVERSIONS[event['event']], object
-      end
+      event_name = event['event'].tr(' ', '_')
+      send "handle_mocha_#{event_name}", event
     end
 
     def example_count
@@ -92,6 +77,46 @@ module Konacha
       end
 
       object
+    end
+
+    private
+    def event_object(event)
+      update_or_create_object(event['data'], event['type'])
+    end
+
+    def handle_mocha_start(event)
+      start(event['testCount'])
+    end
+
+    def handle_mocha_end(event)
+      finish
+    end
+
+    def handle_mocha_suite(event)
+      process_event :example_group_started, event_object(event)
+    end
+
+    def handle_mocha_test(event)
+      process_event :example_started, event_object(event)
+    end
+
+    def handle_mocha_pass(event)
+      process_event :example_passed, event_object(event)
+    end
+
+    def handle_mocha_pending(event)
+      object = event_object(event)
+      # Mocha emits pending without a start event; RSpec emits start, then pending
+      process_event :example_started, object
+      process_event :example_pending, object
+    end
+
+    def handle_mocha_fail(event)
+      process_event :example_failed, event_object(event)
+    end
+
+    def handle_mocha_suite_end(event)
+      process_event :example_group_finished, event_object(event)
     end
   end
 end
