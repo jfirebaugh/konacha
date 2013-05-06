@@ -1,5 +1,10 @@
 # master
 
+# 2.7.0
+
+* Fix semantics of pending event for RSpec reporters (#131, #132)
+* Update chai (1.6.0)
+
 # 2.6.0
 
 * Update mocha (1.9.0) and chai (1.5.0)
