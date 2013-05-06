@@ -61,7 +61,7 @@ describe Konacha::Reporter do
 
     it "creates the object" do
       subject.should_receive(:update_or_create_object).with('data', 'type')
-      subject.process_mocha_event({'data' => 'data', 'type' => 'type'})
+      subject.process_mocha_event({'data' => 'data', 'event' => 'test', 'type' => 'type'})
     end
 
     it "calls #process_event with the converted event name" do
@@ -69,6 +69,14 @@ describe Konacha::Reporter do
       subject.stub(:update_or_create_object) { object }
       subject.should_receive(:process_event).with(:example_started, object)
       subject.process_mocha_event({'event' => 'test', 'type' => 'test'})
+    end
+
+    it "calls #process_event twice for pending examples" do
+      object = double('test')
+      subject.stub(:update_or_create_object) { object }
+      subject.should_receive(:process_event).with(:example_started, object)
+      subject.should_receive(:process_event).with(:example_pending, object)
+      subject.process_mocha_event({'event' => 'pending', 'type' => 'test'})
     end
   end
 
