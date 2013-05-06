@@ -43,14 +43,8 @@ module Konacha
     end
 
     def process_mocha_event(event)
-      if event['event'] == 'start'
-        handle_mocha_start event
-      elsif event['event'] == 'end'
-        handle_mocha_end event
-      elsif event['type']
-        event_name = event['event'].tr(' ', '_')
-        send "handle_mocha_#{event_name}", event
-      end
+      event_name = event['event'].tr(' ', '_')
+      send "handle_mocha_#{event_name}", event
     end
 
     def example_count
