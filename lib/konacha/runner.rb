@@ -19,9 +19,15 @@ module Konacha
 
       events_consumed = 0
       done = false
+
       begin
-        sleep 0.1
-        events = JSON.parse(session.evaluate_script('window.top.Konacha.getEvents()'))
+        events = nil
+
+        until events do
+          sleep 0.1
+          events = JSON.parse(session.evaluate_script('window.top.Konacha.getEvents()')) rescue nil
+        end
+
         if events.present?
           events[events_consumed..-1].each do |event|
             done = true if event['event'] == 'end'
