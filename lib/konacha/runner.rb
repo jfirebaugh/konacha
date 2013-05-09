@@ -21,13 +21,7 @@ module Konacha
       done = false
 
       begin
-        events = nil
-
-        until events do
-          sleep 0.1
-          events = JSON.parse(session.evaluate_script('window.top.Konacha.getEvents()')) rescue nil
-        end
-
+        events = JSON.parse(json_events)
         if events.present?
           events[events_consumed..-1].each do |event|
             done = true if event['event'] == 'end'
@@ -39,6 +33,8 @@ module Konacha
       end until done
 
       reporter.passed?
+    rescue Timeout::Error => e
+      raise e, "Timeout while attempting to get konacha events: #{e}", e.backtrace
     rescue => e
       raise e, "Error communicating with browser process: #{e}", e.backtrace
     end
@@ -48,6 +44,7 @@ module Konacha
     end
 
     private
+
     def formatters
       if ENV['FORMAT']
         ENV['FORMAT'].split(',').map do |string|
@@ -56,6 +53,16 @@ module Konacha
       else
         [Konacha::Formatter.new(STDOUT)]
       end
+    end
+
+    def json_events
+      events = nil
+      Timeout::timeout(10) do
+        until events = session.evaluate_script('window.top.Konacha.getEvents()')
+          sleep 0.1
+        end
+      end
+      events
     end
   end
 end
