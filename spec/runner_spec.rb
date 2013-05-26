@@ -101,6 +101,20 @@ describe Konacha::Runner do
            'error'           => {'message' => 'this one errors out', 'name' => 'Error'}}}
       end
 
+      let(:error_async) do
+        {'event' => 'fail',
+         'type'  => 'test',
+         'data'  => {
+           'title'           => 'errors asynchronously',
+           'fullTitle'       => 'failure errors asynchronously',
+           'parentFullTitle' => 'failure',
+           'status'          => 'failed',
+           'path'            => 'failing_spec.js',
+           # Accept anything for 'message' since async errors have URLs, which
+           # vary on every run, and line #, which may change in Chai releases.
+           'error'           => {'message' => anything(), 'name' => 'Error'}}}
+      end
+
       let(:pass) do
         {'event' => 'pass',
          'type'  => 'test',
@@ -134,6 +148,7 @@ describe Konacha::Runner do
         subject.reporter.should_receive(:process_mocha_event).with(test)
         subject.reporter.should_receive(:process_mocha_event).with(failure)
         subject.reporter.should_receive(:process_mocha_event).with(error)
+        subject.reporter.should_receive(:process_mocha_event).with(error_async)
         subject.reporter.should_receive(:process_mocha_event).with(pass)
         subject.reporter.should_receive(:process_mocha_event).with(pending)
         subject.reporter.should_receive(:process_mocha_event).with(end_event)
