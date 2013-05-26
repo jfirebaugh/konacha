@@ -5,6 +5,13 @@ window.Konacha = {
   }
 };
 
+// Push errors to parent iframe.
+window.onerror = function() {
+  if (parent.onerror) {
+    return parent.onerror.apply(parent, arguments);
+  }
+};
+
 window.Mocha = Object.create(parent.Mocha);
 window.mocha = Object.create(parent.mocha);
 
