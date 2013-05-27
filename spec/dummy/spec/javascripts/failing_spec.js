@@ -10,7 +10,7 @@ describe("failure", function(){
   });
 
   it("errors asynchronously", function(done) {
-    setTimeout(function(done) {
+    setTimeout(function() {
       (2 + 2).should.equal(5);
     }, 0);
     setTimeout(function() {
