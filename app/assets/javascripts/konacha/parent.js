@@ -17,5 +17,27 @@ window.onload = function () {
     }
   }
 
-  mocha.run();
+  var runner = mocha.run();
+
+  // update global error handlers on each frame to match the parent
+  var updateFrameErrorHandlers = function() {
+    for (var i = 0; i < iframes.length; ++i) {
+      iframes[i].contentWindow.onerror = window.onerror;
+    }
+  };
+
+  // now that the runner has started, we can install Mocha's global error
+  // handler on each frame.
+  var _mochaGlobalError = window.onerror;
+  window.onerror = function() {
+    _mochaGlobalError.apply(this, arguments);
+    // return false so Poltergeist doesn't try to capture the error directly
+    return false;
+  };
+  updateFrameErrorHandlers();
+
+  // clean up error handlers when tests are done
+  runner.on("end", function() {
+    updateFrameErrorHandlers();
+  });
 };
