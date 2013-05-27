@@ -21,6 +21,13 @@ Capybara.configure do |config|
   config.app              = Konacha.application
 end
 
+Capybara.register_driver :poltergeist do |app|
+  # Work around a bug in PhantomJS where `return true` from a
+  # window.onerror handler does not prevent an uncaught exception
+  # from being reported to Ruby.
+  Capybara::Poltergeist::Driver.new(app, :js_errors => false)
+end
+
 module Konacha
   module FeatureSpec
     def app
