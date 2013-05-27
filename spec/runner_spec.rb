@@ -3,7 +3,6 @@ require 'spec_helper'
 describe Konacha::Runner do
   before do
     Konacha.mode = :runner
-    STDOUT.stub(:puts)
   end
 
   describe ".new" do
@@ -31,6 +30,7 @@ describe Konacha::Runner do
     before do
       Konacha.configure do |config|
         config.driver = driver
+        config.formatters = [Konacha::Formatter.new(StringIO.new)]
       end
     end
 
