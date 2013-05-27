@@ -20,6 +20,16 @@ module Konacha
       end
     end
 
+    def self.formatters
+      if ENV['FORMAT']
+        ENV['FORMAT'].split(',').map do |string|
+          eval(string).new(STDOUT)
+        end
+      else
+        [Konacha::Formatter.new(STDOUT)]
+      end
+    end
+
     initializer "konacha.environment" do |app|
       options = app.config.konacha
 
@@ -31,6 +41,7 @@ module Konacha
       options.stylesheets  ||= %w(application)
       options.verbose      ||= false
       options.runner_port  ||= nil
+      options.formatters   ||= self.class.formatters
 
       app.config.assets.paths << app.root.join(options.spec_dir).to_s
     end

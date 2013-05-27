@@ -5,23 +5,11 @@ describe Konacha::Runner do
     Konacha.mode = :runner
     STDOUT.stub(:puts)
   end
+
   describe ".new" do
-
-    before do
-      class TestFormatter
-        def initialize(io)
-        end
-      end
-      ENV['FORMAT'] = 'Konacha::Formatter,TestFormatter'
-    end
-
-    after do
-      Object.send(:remove_const, :TestFormatter)
-      ENV.delete('FORMAT')
-    end
-
-    it "initializes a reporter with formatters named by the FORMAT environment variable" do
-      Konacha::Reporter.should_receive(:new).with(instance_of(Konacha::Formatter), instance_of(TestFormatter))
+    it 'creates a reporter with formatters returned by Konacha.formatters' do
+      Konacha.should_receive(:formatters) { :formatters }
+      Konacha::Reporter.should_receive(:new).with(:formatters)
       described_class.new
     end
 

@@ -11,7 +11,7 @@ module Konacha
 
     def initialize(session = nil)
       @session = session
-      @reporter = Konacha::Reporter.new(*formatters)
+      @reporter = Konacha::Reporter.new(*Konacha.formatters)
     end
 
     def run(path = '/')
@@ -39,17 +39,6 @@ module Konacha
 
     def session
       @session ||= Capybara::Session.new(Konacha.driver, Konacha.application)
-    end
-
-    private
-    def formatters
-      if ENV['FORMAT']
-        ENV['FORMAT'].split(',').map do |string|
-          eval(string).new(STDOUT)
-        end
-      else
-        [Konacha::Formatter.new(STDOUT)]
-      end
     end
   end
 end
