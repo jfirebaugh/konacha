@@ -33,5 +33,5 @@ the asset pipeline and engines.}
   gem.add_development_dependency "ejs"
   gem.add_development_dependency "tzinfo"
   gem.add_development_dependency "selenium-webdriver"
-  gem.add_development_dependency "poltergeist"
+  gem.add_development_dependency "poltergeist", "~> 1.3.0"
 end
