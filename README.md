@@ -255,42 +255,10 @@ describe("templating", function() {
 });
 ```
 
-## Upgrading from Konacha 1.x
+## Upgrading from Konacha 2.x
 
-### Iframe
-
-As of Konacha 2.0, each test file is run inside an isolated iframe. For
-compatibility with Konacha 1.x, the iframe's `<body>` element will have
-`id="konacha"` set on it.
-
-Previously, all test files would run in the same environment. Thus, if only
-one test file pulled in an external library, all tests would be able to use
-it. Now test files are run in isolation. If you encounter an undefined
-JavaScript module in your test, you may be missing an explicit `//= require`
-call somewhere.
-
-### Options
-
-In Konacha 1.x you would set `Konacha.mochaOptions` in `konacha_config.js`:
-
-```javascript
-// Old syntax
-Konacha.mochaOptions.ignoreLeaks = true;
-```
-
-The `konacha_config.js` file is no longer used by Konacha 2.0. Instead, call
-Mocha's own methods in [`spec_helper.js`](#spec-helper):
-
-```javascript
-// New syntax
-mocha.ignoreLeaks();
-```
-
-### Global `mocha`
-
-Konacha 2.0 ships with an upgraded Mocha. Some objects that were previously
-available on the global `mocha` object might now be located on `Mocha`. If you
-get an error message to this effect, adjust your code accordingly.
+The only backward-incompatible change in Konacha 3.0 is that Ruby 1.8.7 is
+no longer supported. Please upgrade to 1.9.3 or 2.0.
 
 ## Contributing
 
