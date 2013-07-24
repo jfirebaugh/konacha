@@ -42,6 +42,11 @@ module Konacha
       options.verbose      ||= false
       options.runner_port  ||= nil
       options.formatters   ||= self.class.formatters
+      if options.extra_asset_paths
+        options.extra_asset_paths.each do |extra_asset_path|
+          app.config.assets.paths << app.root.join(extra_asset_path).to_s
+        end
+      end
 
       app.config.assets.paths << app.root.join(options.spec_dir).to_s
     end
