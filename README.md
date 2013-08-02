@@ -182,8 +182,8 @@ Konacha can be configured in an initializer, e.g. `config/initializers/konacha.r
 Konacha.configure do |config|
   config.spec_dir     = "spec/javascripts"
   config.spec_matcher = /_spec\.|_test\./
-  config.driver       = :selenium
   config.stylesheets  = %w(application)
+  config.driver       = :selenium
 end if defined?(Konacha)
 ```
 
@@ -192,11 +192,21 @@ environment.
 
 The `spec_dir` option tells Konacha where to find JavaScript specs.  `spec_matcher`
 is an object responding to `===` (most likely a `Regexp`); it receives a filename
-and should return true if the file is a spec. `driver` names a Capybara driver used
-for the `run` task (try `:poltergeist`, after installing
-[PhantomJS](https://github.com/jonleighton/poltergeist#installing-phantomjs)).
-The `stylesheets` option sets the stylesheets to be linked from the `<head>`
-of the test runner iframe.
+and should return true if the file is a spec. The `stylesheets` option sets the stylesheets to be linked from the `<head>`
+of the test runner iframe. `driver` names a Capybara driver used
+for the `run` task.
+
+For [PhantomJS](https://github.com/jonleighton/poltergeist#installing-phantomjs) support you can use
+the [poltergeist](https://github.com/jonleighton/poltergeist) driver. Be sure to require capybara/poltergeist
+after installing the gem:
+
+```ruby
+require 'capybara/poltergeist'
+
+Konacha.configure do |config|
+  config.driver       = :poltergeist
+end if defined?(Konacha)
+```
 
 The values above are the defaults.
 
