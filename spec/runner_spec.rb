@@ -140,7 +140,7 @@ describe Konacha::Runner do
         subject.reporter.should_receive(:process_mocha_event).with(pass)
         subject.reporter.should_receive(:process_mocha_event).with(pending)
         subject.reporter.should_receive(:process_mocha_event).with(end_event)
-        subject.reporter.should_receive(:process_mocha_event).any_number_of_times
+        subject.reporter.stub(:process_mocha_event)
         subject.run
       end
 
