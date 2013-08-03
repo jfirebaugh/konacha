@@ -5,6 +5,7 @@ bin
 .config
 .yardoc
 Gemfile.lock
+Gemfile-rails3.lock
 InstalledFiles
 _yardoc
 coverage

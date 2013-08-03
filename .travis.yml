@@ -4,10 +4,7 @@ rvm:
   - 2.0.0
 gemfile:
   - Gemfile
-  - Gemfile-rails4
+  - Gemfile-rails3
 before_script:
   - sh -e /etc/init.d/xvfb start
   - export DISPLAY=:99.0
-matrix:
-  allow_failures:
-    - { gemfile: Gemfile-rails4 }
