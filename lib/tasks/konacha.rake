@@ -11,5 +11,7 @@ namespace :konacha do
     # throwing an exception or exiting.
     # http://stackoverflow.com/a/5117457/525872
     exit 1 unless passed
+    # Jruby seems to require an explicit exit 0
+    exit 0
   end
 end
