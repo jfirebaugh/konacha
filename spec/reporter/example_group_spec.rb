@@ -66,4 +66,21 @@ describe Konacha::Reporter::ExampleGroup do
       subject.update_metadata(data)
     end
   end
+
+  describe "#[]" do
+    it "should delegate to instance method if it exists" do
+      subject.stub(:some_method) { nil }
+      subject.stub(:metadata) { nil }
+      subject.should_receive(:some_method)
+      subject.should_not_receive(:metadata)
+      subject[:some_method]
+    end
+
+    it "should delegate to metadata if no method exists" do
+      subject.should_not respond_to(:some_method)
+      subject.metadata.stub(:[]) { nil }
+      subject.metadata.should_receive(:[]).with(:some_method)
+      subject[:some_method]
+    end
+  end
 end

@@ -36,6 +36,10 @@ module Konacha
       def update_metadata(data)
         metadata.update(data)
       end
+
+      def [](key)
+        respond_to?(key) ? send(key) : metadata[key]
+      end
     end
   end
 end
