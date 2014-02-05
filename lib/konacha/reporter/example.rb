@@ -10,6 +10,9 @@ module Konacha
       def initialize(data, parent)
         @metadata = Metadata.new(data)
         @parent = parent
+        if parent
+          update_metadata(example_group: parent.metadata)
+        end
       end
 
       delegate :full_description, :description, :location, :file_path, :line_number, :pending, :pending_message, :exception, :execution_result, :to => :metadata

@@ -6,9 +6,14 @@ describe Konacha::Reporter::ExampleGroup do
   describe "#initialize" do
     it "loads up a metadata instance and the parent" do
       data = double('data')
-      parent = double('parent')
-      example_group = described_class.new(data, parent)
+      parent_metadata = Konacha::Reporter::Metadata.new({})
+      parent = double('parent', metadata: parent_metadata)
 
+      # Check if parent metadata is added to metadata
+      described_class.any_instance.stub(:update_metadata) { nil }
+      described_class.any_instance.should_receive(:update_metadata).with(example_group: parent_metadata)
+
+      example_group = described_class.new(data, parent)
       example_group.parent.should == parent
       example_group.metadata.should be_a(Konacha::Reporter::Metadata)
       example_group.metadata.data.should == data
