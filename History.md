@@ -1,5 +1,11 @@
 # master
 
+# 3.1.0
+
+* Update mocha (1.17.1) and chai (1.9.0)
+* Compatibility with yarjuf RSpec formatter (#164)
+* Improve runner styling (#152)
+
 # 3.0.0
 
 * Update mocha (1.10.0)
