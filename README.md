@@ -162,6 +162,16 @@ mocha.timeout(5);
 chai.Assertion.includeStack = true;
 ```
 
+## Optional manifest file
+
+Any assets that are included in your `spec_helper` get loaded once for
+each spec which can lead to many time consuming requests. If you have
+assets that are used in all tests you can create a `manifest.js` or
+`manifest.js.coffee` in `app/assets/javascript/konacha` and include your
+assets there. This file is included once for each test. Please consider
+the next section before you decide to add all your assets to the
+`konacha/manifest`.
+
 ## Directives and Asset Bundling
 
 We suggest that you explicitly require just the assets necessary for each spec.

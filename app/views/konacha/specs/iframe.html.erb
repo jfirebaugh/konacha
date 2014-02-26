@@ -9,7 +9,7 @@
       <%= stylesheet_link_tag file, :debug => false %>
     <% end %>
 
-    <%= javascript_include_tag "chai", "konacha/iframe", :debug => false %>
+    <%= javascript_include_tag "chai", "konacha/iframe", "konacha/manifest", :debug => false %>
     <%= javascript_include_tag @spec.asset_name %>
   </head>
   <body>
