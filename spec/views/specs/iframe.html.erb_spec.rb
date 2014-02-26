@@ -3,6 +3,7 @@ require 'spec_helper'
 describe "konacha/specs/iframe" do
   before do
     assign(:stylesheets, [])
+    assign(:javascripts, [])
   end
 
   def spec_double(asset_name)
@@ -13,7 +14,8 @@ describe "konacha/specs/iframe" do
     assign(:spec, spec_double("a_spec"))
 
     view.stub(:javascript_include_tag)
-    view.should_receive(:javascript_include_tag).with("a_spec")
+    view.should_receive(:javascript_include_tag).with(:debug => false).ordered
+    view.should_receive(:javascript_include_tag).with("a_spec").ordered
 
     render
   end
@@ -24,6 +26,16 @@ describe "konacha/specs/iframe" do
 
     view.should_receive(:stylesheet_link_tag).with("foo", :debug => false)
     view.should_receive(:stylesheet_link_tag).with("bar", :debug => false)
+
+    render
+  end
+
+  it "renders the javascripts" do
+    assign(:spec, spec_double("a_spec"))
+    assign(:javascripts, %w(foo bar))
+
+    view.should_receive(:javascript_include_tag).with("foo", "bar", :debug => false).ordered
+    view.should_receive(:javascript_include_tag).with("a_spec").ordered
 
     render
   end

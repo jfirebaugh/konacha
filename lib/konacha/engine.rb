@@ -39,6 +39,7 @@ module Konacha
       options.application  ||= self.class.application(app)
       options.driver       ||= :selenium
       options.stylesheets  ||= %w(application)
+      options.javascripts  ||= %w(chai konacha/iframe)
       options.verbose      ||= false
       options.runner_port  ||= nil
       options.formatters   ||= self.class.formatters

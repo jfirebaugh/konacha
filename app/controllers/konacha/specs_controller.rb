@@ -12,6 +12,7 @@ module Konacha
     def iframe
       @spec = Konacha::Spec.find_by_name(params[:name])
       @stylesheets = Konacha::Engine.config.konacha.stylesheets
+      @javascripts = Konacha::Engine.config.konacha.javascripts
     end
   end
 end
