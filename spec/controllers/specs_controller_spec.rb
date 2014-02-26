@@ -23,6 +23,8 @@ describe Konacha::SpecsController do
       Konacha::Spec.should_receive(:find_by_name).with("spec_name") { :spec }
       get :iframe, :name => "spec_name"
       assigns[:spec].should == :spec
+      assigns[:stylesheets].should == Konacha::Engine.config.konacha.stylesheets
+      assigns[:javascripts].should == Konacha::Engine.config.konacha.javascripts
     end
 
     it "404s if there is no match for the given path" do
