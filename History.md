@@ -1,5 +1,9 @@
 # master
 
+# 3.2.0
+
+* Allow configuration of loaded javascript files (#167)
+
 # 3.1.0
 
 * Update mocha (1.17.1) and chai (1.9.0)
