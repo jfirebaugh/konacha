@@ -159,7 +159,7 @@ mocha.ignoreLeaks();
 mocha.timeout(5);
 
 // Show stack trace on failing assertion.
-chai.Assertion.includeStack = true;
+chai.config.includeStack = true;
 ```
 
 ## Directives and Asset Bundling
