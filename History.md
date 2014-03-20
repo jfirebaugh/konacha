@@ -1,5 +1,9 @@
 # master
 
+# 3.2.1
+
+* Update chai (1.9.1)
+
 # 3.2.0
 
 * Allow configuration of loaded javascript files (#167)
