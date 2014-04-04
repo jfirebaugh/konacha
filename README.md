@@ -295,12 +295,13 @@ localhost:3500 when you refresh your browser.
 
 You can send pull requests to Mocha and Chai straight out of your submodules.
 
-## License
+## See Also
 
-Copyright (c) 2012 John Firebaugh
+Prior art:
 
-MIT License (see the LICENSE file)
+* [Jasmine](https://github.com/pivotal/jasmine-gem)
+* [Evergreen](https://github.com/jnicklas/evergreen)
 
-Portions: Copyright (c) 2009 Jonas Nicklas, Copyright (c) 20011-2012 TJ Holowaychuk
-<tj@vision-media.ca>, Copyright (c) 2011 Jake Luer <jake@alogicalparadox.com>. See
-LICENSE file for details.
+Similar projects:
+
+* [Teaspoon](https://github.com/modeset/teaspoon)
