@@ -1,5 +1,9 @@
 # master
 
+# 3.2.2
+
+* Override mocha links to utilize the konacha path parameter (#168)
+
 # 3.2.1
 
 * Update chai (1.9.1)
