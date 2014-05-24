@@ -1,5 +1,9 @@
 # master
 
+# 3.2.3
+
+* Rails 4.1 compatibility (#178)
+
 # 3.2.2
 
 * Override mocha links to utilize the konacha path parameter (#168)
