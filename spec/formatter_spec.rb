@@ -9,11 +9,18 @@ describe Konacha::Formatter do
       subject.send(method, nil)
       subject.examples.should be_present
     end
-    
+
     it "outputs the dot" do
       subject.send(method, nil)
       io.rewind
-      io.read.should include(dot)
+      io.read.should eql(dot)
+    end
+
+    it "uses colors when tty" do
+      allow(io).to receive(:tty?).and_return(true)
+      subject.send(method, nil)
+      io.rewind
+      expect(io.read).to match(/\e\[0;\d{2};49m#{dot}\e\[0m/)
     end
   end
 
