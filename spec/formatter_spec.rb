@@ -17,10 +17,10 @@ describe Konacha::Formatter do
     end
 
     it "uses colors when tty" do
-      allow(io).to receive(:tty?).and_return(true)
+      io.stub(:tty?).and_return(true)
       subject.send(method, nil)
       io.rewind
-      expect(io.read).to match(/\e\[0;\d{2};49m#{dot}\e\[0m/)
+      io.read.should match(/\e\[0;\d{2};49m#{dot}\e\[0m/)
     end
   end
 
