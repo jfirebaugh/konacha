@@ -15,6 +15,10 @@ module Konacha
     end
 
     def run(path = '/')
+      if ENV['GREP']
+        grep_param = URI.encode(ENV['GREP'])
+        path = "#{path}?grep=#{grep_param}"
+      end
       session.visit path
 
       events_consumed = 0

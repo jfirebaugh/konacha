@@ -152,6 +152,16 @@ describe Konacha::Runner do
         instance = described_class.new session
         instance.run('/test_path')
       end
+
+      it "accepts the GREP argument" do
+        ENV["GREP"] = "sets a container if a selector is given"
+        session = double('capybara session')
+        session.stub(:evaluate_script).and_return([start, pass, end_event].to_json)
+        session.should_receive(:visit).with('/?grep=sets%20a%20container%20if%20a%20selector%20is%20given')
+        instance = described_class.new session
+        instance.run
+        ENV["GREP"] = nil
+      end
     end
   end
 

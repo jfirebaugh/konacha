@@ -102,6 +102,8 @@ To run your tests from the command line, type:
 $ bundle exec rake konacha:run
 ```
 
+#### Running individual spec files
+
 To run individual specs, pass a comma separated list of spec file names via
 the `SPEC` environment variable.
 
@@ -109,6 +111,16 @@ the `SPEC` environment variable.
 $ bundle exec rake konacha:run SPEC=foo_spec
 $ bundle exec rake konacha:run SPEC=foo_spec,bar_spec,etc_spec
 ```
+
+#### Targeting tests by pattern
+
+The [`--grep` option](http://visionmedia.github.io/mocha/#grep-option) in Mocha allows you to match tests by string pattern. You can pass a grep string in Konacha via the `GREP` environment variable. 
+
+```
+$ bundle exec rake konacha:run GREP="sets a container if a selector is given"
+```
+
+#### Specifying alternate formatters
 
 Konacha includes a default formatter modeled upon RSpec's ProgressFormatter.
 Additionally, Konacha's runner implements the same protocol as RSpec, so many
@@ -124,6 +136,8 @@ $ bundle exec rake ci:setup:rspec spec konacha:run FORMAT=CI::Reporter::RSpec
 
 You will need to `require` any formatters you use. It's a good idea to do this
 within a `defined?` check in your [Konacha initializer](#configuration).
+
+#### Guard support
 
 To automatically trigger reruns when files change, try [guard-konacha](https://github.com/alexgb/guard-konacha).
 
