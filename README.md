@@ -105,19 +105,21 @@ $ bundle exec rake konacha:run
 #### Running individual spec files
 
 To run individual specs, pass a comma separated list of spec file names via
-the `SPEC` environment variable.
+the `--spec` command line option.
+
+Note: the extra '--' is necessary for Rake to pass-through the remaining arguments.
 
 ```
-$ bundle exec rake konacha:run SPEC=foo_spec
-$ bundle exec rake konacha:run SPEC=foo_spec,bar_spec,etc_spec
+$ bundle exec rake konacha:run -- --spec=foo_spec
+$ bundle exec rake konacha:run -- spec=foo_spec,bar_spec,etc_spec
 ```
 
 #### Targeting tests by pattern
 
-The [`--grep` option](http://visionmedia.github.io/mocha/#grep-option) in Mocha allows you to match tests by string pattern. You can pass a grep string in Konacha via the `GREP` environment variable. 
+The [--grep option](http://visionmedia.github.io/mocha/#grep-option) in Mocha allows you to match tests by string pattern. You can pass a grep string in Konacha via the `--grep` command line option. 
 
 ```
-$ bundle exec rake konacha:run GREP="sets a container if a selector is given"
+$ bundle exec rake konacha:run -- --grep="sets a container if a selector is given"
 ```
 
 #### Specifying alternate formatters
@@ -127,11 +129,11 @@ Additionally, Konacha's runner implements the same protocol as RSpec, so many
 RSpec formatters also work with Konacha.
 
 To specify one or more formatters, provide a comma separated list of class names
-in the `FORMAT` environment variable. For example, you can run both Ruby and JavaScript
+in the `--format` command line option. For example, you can run both Ruby and JavaScript
 specs with CI integration using [ci_reporter](https://github.com/nicksieger/ci_reporter):
 
 ```
-$ bundle exec rake ci:setup:rspec spec konacha:run FORMAT=CI::Reporter::RSpec
+$ bundle exec rake ci:setup:rspec spec konacha:run -- --format=CI::Reporter::RSpec
 ```
 
 You will need to `require` any formatters you use. It's a good idea to do this
