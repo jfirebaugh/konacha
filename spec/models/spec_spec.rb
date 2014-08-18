@@ -23,15 +23,6 @@ describe Konacha::Spec do
       all.length.should == 2
     end
 
-    it "returns specs passed via the ENV['spec'] parameter" do
-      ENV["SPEC"] = "foo_spec,bar_spec,baz_spec"
-      all = described_class.all
-      all.length.should == 3
-      paths = all.map {|p| p.path}
-      paths =~ %w{foo_spec bar_spec baz_spec}
-      ENV["SPEC"] = nil
-    end
-
     it "returns all Specs if given an empty path" do
       all = ["a_spec.js", "b_spec.js"]
       Konacha.should_receive(:spec_paths) { all }
@@ -53,6 +44,23 @@ describe Konacha::Spec do
     it "raises NotFound if no Specs match" do
       Konacha.should_receive(:spec_paths) { [] }
       expect { described_class.all("b_spec") }.to raise_error(Konacha::Spec::NotFound)
+    end
+
+    context "passing in target spec names (as command line args)" do
+      after do
+        Konacha.configure do |config|
+          config.delete :spec
+        end
+      end
+      it "returns targeted specs" do
+        Konacha.configure do |config|
+          config.spec = ['foo_spec', 'bar_spec', 'baz_spec']
+        end
+        all = described_class.all
+        all.length.should == 3
+        paths = all.map {|p| p.path}
+        paths =~ %w{foo_spec bar_spec baz_spec}
+      end
     end
   end
 

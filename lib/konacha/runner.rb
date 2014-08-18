@@ -11,12 +11,13 @@ module Konacha
 
     def initialize(session = nil)
       @session = session
-      @reporter = Konacha::Reporter.new(*Konacha.formatters)
+      @reporter = Konacha::Reporter.new(*Konacha.config.formatters)
     end
 
     def run(path = '/')
-      if ENV['GREP']
-        grep_param = URI.encode(ENV['GREP'])
+      if Konacha.config.grep_string
+        grep_string = Konacha.config.grep_string
+        grep_param = grep_string.include?('%') ? grep_string : URI.encode(grep_string)
         path = "#{path}?grep=#{grep_param}"
       end
       session.visit path
