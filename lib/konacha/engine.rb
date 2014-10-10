@@ -43,9 +43,10 @@ module Konacha
       options.verbose      ||= false
       options.runner_port  ||= nil
       options.formatters   ||= self.class.formatters
+      options.precompile   ||= true
 
       app.config.assets.paths << app.root.join(options.spec_dir).to_s
-      app.config.assets.precompile << lambda{|path| path =~ %r{\.(js|coffee)$} }
+      app.config.assets.precompile << lambda{|path| path =~ %r{\.(js|coffee)$} } if options.precompile
     end
   end
 end
