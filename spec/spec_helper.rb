@@ -5,7 +5,6 @@ ENV["RAILS_ENV"] = "development"
 
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 require "rspec/rails"
-require "rspec/autorun"
 
 # Preload to avoid occasional tilt warnings about thread safety
 require "coffee_script"
@@ -38,6 +37,16 @@ module Konacha
 end
 
 RSpec.configure do |config|
+  config.infer_spec_type_from_file_location!
+
+  config.mock_with :rspec do |c|
+    c.syntax = [:expect, :should]
+  end
+
+  config.expect_with :rspec do |c|
+    c.syntax = [:expect, :should]
+  end
+
   config.include Konacha::FeatureSpec, :type => :feature
 end
 

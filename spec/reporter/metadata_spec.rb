@@ -44,11 +44,11 @@ describe Konacha::Reporter::Metadata do
   describe "#pending" do
     it "returns true iff status is pending" do
       subject.update('status' => 'pending')
-      subject.pending.should be_true
+      subject.pending.should == true
     end
 
     it "returns false" do
-      subject.pending.should be_false
+      subject.pending.should == false
     end
   end
 

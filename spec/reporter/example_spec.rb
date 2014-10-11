@@ -49,24 +49,24 @@ describe Konacha::Reporter::Example do
   describe "#passed?" do
     it "returns true iff execution_result[:status] is passed" do
       subject.should_receive(:execution_result) { {:status => "passed"} }
-      subject.passed?.should be_true
+      subject.passed?.should == true
     end
 
     it "returns false" do
       subject.should_receive(:execution_result) { {} }
-      subject.passed?.should be_false
+      subject.passed?.should == false
     end
   end
 
   describe "#failed?" do
     it "returns true iff execution_result[:status] is failed" do
       subject.should_receive(:execution_result) { {:status => "failed"} }
-      subject.failed?.should be_true
+      subject.failed?.should == true
     end
 
     it "returns false" do
       subject.should_receive(:execution_result) { {} }
-      subject.failed?.should be_false
+      subject.failed?.should == false
     end
   end
 
