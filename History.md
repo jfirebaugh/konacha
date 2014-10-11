@@ -1,5 +1,9 @@
 # master
 
+# 3.2.5
+
+* Better Rails 4.1 compatibility (#178)
+
 # 3.2.4
 
 * Only use colors when output is a tty (#179)
