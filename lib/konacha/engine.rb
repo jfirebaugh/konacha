@@ -45,7 +45,8 @@ module Konacha
       options.formatters   ||= self.class.formatters
 
       app.config.assets.paths << app.root.join(options.spec_dir).to_s
-      app.config.assets.precompile << lambda{|path| path =~ %r{\.(js|coffee)$} }
+      app.config.assets.precompile << lambda {|path| path =~ %r{\.(js|coffee)$} }
+      app.config.assets.precompile << "konacha.css"
     end
   end
 end
