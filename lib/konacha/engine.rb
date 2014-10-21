@@ -44,7 +44,8 @@ module Konacha
       options.runner_port  ||= nil
       options.formatters   ||= self.class.formatters
 
-      app.config.assets.paths << app.root.join(options.spec_dir).to_s
+      spec_dirs = [options.spec_dir].flatten
+      app.config.assets.paths += spec_dirs.map{|d| app.root.join(d).to_s}
       app.config.assets.raise_runtime_errors = false
     end
   end

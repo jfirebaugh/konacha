@@ -98,6 +98,31 @@ describe Konacha do
         subject.size.should == 1
       end
     end
+
+    context 'with additional spec directories', focus: true do
+      around do |example|
+        begin
+          spec_dir = Konacha.config.spec_dir
+          Konacha.configure {|c| c.spec_dir = ["spec/javascripts", "app/sections"]}
+          example.run
+          Rails.application.config.assets.paths << Rails.root.join("app/sections").to_s
+        ensure
+          Konacha.configure {|c| c.spec_dir = spec_dir}
+
+        end
+      end
+
+      it 'has specs from spec/javascripts' do
+        subject.should include("array_sum_js_spec.js")
+        subject.should include("array_sum_cs_spec.js.coffee")
+      end
+
+      it 'has specs from app/sections' do
+        Konacha.spec_root.should include Rails.root.join("app/sections").to_s
+        subject.should include("my_section/my_section_spec.js.coffee")
+      end
+    end
+
   end
 
   it "can be configured in an initializer" do

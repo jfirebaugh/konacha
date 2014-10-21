@@ -32,17 +32,19 @@ module Konacha
     delegate :port, :spec_dir, :spec_matcher, :application, :driver, :runner_port, :formatters, :to => :config
 
     def spec_root
-      File.join(Rails.root, config.spec_dir)
+      [config.spec_dir].flatten.map {|d| File.join(Rails.root, d)}
     end
 
     def spec_paths
-      Rails.application.assets.each_entry(spec_root).find_all { |pathname|
-        config.spec_matcher === pathname.basename.to_s &&
-        (pathname.extname == '.js' || Tilt[pathname]) &&
-        Rails.application.assets.content_type_of(pathname) == 'application/javascript'
-      }.map { |pathname|
-        pathname.to_s.gsub(File.join(spec_root, ''), '')
-      }.sort
+      spec_root.flat_map {|root| 
+        Rails.application.assets.each_entry(root).find_all { |pathname|
+          config.spec_matcher === pathname.basename.to_s &&
+          (pathname.extname == '.js' || Tilt[pathname]) &&
+          Rails.application.assets.content_type_of(pathname) == 'application/javascript'
+        }.map { |pathname|
+          pathname.to_s.gsub(File.join(root, ''), '')
+        }.sort
+      }
     end
   end
 end
