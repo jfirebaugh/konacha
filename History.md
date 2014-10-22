@@ -1,5 +1,9 @@
 # master
 
+# 3.3.0
+
+* Allow multiple spec_dir entries (#187)
+
 # 3.2.5
 
 * Better Rails 4.1 compatibility (#178)
