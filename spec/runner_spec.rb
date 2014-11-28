@@ -6,8 +6,10 @@ describe Konacha::Runner do
   end
 
   describe ".new" do
-    it 'creates a reporter with formatters returned by Konacha.formatters' do
-      Konacha.should_receive(:formatters) { :formatters }
+    it 'creates a reporter with formatters returned by Konacha.config.formatters' do
+      Konacha.configure do |config|
+        config.formatters = :formatters
+      end
       Konacha::Reporter.should_receive(:new).with(:formatters)
       described_class.new
     end
@@ -151,6 +153,34 @@ describe Konacha::Runner do
 
         instance = described_class.new session
         instance.run('/test_path')
+      end
+
+      context "grep configuration is set" do
+        after do
+          Konacha.configure do |config|
+            config.delete :grep_string
+          end
+        end
+        it "processes a non-url-escaped grep string" do
+          Konacha.configure do |config|
+            config.grep_string = "sets a container if a selector is given"
+          end
+          session = double('capybara session')
+          session.stub(:evaluate_script).and_return([start, pass, end_event].to_json)
+          session.should_receive(:visit).with('/?grep=sets%20a%20container%20if%20a%20selector%20is%20given')
+          instance = described_class.new session
+          instance.run
+        end
+        it "processes a url-escaped grep string" do
+          Konacha.configure do |config|
+            config.grep_string = "sets%20a%20container%20if%20a%20selector%20is%20given"
+          end
+          session = double('capybara session')
+          session.stub(:evaluate_script).and_return([start, pass, end_event].to_json)
+          session.should_receive(:visit).with('/?grep=sets%20a%20container%20if%20a%20selector%20is%20given')
+          instance = described_class.new session
+          instance.run
+        end
       end
     end
   end

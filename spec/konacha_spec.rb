@@ -21,6 +21,35 @@ describe Konacha do
         subject.runner_port.should == nil
       end
     end
+
+    describe ".formatters" do
+      it "defaults to a Konacha::Formatter pointing to STDOUT" do
+        Konacha.config.formatters.first.should be_a(Konacha::Formatter)
+        Konacha.config.formatters.first.io.should == STDOUT
+      end
+
+      context "with custom formatters" do
+        before do
+          class TestFormatter
+            def initialize(io)
+            end
+          end
+          Konacha.configure_custom_formatters(['Konacha::Formatter', 'TestFormatter'])
+        end
+
+        after do
+          Object.send(:remove_const, :TestFormatter)
+          Konacha.configure do |config|
+            config.formatters = Konacha::Engine.default_formatters
+          end
+        end
+
+        it "creates the specified formatters" do
+          Konacha.config.formatters.first.should be_a(Konacha::Formatter)
+          Konacha.config.formatters.second.should be_a(TestFormatter)
+        end
+      end
+    end
   end
 
   describe ".spec_paths" do

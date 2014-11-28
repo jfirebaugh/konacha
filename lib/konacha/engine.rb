@@ -20,14 +20,8 @@ module Konacha
       end
     end
 
-    def self.formatters
-      if ENV['FORMAT']
-        ENV['FORMAT'].split(',').map do |string|
-          eval(string).new(STDOUT)
-        end
-      else
-        [Konacha::Formatter.new(STDOUT)]
-      end
+    def default_formatters
+      [Konacha::Formatter.new(STDOUT)]
     end
 
     initializer "konacha.environment" do |app|
@@ -42,7 +36,7 @@ module Konacha
       options.javascripts  ||= %w(chai konacha/iframe)
       options.verbose      ||= false
       options.runner_port  ||= nil
-      options.formatters   ||= self.class.formatters
+      options.formatters   ||= default_formatters
 
       spec_dirs = [options.spec_dir].flatten
       app.config.assets.paths += spec_dirs.map{|d| app.root.join(d).to_s}

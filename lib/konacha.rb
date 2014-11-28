@@ -4,6 +4,7 @@ require "konacha/runner"
 require "konacha/server"
 require "konacha/reporter"
 require "konacha/formatter"
+require "konacha/option_parser"
 
 module Konacha
   class << self
@@ -27,6 +28,12 @@ module Konacha
 
     def configure
       yield config
+    end
+
+    def configure_custom_formatters(formatter_names)
+      config.formatters = formatter_names.map do |formatter_name|
+        formatter_name.constantize.new(STDOUT)
+      end
     end
 
     delegate :port, :spec_dir, :spec_matcher, :application, :driver, :runner_port, :formatters, :to => :config
