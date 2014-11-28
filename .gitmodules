@@ -3,4 +3,4 @@
 	url = git://github.com/chaijs/chai.git
 [submodule "mocha"]
 	path = mocha
-	url = git://github.com/visionmedia/mocha.git
+	url = git://github.com/mochajs/mocha.git
