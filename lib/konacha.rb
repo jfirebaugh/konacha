@@ -11,7 +11,7 @@ module Konacha
 
     def serve
       puts "Your tests are here:"
-      puts "  http://localhost:#{port}/"
+      puts "  http://#{host}:#{port}/"
       self.mode = :server
       Konacha::Server.start
     end
@@ -29,7 +29,7 @@ module Konacha
       yield config
     end
 
-    delegate :port, :spec_dir, :spec_matcher, :application, :driver, :runner_port, :formatters, :to => :config
+    delegate :host, :port, :spec_dir, :spec_matcher, :application, :driver, :runner_port, :formatters, :to => :config
 
     def spec_root
       [config.spec_dir].flatten.map {|d| File.join(Rails.root, d)}

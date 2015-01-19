@@ -36,6 +36,7 @@ module Konacha
       options.spec_dir     ||= "spec/javascripts"
       options.spec_matcher ||= /_spec\.|_test\./
       options.port         ||= 3500
+      options.host         ||= 'localhost'
       options.application  ||= self.class.application(app)
       options.driver       ||= :selenium
       options.stylesheets  ||= %w(application)
