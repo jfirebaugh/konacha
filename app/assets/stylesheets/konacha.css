@@ -38,6 +38,14 @@ body {
   width: 40%;
 }
 
+pre.error {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 90%;
+  width: calc(100% - 42px);
+}
+
 
 @media (max-width: 1860px) {
   .test-context {
