@@ -1,5 +1,5 @@
 module Konacha
-  class Engine < Rails::Engine
+  class Engine < ::Rails::Engine
     # Do not mess up the application's namespace.
     # http://api.rubyonrails.org/classes/Rails/Engine.html#label-Isolated+Engine
     isolate_namespace Konacha
