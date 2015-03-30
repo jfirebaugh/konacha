@@ -94,6 +94,14 @@ first, so your code runs in the correct context.
 
 ![Selecting the test-context frame in Chrome](https://raw.github.com/jfirebaugh/konacha/master/images/frame-select.png)
 
+You can also add the following to your `config/routes.rb` to see the specs run at `/konacha`:
+
+```ruby
+Rails.application.routes.draw do
+  mount Konacha::Engine, at: "/konacha" if defined?(Konacha)
+end
+```
+
 ### Command-Line Runner
 
 To run your tests from the command line, type:
