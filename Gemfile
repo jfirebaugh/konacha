@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
 gemspec
 
-gem "railties", "~> 4.1.0"
+gem "railties", "~> 4.2.0"
 gem "sprockets-rails"
