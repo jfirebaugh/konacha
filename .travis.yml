@@ -6,6 +6,8 @@ gemfile:
   - Gemfile
   - Gemfile-rails3
   - Gemfile-rails40
+  - Gemfile-rails41
+  - Gemfile-rails42
 before_script:
   - sh -e /etc/init.d/xvfb start
   - export DISPLAY=:99.0
