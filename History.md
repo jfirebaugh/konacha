@@ -1,5 +1,12 @@
 # master
 
+# 3.4.0
+
+* Add host configuration option (#196)
+* Make mocha pre.error element vertically scrollable (#184)
+* Use root namespace for Rails::Engine (#197)
+* Tighten sprockets dependency - 3.x doesn't work (#202, #203, #204)
+
 # 3.3.0
 
 * Allow multiple spec_dir entries (#187)
