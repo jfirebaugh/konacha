@@ -37,11 +37,24 @@ module Konacha
 
     def spec_paths
       spec_root.flat_map do |root|
-        Rails.application.assets.each_entry(root).find_all { |pathname|
-          config.spec_matcher === pathname.basename.to_s &&
-          (pathname.extname == '.js' || Tilt[pathname]) &&
-          Rails.application.assets.content_type_of(pathname) == 'application/javascript'
-        }.map { |pathname|
+        # Support Sprockets 2.x
+        if Rails.application.assets.respond_to?(:each_entry)
+          paths = Rails.application.assets.each_entry(root).find_all { |pathname|
+            config.spec_matcher === pathname.basename.to_s &&
+            (pathname.extname == '.js' || Tilt[pathname]) &&
+            Rails.application.assets.content_type_of(pathname) == 'application/javascript'
+          }
+        # Sprockets 3
+        elsif Rails.application.assets.respond_to?(:each_file)
+          paths = Rails.application.assets.each_file.find_all { |path|
+            pathname = Pathname.new(path)
+            config.spec_matcher === pathname.basename.to_s &&
+              (pathname.extname == '.js' || Tilt[pathname])
+          }
+        else
+          raise NotImplementedError.new("Konacha is not compatible with the version of Sprockets used by your application.")
+        end
+        paths.map { |pathname|
           pathname.to_s.gsub(File.join(root, ''), '')
         }.sort
       end

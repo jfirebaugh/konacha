@@ -1,5 +1,7 @@
 # master
 
+* Supports Sprockets 3.x (#202, #203, #204)
+
 # 3.4.0
 
 * Add host configuration option (#196)
