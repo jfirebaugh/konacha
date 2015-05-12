@@ -104,10 +104,12 @@ describe Konacha do
         begin
           spec_dir = Konacha.config.spec_dir
           Konacha.configure {|c| c.spec_dir = ["spec/javascripts", "app/sections"]}
-          Rails.application.config.assets.paths << Rails.root.join("app/sections").to_s
           # For Sprockets 3, adding to config.assets.paths does not work
           if Rails.application.assets.respond_to?(:append_path)
             Rails.application.assets.append_path(Rails.root.join("app/sections").to_s)
+          # Sprockets 2
+          else
+            Rails.application.config.assets.paths << Rails.root.join("app/sections").to_s
           end
           example.run
         ensure
