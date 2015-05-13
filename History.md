@@ -1,5 +1,7 @@
 # master
 
+# 3.5.0
+
 * Supports Sprockets 3.x (#202, #203, #204)
 
 # 3.4.0
