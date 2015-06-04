@@ -1,5 +1,9 @@
 # master
 
+# 3.5.1
+
+* Update chai (1.9.2)
+
 # 3.5.0
 
 * Supports Sprockets 3.x (#202, #203, #204)
