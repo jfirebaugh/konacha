@@ -99,7 +99,7 @@ describe Konacha do
       end
     end
 
-    context 'with additional spec directories' do
+    context 'with configured spec directories' do
       around do |example|
         begin
           spec_dir = Konacha.config.spec_dir
@@ -107,9 +107,11 @@ describe Konacha do
           # For Sprockets 3, adding to config.assets.paths does not work
           if Rails.application.assets.respond_to?(:append_path)
             Rails.application.assets.append_path(Rails.root.join("app/sections").to_s)
+            Rails.application.assets.append_path(Rails.root.join("spec/isolated").to_s)
           # Sprockets 2
           else
             Rails.application.config.assets.paths << Rails.root.join("app/sections").to_s
+            Rails.application.config.assets.paths << Rails.root.join("spec/isolated").to_s
           end
           example.run
         ensure
@@ -126,6 +128,16 @@ describe Konacha do
       it 'has specs from app/sections' do
         Konacha.spec_root.should include Rails.root.join("app/sections").to_s
         subject.should include("my_section/my_section_spec.js.coffee")
+      end
+
+      # spec/isolated is in the assets path, but not Koncha's spec_dir
+      it 'does not have specs from spec/isolated' do
+        Konacha.spec_root.should_not include Rails.root.join("spec/isolated").to_s
+
+        spec_file = "isolated/errors/failing_iframe_spec.js.coffee"
+        # Ensure neither the relative or absolute paths are present
+        subject.should_not include(spec_file)
+        subject.should_not include(Rails.root.join("spec", spec_file).to_s)
       end
     end
 

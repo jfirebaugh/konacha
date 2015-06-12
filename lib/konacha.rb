@@ -48,7 +48,8 @@ module Konacha
         elsif Rails.application.assets.respond_to?(:each_file)
           paths = Rails.application.assets.each_file.find_all { |path|
             pathname = Pathname.new(path)
-            config.spec_matcher === pathname.basename.to_s &&
+            pathname.dirname.to_s.start_with?(root) &&
+              config.spec_matcher === pathname.basename.to_s &&
               (pathname.extname == '.js' || Tilt[pathname])
           }
         else
