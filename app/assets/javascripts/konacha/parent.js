@@ -12,7 +12,11 @@ window.onload = function () {
         currentSuite = suite;
 
     while (!(specFilePath = currentSuite.path)) {
-      currentSuite = currentSuite.parent
+      if (currentSuite.parent) {
+        currentSuite = currentSuite.parent;
+      } else {
+        break;
+      }
     }
 
     specFilePath = /([^\.]*)/.exec(specFilePath)[1];
