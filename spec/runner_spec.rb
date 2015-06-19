@@ -69,6 +69,7 @@ describe Konacha::Runner do
         {'event' => 'fail',
          'type'  => 'test',
          'data'  => {
+           'duration'        => anything,
            'title'           => 'fails',
            'fullTitle'       => 'failure fails',
            'parentFullTitle' => 'failure',
