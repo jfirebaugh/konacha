@@ -1,5 +1,9 @@
 # master
 
+# 3.6.0
+
+* Update chai (3.0.0) and mocha (2.3.0)
+
 # 3.5.1
 
 * Update chai (1.9.2)
