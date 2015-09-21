@@ -1029,7 +1029,7 @@ function Mocha(options) {
   this.ui(options.ui);
   this.bail(options.bail);
   this.reporter(options.reporter, options.reporterOptions);
-  if (options.timeout != null) {
+  if (typeof options.timeout !== 'undefined' && options.timeout !== null) {
     this.timeout(options.timeout);
   }
   this.useColors(options.useColors);
@@ -1751,7 +1751,14 @@ exports.list = function(failures) {
     // msg
     var msg;
     var err = test.err;
-    var message = err.message || '';
+    var message;
+    if (err.message) {
+      message = err.message;
+    } else if (typeof err.inspect === 'function') {
+      message = err.inspect() + '';
+    } else {
+      message = '';
+    }
     var stack = err.stack || message;
     var index = stack.indexOf(message);
     var actual = err.actual;
@@ -1983,7 +1990,7 @@ function unifiedDiff(err, escape) {
     return indent + line;
   }
   function notBlank(line) {
-    return line != null;
+    return typeof line !== 'undefined' && line !== null;
   }
   var msg = diff.createPatch('string', err.actual, err.expected);
   var lines = msg.split('\n').splice(4);
@@ -3120,7 +3127,7 @@ function Markdown(runner) {
     var key = SUITE_PREFIX + suite.title;
 
     obj = obj[key] = obj[key] || { suite: suite };
-    suite.suites.forEach(function() {
+    suite.suites.forEach(function(suite) {
       mapTOC(suite, obj);
     });
 
@@ -3814,6 +3821,11 @@ function XUnit(runner, options) {
 }
 
 /**
+ * Inherit from `Base.prototype`.
+ */
+inherits(XUnit, Base);
+
+/**
  * Override done to close the stream (if it's a file).
  *
  * @param failures
@@ -3828,11 +3840,6 @@ XUnit.prototype.done = function(failures, fn) {
     fn(failures);
   }
 };
-
-/**
- * Inherit from `Base.prototype`.
- */
-inherits(XUnit, Base);
 
 /**
  * Write out the given line.
@@ -4240,6 +4247,7 @@ var Pending = require('./pending');
 var utils = require('./utils');
 var inherits = utils.inherits;
 var debug = require('debug')('mocha:runner');
+var Runnable = require('./runnable');
 var filter = utils.filter;
 var indexOf = utils.indexOf;
 var keys = utils.keys;
@@ -4297,6 +4305,7 @@ function Runner(suite, delay) {
   this._abort = false;
   this._delay = delay;
   this.suite = suite;
+  this.started = false;
   this.total = suite.total();
   this.failures = 0;
   this.on('test end', function(test) {
@@ -4519,12 +4528,13 @@ Runner.prototype.hook = function(name, fn) {
 
     self.emit('hook', hook);
 
-    hook.on('error', function(err) {
-      self.failHook(hook, err);
-    });
+    if (!hook.listeners('error').length) {
+      hook.on('error', function(err) {
+        self.failHook(hook, err);
+      });
+    }
 
     hook.run(function(err) {
-      hook.removeAllListeners('error');
       var testError = hook.error();
       if (testError) {
         self.fail(self.test, testError);
@@ -4619,7 +4629,8 @@ Runner.prototype.hookDown = function(name, fn) {
 Runner.prototype.parents = function() {
   var suite = this.suite;
   var suites = [];
-  while (suite = suite.parent) {
+  while (suite.parent) {
+    suite = suite.parent;
     suites.push(suite);
   }
   return suites;
@@ -4885,7 +4896,20 @@ Runner.prototype.uncaught = function(err) {
   err.uncaught = true;
 
   var runnable = this.currentRunnable;
+
   if (!runnable) {
+    runnable = new Runnable('Uncaught error outside test suite');
+    runnable.parent = this.suite;
+
+    if (this.started) {
+      this.fail(runnable, err);
+    } else {
+      // Can't recover from this failure
+      this.emit('start');
+      this.fail(runnable, err);
+      this.emit('end');
+    }
+
     return;
   }
 
@@ -4944,6 +4968,7 @@ Runner.prototype.run = function(fn) {
   }
 
   function start() {
+    self.started = true;
     self.emit('start');
     self.runSuite(rootSuite, function() {
       debug('finished running');
@@ -5039,7 +5064,8 @@ function filterLeaks(ok, globals) {
  */
 function extraGlobals() {
   if (typeof process === 'object' && typeof process.version === 'string') {
-    var nodeVersion = process.version.split('.').reduce(function(a, v) {
+    var parts = process.version.split('.');
+    var nodeVersion = utils.reduce(parts, function(a, v) {
       return a << 8 | v;
     });
 
@@ -5054,7 +5080,7 @@ function extraGlobals() {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./pending":16,"./utils":39,"_process":51,"debug":2,"events":3}],37:[function(require,module,exports){
+},{"./pending":16,"./runnable":35,"./utils":39,"_process":51,"debug":2,"events":3}],37:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -6146,7 +6172,7 @@ exports.getError = function(err) {
  * @description
  * When invoking this function you get a filter function that get the Error.stack as an input,
  * and return a prettify output.
- * (i.e: strip Mocha, node_modules, bower and componentJS from stack trace).
+ * (i.e: strip Mocha and internal node functions from stack trace).
  * @returns {Function}
  */
 exports.stackTraceFilter = function() {
@@ -6158,14 +6184,10 @@ exports.stackTraceFilter = function() {
       : (typeof location === 'undefined' ? window.location : location).href.replace(/\/[^\/]*$/, '/');
 
   function isMochaInternal(line) {
-    return (~line.indexOf('node_modules' + slash + 'mocha'))
-      || (~line.indexOf('components' + slash + 'mochajs'))
-      || (~line.indexOf('components' + slash + 'mocha'));
-  }
-
-  // node_modules, bower, componentJS
-  function isBrowserModule(line) {
-    return (~line.indexOf('node_modules')) || (~line.indexOf('components'));
+    return (~line.indexOf('node_modules' + slash + 'mocha' + slash))
+      || (~line.indexOf('components' + slash + 'mochajs' + slash))
+      || (~line.indexOf('components' + slash + 'mocha' + slash))
+      || (~line.indexOf(slash + 'mocha.js'));
   }
 
   function isNodeInternal(line) {
@@ -6181,11 +6203,11 @@ exports.stackTraceFilter = function() {
     stack = stack.split('\n');
 
     stack = exports.reduce(stack, function(list, line) {
-      if (is.node && (isMochaInternal(line) || isNodeInternal(line))) {
+      if (isMochaInternal(line)) {
         return list;
       }
 
-      if (is.browser && (isBrowserModule(line))) {
+      if (is.node && isNodeInternal(line)) {
         return list;
       }
 
