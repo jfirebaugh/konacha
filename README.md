@@ -239,10 +239,12 @@ Sprocket's built in support for JavaScript template (`.jst`) files. Add a `spec/
 directory, place template files there (using any JS template language supported by Sprockets),
 require them in your spec or spec_helper, and render them into the `<body>`.
 
-Note that if you want to use EJS as in the following example, you need to add that gem to your Gemfile:
+The following example uses EJS. You can use an alternative templating language, like ECO, but you need to add something to your Gemfile in order for Sprokets to define the JST function and make your templates available.
 
 ```ruby
-gem "ejs"
+group :development, :test do
+  gem "ejs"
+end
 ```
 
 For example, in `spec/javascripts/templates/hello.jst.ejs`:
