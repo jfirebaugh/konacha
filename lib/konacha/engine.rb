@@ -56,7 +56,7 @@ module Konacha
       ActiveSupport.on_load(:action_view) do
         default_checker = ActionView::Base.precompiled_asset_checker
         ActionView::Base.precompiled_asset_checker = -> logical_path do
-          default_checker[logical_path] || Rails.env.test?
+          default_checker[logical_path] || Konacha.asset_precompiled?(logical_path)
         end
       end
     end
