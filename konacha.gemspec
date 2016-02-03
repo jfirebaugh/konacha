@@ -17,12 +17,12 @@ the asset pipeline and engines.}
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.name          = "konacha"
   gem.require_paths = ["lib"]
-  gem.version       = "3.7.0"
+  gem.version       = "3.8.0"
   gem.license       = "MIT"
 
   gem.add_dependency "railties", ">= 3.1", "< 5"
   gem.add_dependency "actionpack", ">= 3.1", "< 5"
-  gem.add_dependency "sprockets", ">= 2", "< 4"
+  gem.add_dependency "sprockets", ">= 3", "< 4"
   gem.add_dependency "capybara"
   gem.add_dependency "colorize"
   gem.add_dependency "tilt"
