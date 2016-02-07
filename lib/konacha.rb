@@ -60,5 +60,20 @@ module Konacha
         }.sort
       end
     end
+
+    def precompiled_assets
+      %W(konacha.css
+         chai.js
+         mocha.js
+         konacha/parent.js
+         konacha/iframe.js
+         konacha/runner.js).concat(spec_paths).map do |path|
+        path.gsub(/\.js\.coffee$/, ".js").gsub(/\.coffee$/, ".js")
+      end
+    end
+
+    def asset_precompiled?(logical_path)
+      precompiled_assets.include? logical_path
+    end
   end
 end
