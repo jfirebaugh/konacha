@@ -7,11 +7,17 @@ module Konacha
     config.konacha = ActiveSupport::OrderedOptions.new
 
     def self.application(app)
+      # Compatibility workaround for supporting both sprockets 2 and 3
+      if Sprockets::VERSION.start_with? '3'
+        app.config.cache_classes = false
+        sprockes_env = Sprockets::Railtie.build_environment(app)
+      end
+
       Rack::Builder.app do
         use Rack::ShowExceptions
 
         map app.config.assets.prefix do
-          run app.assets
+          run Sprockets::VERSION.start_with?('3') ? sprockes_env : app.assets # Compatibility workaround for supporting both sprockets 2 and 3
         end
 
         map "/" do
@@ -37,7 +43,6 @@ module Konacha
       options.spec_matcher ||= /_spec\.|_test\./
       options.port         ||= 3500
       options.host         ||= 'localhost'
-      options.application  ||= self.class.application(app)
       options.driver       ||= :selenium
       options.stylesheets  ||= %w(application)
       options.javascripts  ||= %w(chai konacha/iframe)
@@ -47,7 +52,19 @@ module Konacha
 
       spec_dirs = [options.spec_dir].flatten
       app.config.assets.paths += spec_dirs.map{|d| app.root.join(d).to_s}
-      app.config.assets.raise_runtime_errors = false
+      options.application  ||= self.class.application(app)
+    end
+
+    # Compatibility workaround for supporting both sprockets 2 and 3
+    if Sprockets::VERSION.start_with? '3'
+      config.after_initialize do
+        ActiveSupport.on_load(:action_view) do
+          default_checker = ActionView::Base.precompiled_asset_checker
+          ActionView::Base.precompiled_asset_checker = -> logical_path do
+            default_checker[logical_path] || Konacha.asset_precompiled?(logical_path)
+          end
+        end
+      end
     end
   end
 end
