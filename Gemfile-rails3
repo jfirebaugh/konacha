@@ -1,6 +1,0 @@
-source 'https://rubygems.org'
-gemspec
-
-gem "railties", "~> 3.2"
-gem "actionpack", "~> 3.2"
-gem "test-unit", "~> 3.0"

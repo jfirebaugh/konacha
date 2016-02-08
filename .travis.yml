@@ -4,8 +4,8 @@ rvm:
   - 2.2.0
 gemfile:
   - Gemfile
-  - Gemfile-rails3
-  - Gemfile-rails40
+  - Gemfile-sprockets2-sprocketsrails2
+  - Gemfile-sprockets3-sprocketsrails2
   - Gemfile-rails41
 before_script:
   - sh -e /etc/init.d/xvfb start
