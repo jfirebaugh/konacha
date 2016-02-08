@@ -7,17 +7,18 @@ module Konacha
     config.konacha = ActiveSupport::OrderedOptions.new
 
     def self.application(app)
-      # Compatibility workaround for supporting both sprockets 2 and 3
-      if Sprockets::VERSION.start_with? '3'
+      if Sprockets::Rails::VERSION.start_with? '3'
         app.config.cache_classes = false
         sprockets_env = Sprockets::Railtie.build_environment(app)
+      else
+        sprockets_env = app.assets
       end
 
       Rack::Builder.app do
         use Rack::ShowExceptions
 
         map app.config.assets.prefix do
-          run Sprockets::VERSION.start_with?('3') ? sprockets_env : app.assets # Compatibility workaround for supporting both sprockets 2 and 3
+          run sprockets_env
         end
 
         map "/" do
@@ -55,8 +56,7 @@ module Konacha
       options.application  ||= self.class.application(app)
     end
 
-    # Compatibility workaround for supporting both sprockets 2 and 3
-    if Sprockets::VERSION.start_with? '3'
+    if Sprockets::Rails::VERSION.start_with? '3'
       config.after_initialize do
         ActiveSupport.on_load(:action_view) do
           default_checker = ActionView::Base.precompiled_asset_checker
