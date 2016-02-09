@@ -7,8 +7,8 @@ module Konacha
     config.konacha = ActiveSupport::OrderedOptions.new
 
     def self.application(app)
-      # Compatibility workaround for supporting both sprockets 2 and 3
-      if Sprockets::VERSION.start_with? '3'
+      # Compatibility workaround for supporting both sprockets 2 and 3 with sprocket-rails 2 or 3
+      if defined?(Sprockets::Rails::VERSION) && Sprockets::Rails::VERSION.start_with?('3')
         app.config.cache_classes = false
         sprockets_env = Sprockets::Railtie.build_environment(app)
       end
@@ -17,7 +17,12 @@ module Konacha
         use Rack::ShowExceptions
 
         map app.config.assets.prefix do
-          run Sprockets::VERSION.start_with?('3') ? sprockets_env : app.assets # Compatibility workaround for supporting both sprockets 2 and 3
+          # Compatibility workaround for supporting both sprockets 2 and 3 with sprocket-rails 2 or 3
+          if defined?(Sprockets::Rails::VERSION) && Sprockets::Rails::VERSION.start_with?('3')
+            run sprockets_env
+          else
+            run app.assets
+          end
         end
 
         map "/" do
@@ -52,12 +57,15 @@ module Konacha
 
       spec_dirs = [options.spec_dir].flatten
       app.config.assets.paths += spec_dirs.map{|d| app.root.join(d).to_s}
+      if !defined?(Sprockets::Rails::VERSION) || Sprockets::Rails::VERSION.start_with?('2')
+        app.config.assets.raise_runtime_errors = false
+      end
       options.application  ||= self.class.application(app)
     end
 
-    # Compatibility workaround for supporting both sprockets 2 and 3
-    if Sprockets::VERSION.start_with? '3'
-      config.after_initialize do
+    config.after_initialize do
+      # Compatibility workaround for supporting both sprockets 2 and 3 with sprocket-rails 2 or 3
+      if defined?(Sprockets::Rails::VERSION) && Sprockets::Rails::VERSION.start_with?('3')
         ActiveSupport.on_load(:action_view) do
           default_checker = ActionView::Base.precompiled_asset_checker
           ActionView::Base.precompiled_asset_checker = -> logical_path do
