@@ -7,17 +7,18 @@ module Konacha
     config.konacha = ActiveSupport::OrderedOptions.new
 
     def self.application(app)
-      # Compatibility workaround for supporting both sprockets 2 and 3
-      if Sprockets::VERSION.start_with? '3'
+      # Compatibility workaround for supporting both sprockets 2 and 3 with sprocket-rails 2 or 3
+      if Sprockets::Rails::VERSION.start_with? '3'
         app.config.cache_classes = false
-        sprockes_env = Sprockets::Railtie.build_environment(app)
+        sprockets_env = Sprockets::Railtie.build_environment(app)
       end
 
       Rack::Builder.app do
         use Rack::ShowExceptions
 
         map app.config.assets.prefix do
-          run Sprockets::VERSION.start_with?('3') ? sprockes_env : app.assets # Compatibility workaround for supporting both sprockets 2 and 3
+          # Compatibility workaround for supporting both sprockets 2 and 3 with sprocket-rails 2 or 3
+          run Sprockets::Rails::VERSION.start_with?('3') ? sprockets_env : app.assets
         end
 
         map "/" do
@@ -52,11 +53,12 @@ module Konacha
 
       spec_dirs = [options.spec_dir].flatten
       app.config.assets.paths += spec_dirs.map{|d| app.root.join(d).to_s}
+      app.config.assets.raise_runtime_errors = false unless Sprockets::Rails::VERSION.start_with? '3'
       options.application  ||= self.class.application(app)
     end
 
-    # Compatibility workaround for supporting both sprockets 2 and 3
-    if Sprockets::VERSION.start_with? '3'
+    # Compatibility workaround for supporting both sprockets 2 and 3 with sprocket-rails 2 or 3
+    if Sprockets::Rails::VERSION.start_with? '3'
       config.after_initialize do
         ActiveSupport.on_load(:action_view) do
           default_checker = ActionView::Base.precompiled_asset_checker
