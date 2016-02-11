@@ -20,9 +20,10 @@ the asset pipeline and engines.}
   gem.version       = "3.7.0"
   gem.license       = "MIT"
 
-  gem.add_dependency "railties", ">= 3.1", "< 5"
-  gem.add_dependency "actionpack", ">= 3.1", "< 5"
+  gem.add_dependency "railties", ">= 4.1", "< 5"
+  gem.add_dependency "actionpack", ">= 4.1", "< 5"
   gem.add_dependency "sprockets", ">= 2", "< 4"
+  gem.add_dependency "sprockets-rails", ">= 2", "< 4"
   gem.add_dependency "capybara"
   gem.add_dependency "colorize"
   gem.add_dependency "tilt"
