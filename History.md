@@ -1,5 +1,10 @@
 # master
 
+# 4.0.0
+
+* Add support for sprockets-rails 3.0 (#216)
+* Rails < 4.1 is no longer supported
+
 # 3.7.0
 
 * Update chai (3.3.0) and mocha (2.3.2)

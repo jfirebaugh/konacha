@@ -272,10 +272,10 @@ describe("templating", function() {
 });
 ```
 
-## Upgrading from Konacha 2.x
+## Upgrading from Konacha 3.x
 
-The only backward-incompatible change in Konacha 3.0 is that Ruby 1.8.7 is
-no longer supported. Please upgrade to 1.9.3 or 2.0.
+The only backward-incompatible change in Konacha 4.0 is that Rails versions
+less than 4.1 are longer supported. Please upgrade to 4.1 or later.
 
 ## Contributing
 
