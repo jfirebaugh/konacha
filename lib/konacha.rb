@@ -75,5 +75,9 @@ module Konacha
     def asset_precompiled?(logical_path)
       precompiled_assets.include? logical_path
     end
+
+    def sprockets_rails_3?
+      defined?(Sprockets::Rails::VERSION) && Sprockets::Rails::VERSION.start_with?('3')
+    end
   end
 end

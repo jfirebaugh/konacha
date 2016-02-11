@@ -7,19 +7,12 @@ module Konacha
     config.konacha = ActiveSupport::OrderedOptions.new
 
     def self.application(app)
-      # Compatibility workaround for supporting both sprockets 2 and 3 with sprocket-rails 2 or 3
-      if defined?(Sprockets::Rails::VERSION) && Sprockets::Rails::VERSION.start_with?('3')
-        app.config.cache_classes = false
-        sprockets_env = Sprockets::Railtie.build_environment(app)
-      end
-
       Rack::Builder.app do
         use Rack::ShowExceptions
 
         map app.config.assets.prefix do
-          # Compatibility workaround for supporting both sprockets 2 and 3 with sprocket-rails 2 or 3
-          if defined?(Sprockets::Rails::VERSION) && Sprockets::Rails::VERSION.start_with?('3')
-            run sprockets_env
+          if Konacha.sprockets_rails_3?
+            run Sprockets::Railtie.build_environment(app)
           else
             run app.assets
           end
@@ -57,22 +50,21 @@ module Konacha
 
       spec_dirs = [options.spec_dir].flatten
       app.config.assets.paths += spec_dirs.map{|d| app.root.join(d).to_s}
-      if !defined?(Sprockets::Rails::VERSION) || Sprockets::Rails::VERSION.start_with?('2')
-        app.config.assets.raise_runtime_errors = false
-      end
-      options.application  ||= self.class.application(app)
-    end
 
-    config.after_initialize do
-      # Compatibility workaround for supporting both sprockets 2 and 3 with sprocket-rails 2 or 3
-      if defined?(Sprockets::Rails::VERSION) && Sprockets::Rails::VERSION.start_with?('3')
-        ActiveSupport.on_load(:action_view) do
-          default_checker = ActionView::Base.precompiled_asset_checker
-          ActionView::Base.precompiled_asset_checker = -> logical_path do
-            default_checker[logical_path] || Konacha.asset_precompiled?(logical_path)
+      if Konacha.sprockets_rails_3?
+        config.after_initialize do
+          ActiveSupport.on_load(:action_view) do
+            default_checker = ActionView::Base.precompiled_asset_checker
+            ActionView::Base.precompiled_asset_checker = -> logical_path do
+              default_checker[logical_path] || Konacha.asset_precompiled?(logical_path)
+            end
           end
         end
+      else
+        app.config.assets.raise_runtime_errors = false
       end
+
+      options.application  ||= self.class.application(app)
     end
   end
 end
