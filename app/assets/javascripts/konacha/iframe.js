@@ -1,6 +1,9 @@
 window.Konacha = {
   reset: function() {
-    document.body = document.createElement('body');
+    document.body.parentNode.replaceChild(
+      document.createElement('body'),
+      document.body
+    );
     document.body.id = 'konacha';
   }
 };
