@@ -34,6 +34,6 @@ the asset pipeline and engines.}
   gem.add_development_dependency "coffee-script"
   gem.add_development_dependency "ejs"
   gem.add_development_dependency "tzinfo"
-  gem.add_development_dependency "selenium-webdriver"
+  gem.add_development_dependency "selenium-webdriver", "~> 2"
   gem.add_development_dependency "poltergeist", "~> 1.5"
 end
