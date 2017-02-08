@@ -24,13 +24,25 @@ module Konacha
       end
     end
 
+    def self.openOutput
+      if ENV['KONACHA_OUTPUT']
+        File.new(ENV['KONACHA_OUTPUT'], 'w')
+      else
+        STDOUT
+      end
+    end
+
+    def self.output
+      @output ||= openOutput
+    end
+
     def self.formatters
       if ENV['FORMAT']
         ENV['FORMAT'].split(',').map do |string|
-          eval(string).new(STDOUT)
+          eval(string).new(output)
         end
       else
-        [Konacha::Formatter.new(STDOUT)]
+        [Konacha::Formatter.new(output)]
       end
     end
 
