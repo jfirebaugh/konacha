@@ -34,4 +34,34 @@ describe Konacha::SpecsController do
       response.should_not render_template("konacha/specs/iframe")
     end
   end
+
+  describe "spec_path" do
+    before do
+      @controller.should_receive(:iframe_path).with('array_spec').and_return('/konacha/the/iframe/route/array_spec')
+    end
+
+    it 'should not contain mount_path when runner is mounted' do
+      Konacha.stub(:mode => :runner)
+      Konacha.stub(:mount_path => '/konacha')
+      @controller.send(:spec_path, 'array_spec').should == '/the/iframe/route/array_spec'
+    end
+
+    it 'should use iframe_path when runner is not mounted' do
+      Konacha.stub(:mode => :runner)
+      Konacha.stub(:mount_path => nil)
+      @controller.send(:spec_path, 'array_spec').should == '/konacha/the/iframe/route/array_spec'
+    end
+
+    it 'should use iframe_path when server is mounted' do
+      Konacha.stub(:mode => :server)
+      Konacha.stub(:mount_path => '/konacha')
+      @controller.send(:spec_path, 'array_spec').should == '/konacha/the/iframe/route/array_spec'
+    end
+
+    it 'should use iframe_path when server is not mounted' do
+      Konacha.stub(:mode => :server)
+      Konacha.stub(:mount_path => nil)
+      @controller.send(:spec_path, 'array_spec').should == '/konacha/the/iframe/route/array_spec'
+    end
+  end
 end

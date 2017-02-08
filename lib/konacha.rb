@@ -79,5 +79,13 @@ module Konacha
     def sprockets_rails_3?
       defined?(Sprockets::Rails::VERSION) && Sprockets::Rails::VERSION.start_with?('3')
     end
+
+    def mounted?
+      !!mount_path
+    end
+
+    def mount_path
+      @mount_path ||= Rails.application.routes.routes.find{|r| r.app == Konacha::Engine }.try(:path).try(:spec).to_s
+    end
   end
 end
