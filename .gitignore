@@ -19,3 +19,4 @@ test/version_tmp
 tmp
 node_modules
 spec/dummy/log
+.idea
