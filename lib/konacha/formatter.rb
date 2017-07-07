@@ -1,4 +1,4 @@
-require "colorize"
+require 'colorized_string'
 
 module Konacha
   class Formatter
@@ -70,7 +70,7 @@ module Konacha
       msg << "  Failed: #{example.full_description}"
       msg << "    #{example.exception.message}"
       msg << "    in #{example.exception.backtrace.first}" if example.exception.backtrace.present?
-      msg.join("\n").red
+      ColorizedString[msg.join("\n")].red
     end
 
     def pending_message(example)
@@ -83,7 +83,7 @@ module Konacha
 
     def with_color(text, color)
       return text unless color_enabled?
-      text.colorize(color)
+      ColorizedString[text].colorize(color)
     end
   end
 end
