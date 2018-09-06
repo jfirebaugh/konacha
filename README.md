@@ -1,7 +1,7 @@
 # Konacha
 
-[![Build Status](https://secure.travis-ci.org/jfirebaugh/konacha.png?branch=master)](http://travis-ci.org/jfirebaugh/konacha)
-[![Dependency Status](https://gemnasium.com/jfirebaugh/konacha.png)](https://gemnasium.com/jfirebaugh/konacha)
+[![Build Status](https://secure.travis-ci.org/jfirebaugh/konacha.svg?branch=master)](http://travis-ci.org/jfirebaugh/konacha)
+[![Dependency Status](https://gemnasium.com/jfirebaugh/konacha.svg)](https://gemnasium.com/jfirebaugh/konacha)
 
 Konacha ([koh-NAH-cha], a type of green tea) is a Rails engine that allows you to test your JavaScript with the
 [Mocha](http://mochajs.org/) test framework and [chai](http://chaijs.com/)
