@@ -29,7 +29,8 @@ module Konacha
       yield config
     end
 
-    delegate :host, :port, :spec_dir, :spec_matcher, :application, :driver, :runner_port, :formatters, :to => :config
+    delegate :host, :port, :spec_dir, :spec_matcher, :application, :driver,
+             :runner_host, :runner_port, :formatters, :to => :config
 
     def spec_root
       [config.spec_dir].flatten.map {|d| File.join(Rails.root, d)}

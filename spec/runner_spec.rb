@@ -19,6 +19,12 @@ describe Konacha::Runner do
   end
 
   describe ".start" do
+    it 'sets the Capybara.server_host' do
+      Capybara.should_receive(:server_host=).with(Konacha.runner_host)
+      Konacha::Runner.any_instance.stub(:run)
+      Konacha::Runner.start
+    end
+
     it 'sets the Capybara.server_port' do
       Capybara.should_receive(:server_port=).with(Konacha.runner_port)
       Konacha::Runner.any_instance.stub(:run)

@@ -45,6 +45,7 @@ module Konacha
       options.stylesheets  ||= %w(application)
       options.javascripts  ||= %w(chai konacha/iframe)
       options.verbose      ||= false
+      options.runner_host  ||= nil
       options.runner_port  ||= nil
       options.formatters   ||= self.class.formatters
 

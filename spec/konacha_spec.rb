@@ -16,6 +16,12 @@ describe Konacha do
       end
     end
 
+    describe ".runner_host" do
+      it "defaults to nil" do
+        subject.runner_host.should == nil
+      end
+    end
+
     describe ".runner_port" do
       it "defaults to nil" do
         subject.runner_port.should == nil

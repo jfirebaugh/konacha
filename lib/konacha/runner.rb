@@ -3,6 +3,7 @@ require "capybara"
 module Konacha
   class Runner
     def self.start
+      Capybara.server_host = Konacha.runner_host
       Capybara.server_port = Konacha.runner_port
       new.run
     end
