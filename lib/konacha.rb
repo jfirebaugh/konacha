@@ -79,5 +79,9 @@ module Konacha
     def sprockets_rails_3?
       defined?(Sprockets::Rails::VERSION) && Sprockets::Rails::VERSION.start_with?('3')
     end
+
+    def rails_5_x?
+      defined?(Rails::VERSION::STRING) && Rails::VERSION::STRING.starts_with?('5.')
+    end
   end
 end

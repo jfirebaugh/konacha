@@ -1,7 +1,11 @@
 module Konacha
   class SpecsController < ActionController::Base
     rescue_from Konacha::Spec::NotFound do
-      render :text => "Not found", :status => 404
+      if Konacha.rails_5_x?
+        render plain: "Not found", status: 404
+      else
+        render :text => "Not found", :status => 404
+      end
     end
 
     def parent
