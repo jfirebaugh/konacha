@@ -1,12 +1,15 @@
 sudo: false
 language: ruby
 rvm:
-  - 2.2.0
+  - 2.4.0
+  - 2.3.3
+  - 2.2.6
 gemfile:
   - Gemfile
   - Gemfile-sprockets2-sprocketsrails2
   - Gemfile-sprockets3-sprocketsrails2
   - Gemfile-rails41
+  - Gemfile-rails42
 before_script:
   - sh -e /etc/init.d/xvfb start
   - export DISPLAY=:99.0
