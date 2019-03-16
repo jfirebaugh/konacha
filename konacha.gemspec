@@ -20,8 +20,8 @@ the asset pipeline and engines.}
   gem.version       = "4.0.0"
   gem.license       = "MIT"
 
-  gem.add_dependency "railties", ">= 4.1", "< 5"
-  gem.add_dependency "actionpack", ">= 4.1", "< 5"
+  gem.add_dependency "railties", ">= 4.1", "< 6"
+  gem.add_dependency "actionpack", ">= 4.1", "< 6"
   gem.add_dependency "sprockets", ">= 2", "< 4"
   gem.add_dependency "sprockets-rails", ">= 2", "< 4"
   gem.add_dependency "capybara"
@@ -29,11 +29,12 @@ the asset pipeline and engines.}
   gem.add_dependency "tilt"
 
   gem.add_development_dependency "jquery-rails"
-  gem.add_development_dependency "rspec-rails", "~> 3.1"
+  gem.add_development_dependency "rspec-rails"
   gem.add_development_dependency "capybara-firebug", "~> 1.1"
   gem.add_development_dependency "coffee-script"
   gem.add_development_dependency "ejs"
   gem.add_development_dependency "tzinfo"
-  gem.add_development_dependency "selenium-webdriver", "~> 2"
+  gem.add_development_dependency "selenium-webdriver", "~> 3"
   gem.add_development_dependency "poltergeist", "1.9.0"
+  gem.add_development_dependency "rails-controller-testing"
 end
